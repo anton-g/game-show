@@ -1,5 +1,5 @@
 {
-  "name": "gameshow",
+  "name": "game-show",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -10,9 +10,15 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
+    "history": "^5.0.0",
+    "overmind": "^25.0.2",
+    "overmind-react": "^26.0.2",
+    "overmind-statechart": "^2.0.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-router-dom": "^6.0.0-beta.0",
     "react-scripts": "4.0.0-next.98",
+    "styled-components": "^5.2.0",
     "typescript": "^4.0.2",
     "web-vitals": "^0.2.4"
   },
