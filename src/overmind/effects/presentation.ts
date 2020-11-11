@@ -1,3 +1,4 @@
+// Inspired by use-presentation.js from https://github.com/FormidableLabs/spectacle/blob/main/src/hooks/use-presentation.js
 // The PresentationRequest API doesn't exist in TypeScripts window definitions yet
 declare global {
   interface Navigator {
@@ -20,19 +21,6 @@ const presentation = (() => {
   let connection: any
 
   return {
-    // initialize(options: any) {
-    // ws.on('connect_error', () => console.log('connect_error'))
-    // ws.on('connect_timeout', () => console.log('connect_timeout'))
-    // ws.on('error', () => console.log('error'))
-    // ws.on('reconnect_error', () => console.log('reconnect_error'))
-    // ws.on('reconnect_failed', () => console.log('reconnect_failed'))
-    // ws.on('disconnect', () => console.log('disconnected'))
-    // ws.on('reconnect', () => console.log('reconnected'))
-    // ws.on('reconnect_attempt', () => console.log('reconnecting'))
-    // for (const handler of options.messageHandlers) {
-    //   ws.on(handler.type, handler.handler)
-    // }
-    // },
     startConnection(urlParams: string | string[]) {
       const request = new window.PresentationRequest(urlParams)
       if (request) {

@@ -4,15 +4,24 @@ import './index.css'
 import reportWebVitals from './reportWebVitals'
 import { createOvermind } from 'overmind'
 import { Provider } from 'overmind-react'
-import { config } from './overmind'
+import config from './overmind'
 import App from './App'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import DevPanel from './DevPanel'
 
-const overmind = createOvermind(config)
+const overmind = createOvermind(config, {
+  devtools: true,
+})
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider value={overmind}>
-      <App />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+        </Routes>
+      </BrowserRouter>
+      <DevPanel></DevPanel>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

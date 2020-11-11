@@ -1,5 +1,5 @@
 import { Action } from 'overmind'
 
-export const test: Action = ({ effects }) => {
-  effects.presentation.startConnection('/')
+export const startShow: Action = ({ state }) => {
+  state.currentSegmentIndex = 0
 }

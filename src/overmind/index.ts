@@ -1,4 +1,5 @@
 import { IConfig } from 'overmind'
+import { Statechart, statechart } from 'overmind-statechart'
 import {
   createActionsHook,
   createEffectsHook,
@@ -10,18 +11,47 @@ import { state } from './state'
 import effects from './effects'
 import * as actions from './actions'
 
-export const config = {
+const config = {
   state,
   effects,
   actions,
 }
 
-declare module 'overmind' {
-  interface Config extends IConfig<typeof config> {}
+const gameChart: Statechart<
+  typeof config,
+  {
+    TITLE: void
+    SEGMENT: void
+    SCORES: void
+    RESULTS: void
+  }
+> = {
+  initial: 'TITLE',
+  states: {
+    TITLE: {
+      on: {
+        startShow: 'SEGMENT',
+      },
+    },
+    SEGMENT: {},
+    SCORES: {},
+    RESULTS: {},
+  },
 }
 
-export const useOvermind = createHook<typeof config>()
-export const useState = createStateHook<typeof config>()
-export const useActions = createActionsHook<typeof config>()
-export const useEffects = createEffectsHook<typeof config>()
-export const useReaction = createReactionHook<typeof config>()
+const chartConfig = statechart(config, gameChart)
+export default chartConfig
+
+declare module 'overmind' {
+  interface Config extends IConfig<typeof chartConfig> {}
+}
+
+export const useOvermind = createHook<typeof chartConfig>()
+export const useState = createStateHook<typeof chartConfig>()
+export const useActions = createActionsHook<typeof chartConfig>()
+export const useEffects = createEffectsHook<typeof chartConfig>()
+export const useReaction = createReactionHook<typeof chartConfig>()
+
+if (module.hot) {
+  module.hot.accept()
+}
