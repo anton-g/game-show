@@ -33,8 +33,16 @@ const gameChart: Statechart<
         startShow: 'SEGMENT',
       },
     },
-    SEGMENT: {},
-    SCORES: {},
+    SEGMENT: {
+      on: {
+        nextSegment: 'SEGMENT',
+      },
+    },
+    SCORES: {
+      on: {
+        nextSegment: 'SEGMENT',
+      },
+    },
     RESULTS: {},
   },
 }

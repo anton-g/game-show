@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>Ditt å Datt</h1>
-        <p>{state.segment?.id}</p>
+        <p>{state.segment?.name}</p>
       </header>
     </div>
   )

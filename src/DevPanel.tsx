@@ -39,6 +39,7 @@ const DevPanel = () => {
       <Heading>Dev</Heading>
       <Buttons>
         <button onClick={actions.startShow}>Start show</button>
+        <button onClick={actions.nextSegment}>Next segment</button>
       </Buttons>
     </Wrapper>
   )
