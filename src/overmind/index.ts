@@ -35,7 +35,7 @@ const gameChart: Statechart<
     },
     SEGMENT: {
       on: {
-        nextSegment: 'SEGMENT',
+        endSegment: 'SCORES',
       },
     },
     SCORES: {
@@ -55,7 +55,7 @@ declare module 'overmind' {
 }
 
 export const useOvermind = createHook<typeof chartConfig>()
-export const useState = createStateHook<typeof chartConfig>()
+export const useOvermindState = createStateHook<typeof chartConfig>()
 export const useActions = createActionsHook<typeof chartConfig>()
 export const useEffects = createEffectsHook<typeof chartConfig>()
 export const useReaction = createReactionHook<typeof chartConfig>()

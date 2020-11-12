@@ -1,8 +1,7 @@
-import { To } from 'history'
-import { history } from '../../history'
+import history from '../../history'
 
 export const router = {
-  goTo(to: To) {
+  goTo(to: string) {
     history.push(to)
   },
 }

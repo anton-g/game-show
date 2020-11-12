@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components/macro'
-import { useActions, useState } from './overmind'
+import { useActions, useOvermindState } from './overmind'
 
 const Wrapper = styled.section`
   display: flex;
@@ -32,14 +32,21 @@ const Buttons = styled.div`
 
 const DevPanel = () => {
   const actions = useActions()
-  const state = useState()
+  const state = useOvermindState()
 
   return (
     <Wrapper>
       <Heading>Dev</Heading>
       <Buttons>
-        <button onClick={actions.startShow}>Start show</button>
-        <button onClick={actions.nextSegment}>Next segment</button>
+        {state.matches({ TITLE: true }) && (
+          <button onClick={actions.startShow}>Start show</button>
+        )}
+        {state.matches({ SEGMENT: true }) && (
+          <button onClick={actions.endSegment}>End segment</button>
+        )}
+        {state.matches({ SCORES: true }) && (
+          <button onClick={actions.nextSegment}>Next segment</button>
+        )}
       </Buttons>
     </Wrapper>
   )
