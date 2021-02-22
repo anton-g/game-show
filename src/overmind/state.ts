@@ -14,12 +14,12 @@ type Answer = {
 
 type BaseQuestion = {
   id: string
+  question: string
   answer: Answer
 }
 
 type TextQuestion = {
   type: 'TEXT'
-  question: string
 } & BaseQuestion
 
 type SoundQuestion = {

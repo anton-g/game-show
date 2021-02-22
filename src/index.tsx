@@ -4,10 +4,11 @@ import './index.css'
 import reportWebVitals from './reportWebVitals'
 import { createOvermind } from 'overmind'
 import { Provider } from 'overmind-react'
-import config from './overmind'
+import { config } from './overmind'
 import App from './App'
 import { Router, Route, Switch } from 'react-router-dom'
 import history from './history'
+import { Creator } from './pages/Creator'
 
 const overmind = createOvermind(config, {
   devtools: true,
@@ -22,7 +23,7 @@ ReactDOM.render(
             <App />
           </Route>
           <Route path="/creator">
-            <p>scores</p>
+            <Creator />
           </Route>
         </Switch>
       </Provider>

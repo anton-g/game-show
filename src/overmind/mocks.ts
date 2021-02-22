@@ -9,20 +9,21 @@ export const mockSegment1: Segment = {
   },
   questions: [
     {
-      id: '1',
+      id: '1-1',
       type: 'TEXT',
-      question: 'Mock question',
+      question: 'Mock question 1-1',
       answer: {
         type: 'BUZZ_SINGLE',
         value: 'Mock answer',
       },
     },
     {
-      id: '2',
+      id: '1-2',
       type: 'SOUND',
+      question: 'Mock question 1-2',
       answer: {
         type: 'PHYSICAL',
-        value: 'Mock answer 2',
+        value: 'Mock answer 1-2',
       },
     },
   ],
@@ -37,20 +38,21 @@ export const mockSegment2: Segment = {
   },
   questions: [
     {
-      id: '1',
+      id: '2-1',
       type: 'TEXT',
-      question: 'Mock question',
+      question: 'Mock question 2-1',
       answer: {
         type: 'BUZZ_SINGLE',
         value: 'Mock answer',
       },
     },
     {
-      id: '2',
+      id: '2-2',
       type: 'SOUND',
+      question: 'Mock question 2-2',
       answer: {
         type: 'PHYSICAL',
-        value: 'Mock answer 2',
+        value: 'Mock answer 2-2',
       },
     },
   ],
