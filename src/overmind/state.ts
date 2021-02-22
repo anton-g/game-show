@@ -1,5 +1,4 @@
-import { derived } from 'overmind'
-import { mockSegment1, mockSegment2 } from './mocks'
+import { mockSegment1, mockSegment2, mockSegment3 } from './mocks'
 
 type AnswerType =
   | 'BUZZ_SINGLE'
@@ -44,12 +43,8 @@ export type Segment = {
 
 type State = {
   segments: Segment[]
-  currentSegmentIndex: number
-  segment: Segment | null
 }
 
 export const state: State = {
-  segments: [mockSegment1, mockSegment2],
-  currentSegmentIndex: -1,
-  segment: derived((state: State) => state.segments[state.currentSegmentIndex]),
+  segments: [mockSegment1, mockSegment2, mockSegment3],
 }

@@ -57,3 +57,13 @@ export const mockSegment2: Segment = {
     },
   ],
 }
+
+export const mockSegment3: Segment = {
+  id: '3',
+  name: 'THIRD SEGMENT',
+  intro: {
+    type: 'VIDEO',
+    src: '',
+  },
+  questions: [],
+}

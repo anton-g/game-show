@@ -40,3 +40,14 @@ export const moveSegmentQuestion: Action<{
   fromSegment.questions = fromClone
   toSegment.questions = toClone
 }
+
+export const reorderSegment: Action<{
+  sourcePosition: number
+  targetPosition: number
+}> = ({ state }, { sourcePosition, targetPosition }) => {
+  const result = Array.from(state.segments)
+  const [removed] = result.splice(sourcePosition, 1)
+  result.splice(targetPosition, 0, removed)
+
+  state.segments = result
+}
