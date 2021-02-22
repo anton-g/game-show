@@ -25,7 +25,7 @@ type SoundQuestion = {
   type: 'SOUND'
 } & BaseQuestion
 
-type Question = TextQuestion | SoundQuestion
+export type Question = TextQuestion | SoundQuestion
 
 type IntroType = 'VIDEO' | 'COMPONENT'
 
