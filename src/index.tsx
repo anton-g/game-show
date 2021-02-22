@@ -8,8 +8,6 @@ import config from './overmind'
 import App from './App'
 import { Router, Route, Switch } from 'react-router-dom'
 import history from './history'
-import DevPanel from './DevPanel'
-import { Segment } from './Segment'
 
 const overmind = createOvermind(config, {
   devtools: true,
@@ -23,14 +21,10 @@ ReactDOM.render(
           <Route path="/" exact>
             <App />
           </Route>
-          <Route path="/segment">
-            <Segment></Segment>
-          </Route>
-          <Route path="/scores">
+          <Route path="/creator">
             <p>scores</p>
           </Route>
         </Switch>
-        <DevPanel></DevPanel>
       </Provider>
     </Router>
   </React.StrictMode>,

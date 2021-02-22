@@ -4,7 +4,7 @@ import { mockSegment1, mockSegment2 } from './mocks'
 type AnswerType =
   | 'BUZZ_SINGLE'
   | 'OPTIONS_SINGLE'
-  | 'OPTIONS_ORDER'
+  | 'OPTIONS_MULTI'
   | 'PHYSICAL'
 
 type Answer = {
