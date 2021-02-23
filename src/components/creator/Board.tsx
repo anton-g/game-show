@@ -8,13 +8,7 @@ import {
 } from 'react-beautiful-dnd'
 import { DraggableSegment } from '../../components/creator/DraggableSegment'
 import { useActions, useAppState } from '../../overmind'
-
-const Container = styled.div`
-  background-color: rebeccapurple;
-  min-height: 100vh;
-  min-width: 100vw;
-  display: inline-flex;
-`
+import { Drawer } from './Drawer'
 
 export const Board = () => {
   const { segments } = useAppState()
@@ -72,30 +66,40 @@ export const Board = () => {
   }
 
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
-      <Droppable droppableId="board" type="SEGMENT" direction="horizontal">
-        {(provided) => (
-          <Container ref={provided.innerRef} {...provided.droppableProps}>
-            {segments.map((segment, index) => (
-              <Draggable
-                draggableId={segment.id}
-                index={index}
-                key={segment.id}
-              >
-                {(provided, snapshot) => (
-                  <DraggableSegment
-                    segment={segment}
-                    ref={provided.innerRef}
-                    draggableProps={provided.draggableProps}
-                    dragHandleProps={provided.dragHandleProps}
-                  />
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </Container>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="board" type="SEGMENT" direction="horizontal">
+          {(provided) => (
+            <Container ref={provided.innerRef} {...provided.droppableProps}>
+              {segments.map((segment, index) => (
+                <Draggable
+                  draggableId={segment.id}
+                  index={index}
+                  key={segment.id}
+                >
+                  {(provided, snapshot) => (
+                    <DraggableSegment
+                      segment={segment}
+                      ref={provided.innerRef}
+                      draggableProps={provided.draggableProps}
+                      dragHandleProps={provided.dragHandleProps}
+                    />
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </Container>
+          )}
+        </Droppable>
+      </DragDropContext>
+      <Drawer></Drawer>
+    </>
   )
 }
+
+const Container = styled.div`
+  background-color: rebeccapurple;
+  height: 100%;
+  min-width: 100vw;
+  display: inline-flex;
+`

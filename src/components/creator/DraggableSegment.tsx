@@ -9,19 +9,6 @@ import {
 import { Segment } from '../../overmind/state'
 import { DraggableQuestion } from './DraggableQuestion'
 
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-width: 300px;
-`
-
-const QuestionsList = styled.div`
-  height: 100%;
-  background-color: palevioletred;
-  margin-right: 8px;
-  min-width: 150px;
-`
-
 type Props = {
   segment: Segment
   draggableProps: DraggableProvidedDraggableProps
@@ -32,7 +19,9 @@ export const DraggableSegment = React.forwardRef<HTMLDivElement, Props>(
   ({ segment, draggableProps, dragHandleProps }, ref) => {
     return (
       <Wrapper ref={ref} {...draggableProps}>
-        <h1 {...dragHandleProps}>{segment.name}</h1>
+        <Header {...dragHandleProps}>
+          <Title>{segment.name}</Title>
+        </Header>
         <Droppable droppableId={segment.id} type="QUESTION">
           {(provided, snapshot) => (
             <QuestionsList ref={provided.innerRef} {...provided.droppableProps}>
@@ -60,3 +49,29 @@ export const DraggableSegment = React.forwardRef<HTMLDivElement, Props>(
     )
   }
 )
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  background-color: royalblue;
+  margin-right: 16px;
+  padding: 0 8px;
+`
+
+const Header = styled.div`
+  padding: 32px 8px;
+`
+
+const Title = styled.h2`
+  margin: 0;
+  padding: 0;
+`
+
+const QuestionsList = styled.div`
+  height: 100%;
+  background-color: palevioletred;
+  min-width: 150px;
+  height: 100%;
+  overflow-y: scroll;
+`

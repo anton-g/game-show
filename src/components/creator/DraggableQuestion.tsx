@@ -3,6 +3,7 @@ import {
   DraggableProvidedDraggableProps,
   DraggableProvidedDragHandleProps,
 } from 'react-beautiful-dnd'
+import styled from 'styled-components'
 import { Question } from '../../overmind/state'
 
 type Props2 = {
@@ -14,9 +15,15 @@ type Props2 = {
 export const DraggableQuestion = React.forwardRef<HTMLDivElement, Props2>(
   ({ question, draggableProps, dragHandleProps }, ref) => {
     return (
-      <div ref={ref} {...draggableProps} {...dragHandleProps}>
+      <Wrapper ref={ref} {...draggableProps} {...dragHandleProps}>
         {question.question}
-      </div>
+      </Wrapper>
     )
   }
 )
+
+const Wrapper = styled.div`
+  background-color: paleturquoise;
+  padding: 8px 16px 32px;
+  margin-bottom: 8px;
+`

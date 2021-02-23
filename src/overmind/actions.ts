@@ -1,5 +1,23 @@
 import { Action } from 'overmind'
 
+export const addQuestion: Action<{ segmentId: string }> = (
+  { state },
+  { segmentId }
+) => {
+  const segment = state.segments.find((x) => x.id === segmentId)
+  if (!segment) return
+
+  segment?.questions.push({
+    id: `question-${Math.random()}`,
+    type: 'TEXT',
+    question: 'foo',
+    answer: {
+      type: 'BUZZ_SINGLE',
+      value: 'HELLO',
+    },
+  })
+}
+
 export const reorderSegmentQuestion: Action<{
   segmentId: string
   sourcePosition: number
