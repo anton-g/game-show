@@ -68,6 +68,18 @@ export const moveSegmentQuestion: Action<{
   toSegment.questions = toClone
 }
 
+export const addSegment: Action = ({ state }) => {
+  state.segments.push({
+    id: `segment-${Math.random()}`,
+    name: `segment-${Math.random()}`,
+    questions: [],
+    intro: {
+      src: '',
+      type: 'COMPONENT',
+    },
+  })
+}
+
 export const reorderSegment: Action<{
   sourcePosition: number
   targetPosition: number

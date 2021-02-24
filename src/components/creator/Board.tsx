@@ -107,34 +107,33 @@ export const Board = () => {
   }
 
   return (
-    <>
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="board" type="SEGMENT" direction="horizontal">
-          {(provided) => (
-            <Container ref={provided.innerRef} {...provided.droppableProps}>
-              {segments.map((segment, index) => (
-                <Draggable
-                  draggableId={`segment-${segment.id}`}
-                  index={index}
-                  key={segment.id}
-                >
-                  {(provided, snapshot) => (
-                    <DraggableSegment
-                      segment={segment}
-                      ref={provided.innerRef}
-                      draggableProps={provided.draggableProps}
-                      dragHandleProps={provided.dragHandleProps}
-                    />
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </Container>
-          )}
-        </Droppable>
-        <Drawer></Drawer>
-      </DragDropContext>
-    </>
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <Droppable droppableId="board" type="SEGMENT" direction="horizontal">
+        {(provided) => (
+          <Container ref={provided.innerRef} {...provided.droppableProps}>
+            {segments.map((segment, index) => (
+              <Draggable
+                draggableId={`segment-${segment.id}`}
+                index={index}
+                key={segment.id}
+              >
+                {(provided, snapshot) => (
+                  <DraggableSegment
+                    segment={segment}
+                    ref={provided.innerRef}
+                    draggableProps={provided.draggableProps}
+                    dragHandleProps={provided.dragHandleProps}
+                  />
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+            <Spacer />
+          </Container>
+        )}
+      </Droppable>
+      <Drawer></Drawer>
+    </DragDropContext>
   )
 }
 
@@ -143,4 +142,8 @@ const Container = styled.div`
   height: 100%;
   min-width: 100vw;
   display: inline-flex;
+`
+
+const Spacer = styled.div`
+  margin-right: 350px;
 `
