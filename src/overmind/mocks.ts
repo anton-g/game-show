@@ -1,4 +1,25 @@
-import { Segment } from './state'
+import { Question, Segment } from './state'
+
+export const mockQuestions: Question[] = [
+  {
+    id: '1',
+    type: 'TEXT',
+    question: 'Mock question 1',
+    answer: {
+      type: 'BUZZ_SINGLE',
+      value: 'Mock answer',
+    },
+  },
+  {
+    id: '2',
+    type: 'SOUND',
+    question: 'Mock question 2',
+    answer: {
+      type: 'PHYSICAL',
+      value: 'Mock answer 2',
+    },
+  },
+]
 
 export const mockSegment1: Segment = {
   id: '1',
@@ -7,26 +28,7 @@ export const mockSegment1: Segment = {
     type: 'VIDEO',
     src: '',
   },
-  questions: [
-    {
-      id: '1-1',
-      type: 'TEXT',
-      question: 'Mock question 1-1',
-      answer: {
-        type: 'BUZZ_SINGLE',
-        value: 'Mock answer',
-      },
-    },
-    {
-      id: '1-2',
-      type: 'SOUND',
-      question: 'Mock question 1-2',
-      answer: {
-        type: 'PHYSICAL',
-        value: 'Mock answer 1-2',
-      },
-    },
-  ],
+  questions: [],
 }
 
 export const mockSegment2: Segment = {
@@ -36,26 +38,7 @@ export const mockSegment2: Segment = {
     type: 'VIDEO',
     src: '',
   },
-  questions: [
-    {
-      id: '2-1',
-      type: 'TEXT',
-      question: 'Mock question 2-1',
-      answer: {
-        type: 'BUZZ_SINGLE',
-        value: 'Mock answer',
-      },
-    },
-    {
-      id: '2-2',
-      type: 'SOUND',
-      question: 'Mock question 2-2',
-      answer: {
-        type: 'PHYSICAL',
-        value: 'Mock answer 2-2',
-      },
-    },
-  ],
+  questions: [],
 }
 
 export const mockSegment3: Segment = {

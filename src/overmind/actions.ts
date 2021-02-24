@@ -1,21 +1,30 @@
 import { Action } from 'overmind'
 
-export const addQuestion: Action<{ segmentId: string }> = (
-  { state },
-  { segmentId }
-) => {
+export const addSegmentQuestion: Action<{
+  segmentId: string
+  questionId: string
+}> = ({ state }, { segmentId, questionId }) => {
   const segment = state.segments.find((x) => x.id === segmentId)
   if (!segment) return
 
-  segment?.questions.push({
-    id: `question-${Math.random()}`,
-    type: 'TEXT',
-    question: 'foo',
-    answer: {
-      type: 'BUZZ_SINGLE',
-      value: 'HELLO',
-    },
-  })
+  const question = state.questions.find((x) => x.id === questionId)
+  if (!question) return
+
+  // TODO why doesn't push work here?
+  segment.questions = [...segment.questions, question]
+}
+
+export const removeSegmentQuestion: Action<{
+  segmentId: string
+  questionId: string
+}> = ({ state }, { segmentId, questionId }) => {
+  const segment = state.segments.find((x) => x.id === segmentId)
+  if (!segment) return
+
+  const questionIdx = segment.questions.findIndex((q) => q.id === questionId)
+  if (questionIdx === -1) return
+
+  segment.questions.splice(questionIdx, 1)
 }
 
 export const reorderSegmentQuestion: Action<{

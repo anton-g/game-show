@@ -72,6 +72,5 @@ const QuestionsList = styled.div`
   height: 100%;
   background-color: palevioletred;
   min-width: 150px;
-  height: 100%;
   overflow-y: scroll;
 `

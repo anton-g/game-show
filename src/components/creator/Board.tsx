@@ -13,12 +13,14 @@ import { Drawer } from './Drawer'
 export const Board = () => {
   const { segments } = useAppState()
   const {
+    addSegmentQuestion,
+    removeSegmentQuestion,
     reorderSegmentQuestion,
     moveSegmentQuestion,
     reorderSegment,
   } = useActions()
 
-  function handleSegmentDragEnd(result: DropResult) {
+  function handleMoveSegment(result: DropResult) {
     const { source, destination } = result
 
     if (!destination) {
@@ -31,7 +33,7 @@ export const Board = () => {
     })
   }
 
-  function handleQuestionDragEnd(result: DropResult) {
+  function handleMoveQuestion(result: DropResult) {
     const { source, destination } = result
 
     if (!destination) {
@@ -57,12 +59,51 @@ export const Board = () => {
     }
   }
 
+  function handleAddQuestion(result: DropResult) {
+    const { destination, draggableId } = result
+
+    if (!destination) {
+      return
+    }
+
+    const destinationSegmentId = destination.droppableId
+
+    addSegmentQuestion({
+      segmentId: destinationSegmentId,
+      questionId: draggableId,
+    })
+  }
+
+  function handleRemoveQuestion(result: DropResult) {
+    const { source, draggableId } = result
+
+    if (!source) {
+      return
+    }
+
+    removeSegmentQuestion({
+      segmentId: source.droppableId,
+      questionId: draggableId,
+    })
+  }
+
   function handleDragEnd(result: DropResult) {
     if (result.type === 'SEGMENT') {
-      handleSegmentDragEnd(result)
-    } else {
-      handleQuestionDragEnd(result)
+      handleMoveSegment(result)
+      return
     }
+
+    if (result.source.droppableId === 'DRAWER') {
+      handleAddQuestion(result)
+      return
+    }
+
+    if (result?.destination?.droppableId === 'DRAWER') {
+      handleRemoveQuestion(result)
+      return
+    }
+
+    handleMoveQuestion(result)
   }
 
   return (
@@ -73,7 +114,7 @@ export const Board = () => {
             <Container ref={provided.innerRef} {...provided.droppableProps}>
               {segments.map((segment, index) => (
                 <Draggable
-                  draggableId={segment.id}
+                  draggableId={`segment-${segment.id}`}
                   index={index}
                   key={segment.id}
                 >
@@ -91,8 +132,8 @@ export const Board = () => {
             </Container>
           )}
         </Droppable>
+        <Drawer></Drawer>
       </DragDropContext>
-      <Drawer></Drawer>
     </>
   )
 }
