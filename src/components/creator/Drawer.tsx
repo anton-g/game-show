@@ -49,11 +49,8 @@ export const Drawer = () => {
 }
 
 const Wrapper = styled.div<{ open: boolean }>`
-  position: fixed;
   height: 100%;
   width: 350px;
-  right: 0;
-  top: 0;
   background-color: palegoldenrod;
   display: flex;
   flex-direction: column;

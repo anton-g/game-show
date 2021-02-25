@@ -108,40 +108,47 @@ export const Board = () => {
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <Droppable droppableId="board" type="SEGMENT" direction="horizontal">
-        {(provided) => (
-          <Container ref={provided.innerRef} {...provided.droppableProps}>
-            {segments.map((segment, index) => (
-              <Draggable
-                draggableId={`segment-${segment.id}`}
-                index={index}
-                key={segment.id}
-              >
-                {(provided, snapshot) => (
-                  <DraggableSegment
-                    segment={segment}
-                    ref={provided.innerRef}
-                    draggableProps={provided.draggableProps}
-                    dragHandleProps={provided.dragHandleProps}
-                  />
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-            <Spacer />
-          </Container>
-        )}
-      </Droppable>
-      <Drawer></Drawer>
+      <Wrapper>
+        <Droppable droppableId="board" type="SEGMENT" direction="horizontal">
+          {(provided) => (
+            <Segments ref={provided.innerRef} {...provided.droppableProps}>
+              {segments.map((segment, index) => (
+                <Draggable
+                  draggableId={`segment-${segment.id}`}
+                  index={index}
+                  key={segment.id}
+                >
+                  {(provided, snapshot) => (
+                    <DraggableSegment
+                      segment={segment}
+                      ref={provided.innerRef}
+                      draggableProps={provided.draggableProps}
+                      dragHandleProps={provided.dragHandleProps}
+                    />
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+              <Spacer />
+            </Segments>
+          )}
+        </Droppable>
+        <Drawer></Drawer>
+      </Wrapper>
     </DragDropContext>
   )
 }
 
-const Container = styled.div`
+const Wrapper = styled.div`
+  display: flex;
+  height: 100%;
+`
+
+const Segments = styled.div`
   background-color: rebeccapurple;
   height: 100%;
-  min-width: 100vw;
   display: inline-flex;
+  overflow-x: scroll;
 `
 
 const Spacer = styled.div`

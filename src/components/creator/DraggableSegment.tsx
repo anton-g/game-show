@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import styled from 'styled-components'
 import {
   Droppable,
@@ -8,6 +8,7 @@ import {
 } from 'react-beautiful-dnd'
 import { Segment } from '../../overmind/state'
 import { DraggableQuestion } from './DraggableQuestion'
+import { useOnScreen } from '../../hooks/useOnScreen'
 
 type Props = {
   segment: Segment
@@ -17,12 +18,19 @@ type Props = {
 
 export const DraggableSegment = React.forwardRef<HTMLDivElement, Props>(
   ({ segment, draggableProps, dragHandleProps }, ref) => {
+    const ref2 = useRef<HTMLDivElement>(null!)
+    const onScreen = useOnScreen(ref2, { threshold: 0.1 })
+    console.log(onScreen)
     return (
       <Wrapper ref={ref} {...draggableProps}>
-        <Header {...dragHandleProps}>
+        <Header {...dragHandleProps} ref={ref2}>
           <Title>{segment.name}</Title>
         </Header>
-        <Droppable droppableId={segment.id} type="QUESTION">
+        <Droppable
+          droppableId={segment.id}
+          type="QUESTION"
+          isDropDisabled={!onScreen}
+        >
           {(provided, snapshot) => (
             <QuestionsList ref={provided.innerRef} {...provided.droppableProps}>
               {segment.questions.map((question, index) => (
