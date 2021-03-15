@@ -29,12 +29,13 @@ export const removeSegmentQuestion: Action<{
 
 export const reorderSegmentQuestion: Action<{
   segmentId: string
-  sourcePosition: number
+  questionId: string
   targetPosition: number
-}> = ({ state }, { segmentId, sourcePosition, targetPosition }) => {
+}> = ({ state }, { segmentId, questionId, targetPosition }) => {
   const segment = state.segments.find((x) => x.id === segmentId)
-
   if (!segment) return
+
+  const sourcePosition = segment.questions.findIndex((x) => x.id === questionId)
 
   const result = Array.from(segment.questions)
   const [removed] = result.splice(sourcePosition, 1)

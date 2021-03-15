@@ -44,11 +44,11 @@ export const Board = () => {
     const destinationSegmentId = destination.droppableId
 
     if (sourceSegmentId === destinationSegmentId) {
-      reorderSegmentQuestion({
-        segmentId: sourceSegmentId,
-        sourcePosition: source.index,
-        targetPosition: destination.index,
-      })
+      // reorderSegmentQuestion({
+      //   segmentId: sourceSegmentId,
+      //   sourcePosition: source.index,
+      //   targetPosition: destination.index,
+      // })
     } else {
       moveSegmentQuestion({
         fromSegmentId: sourceSegmentId,
