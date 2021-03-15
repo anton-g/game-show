@@ -82,9 +82,10 @@ export const addSegment: Action = ({ state }) => {
 }
 
 export const reorderSegment: Action<{
-  sourcePosition: number
+  segmentId: string
   targetPosition: number
-}> = ({ state }, { sourcePosition, targetPosition }) => {
+}> = ({ state }, { segmentId, targetPosition }) => {
+  const sourcePosition = state.segments.findIndex((x) => x.id === segmentId)
   const result = Array.from(state.segments)
   const [removed] = result.splice(sourcePosition, 1)
   result.splice(targetPosition, 0, removed)

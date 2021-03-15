@@ -27,10 +27,10 @@ export const Board = () => {
       return
     }
 
-    reorderSegment({
-      sourcePosition: source.index,
-      targetPosition: destination.index,
-    })
+    // reorderSegment({
+    //   sourcePosition: source.index,
+    //   targetPosition: destination.index,
+    // })
   }
 
   function handleMoveQuestion(result: DropResult) {
