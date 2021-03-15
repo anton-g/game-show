@@ -1,29 +1,63 @@
-import React from 'react'
-import {
-  DraggableProvidedDraggableProps,
-  DraggableProvidedDragHandleProps,
-} from 'react-beautiful-dnd'
-import styled from 'styled-components'
-import { Question } from '../../overmind/state'
+import { useDrag, useDrop } from 'react-dnd'
+import { useAppState } from '../../overmind'
+import type { Question } from '../../overmind/state'
 
-type Props2 = {
+export function DraggableQuestion({
+  question,
+  index,
+  move,
+}: {
   question: Question
-  draggableProps: DraggableProvidedDraggableProps
-  dragHandleProps?: DraggableProvidedDragHandleProps
+  index: number
+  move: (id: string, toIndex: number) => void
+}) {
+  useAppState()
+
+  const [{ isDragging }, drag] = useDrag(
+    () => ({
+      type: 'QUESTION',
+      item: { id: question.id, index },
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
+      end: (item, monitor) => {
+        const { id, index } = item
+        const didDrop = monitor.didDrop()
+        const r = monitor.getDropResult()
+        console.log('end', r)
+        if (!didDrop) {
+          move(id, index)
+        }
+      },
+    }),
+    [question, index, move]
+  )
+
+  const [, drop] = useDrop(
+    () => ({
+      accept: 'QUESTION',
+      canDrop: () => false,
+      hover({ id: draggedId }: any) {
+        if (draggedId !== question.id) {
+          move(draggedId, index)
+        }
+      },
+    }),
+    [question, move]
+  )
+
+  return (
+    <div
+      ref={(node) => drag(drop(node))}
+      style={{
+        padding: 8,
+        cursor: 'move',
+        backgroundColor: 'white',
+        border: '1px dashed deeppink',
+        opacity: isDragging ? 0 : 1,
+      }}
+    >
+      {question.question}
+    </div>
+  )
 }
-
-export const DraggableQuestion = React.forwardRef<HTMLDivElement, Props2>(
-  ({ question, draggableProps, dragHandleProps }, ref) => {
-    return (
-      <Wrapper ref={ref} {...draggableProps} {...dragHandleProps}>
-        {question.question}
-      </Wrapper>
-    )
-  }
-)
-
-const Wrapper = styled.div`
-  background-color: paleturquoise;
-  padding: 8px 16px 32px;
-  margin-bottom: 8px;
-`

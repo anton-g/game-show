@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useDrop } from 'react-dnd'
 import styled from 'styled-components'
 import { useAppState, useActions } from '../../overmind'
-import { DraggableSegment } from './DraggableSegment2'
+import { DraggableSegment } from './DraggableSegment'
 
 export function Segments() {
   const { segments } = useAppState()

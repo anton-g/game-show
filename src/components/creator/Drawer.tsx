@@ -21,7 +21,7 @@ export const Drawer = () => {
       <button onClick={() => addSegment()} style={{ marginBottom: 16 }}>
         Mock segment
       </button>
-      <Droppable droppableId="DRAWER" type="QUESTION">
+      {/* <Droppable droppableId="DRAWER" type="QUESTION">
         {(provided) => (
           <QuestionsList ref={provided.innerRef} {...provided.droppableProps}>
             {unusedQuestions.map((question, index) => (
@@ -43,7 +43,7 @@ export const Drawer = () => {
             {provided.placeholder}
           </QuestionsList>
         )}
-      </Droppable>
+      </Droppable> */}
     </Wrapper>
   )
 }
