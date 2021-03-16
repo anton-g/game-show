@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import styled from 'styled-components'
-import { useActions } from '../../overmind'
+import { useActions, useAppState } from '../../overmind'
 import type { Segment } from '../../overmind/state'
 import { DraggableQuestion } from './DraggableQuestion'
 
@@ -20,7 +20,8 @@ export const DraggableSegment = ({ segment, index, move }: Props) => {
       }
     },
   }))
-  const { reorderSegmentQuestion } = useActions()
+  const { reorderSegmentQuestion, moveSegmentQuestion } = useActions()
+  useAppState()
 
   const [{ isDragging }, segmentDragSource] = useDrag(
     () => ({
@@ -54,15 +55,39 @@ export const DraggableSegment = ({ segment, index, move }: Props) => {
   )
 
   const moveQuestion = useCallback(
-    (id: string, toIndex: number) => {
-      console.log(`Moving question ${id} to idx ${toIndex}`)
+    (
+      id: string,
+      fromSegmentId: string,
+      toSegmentId: string,
+      toIndex?: number
+    ) => {
+      if (fromSegmentId === toSegmentId) return
+
+      console.log(
+        `Moving question ${id} from segment ${fromSegmentId} to segment ${toSegmentId} ${toIndex}`
+      )
+      moveSegmentQuestion({
+        fromSegmentId: fromSegmentId,
+        toSegmentId: toSegmentId,
+        questionId: id,
+        toIndex,
+      })
+    },
+    [moveSegmentQuestion]
+  )
+  // insert
+  const reorderQuestion = useCallback(
+    (id: string, segmentId: string, toIndex: number) => {
+      console.log(
+        `Reordering question ${id} in seg ${segmentId} to idx ${toIndex}`
+      )
       reorderSegmentQuestion({
-        segmentId: segment.id,
+        segmentId: segmentId,
         questionId: id,
         targetPosition: toIndex,
       })
     },
-    [reorderSegmentQuestion, segment]
+    [reorderSegmentQuestion]
   )
 
   return (
@@ -78,7 +103,9 @@ export const DraggableSegment = ({ segment, index, move }: Props) => {
           <DraggableQuestion
             key={question.id}
             question={question}
+            segmentId={segment.id}
             move={moveQuestion}
+            reorder={reorderQuestion}
             index={index}
           />
         ))}
@@ -91,7 +118,7 @@ const Wrapper = styled.div<{ dragging: boolean }>`
   display: flex;
   flex-direction: column;
   min-width: 300px;
-  background-color: royalblue;
+  background-color: hsl(0, 0%, 90%);
   margin-right: 16px;
   padding: 0 8px;
   opacity: ${(p) => (p.dragging ? 0 : 1)};
@@ -108,7 +135,7 @@ const Title = styled.h2`
 
 const QuestionsList = styled.div`
   height: 100%;
-  background-color: palevioletred;
+  background-color: hsl(0, 0%, 80%);
   min-width: 150px;
   overflow-y: scroll;
 `

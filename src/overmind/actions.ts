@@ -1,4 +1,14 @@
 import { Action } from 'overmind'
+import { Segment } from './state'
+
+export const getQuestionSegment: Action<string, Segment | undefined> = (
+  { state },
+  questionId
+) => {
+  return state.segments.find(
+    (s) => s.questions.findIndex((q) => q.id === questionId) !== -1
+  )
+}
 
 export const addSegmentQuestion: Action<{
   segmentId: string
@@ -47,12 +57,9 @@ export const reorderSegmentQuestion: Action<{
 export const moveSegmentQuestion: Action<{
   fromSegmentId: string
   toSegmentId: string
-  questionIndex: number
-  targetIndex: number
-}> = (
-  { state },
-  { fromSegmentId, toSegmentId, questionIndex, targetIndex }
-) => {
+  questionId: string
+  toIndex?: number
+}> = ({ state }, { fromSegmentId, toSegmentId, questionId, toIndex }) => {
   const fromSegment = state.segments.find((x) => x.id === fromSegmentId)
   const toSegment = state.segments.find((x) => x.id === toSegmentId)
 
@@ -61,9 +68,11 @@ export const moveSegmentQuestion: Action<{
   const fromClone = Array.from(fromSegment.questions)
   const toClone = Array.from(toSegment.questions)
 
+  const questionIndex = fromClone.findIndex((x) => x.id === questionId)
+  if (questionIndex === -1) return
   const [removedQuestion] = fromClone.splice(questionIndex, 1)
 
-  toClone.splice(targetIndex, 0, removedQuestion)
+  toClone.splice(toIndex ?? toClone.length, 0, removedQuestion)
 
   fromSegment.questions = fromClone
   toSegment.questions = toClone
