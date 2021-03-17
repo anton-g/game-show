@@ -1,11 +1,7 @@
-import { useCallback } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import { useActions, useAppState } from '../../overmind'
 import type { Question } from '../../overmind/state'
-
-type DraggedItem = {
-  id: string
-}
+import type { DraggedItem } from './DraggableSegment'
 
 type Props = {
   question: Question
@@ -85,7 +81,7 @@ export function DraggableQuestion({
         cursor: 'move',
         backgroundColor: 'white',
         border: '1px dashed hsl(0, 0%, 70%)',
-        opacity: isDragging ? 0 : 1,
+        opacity: isDragging ? 0.1 : 1,
       }}
     >
       {question.question}

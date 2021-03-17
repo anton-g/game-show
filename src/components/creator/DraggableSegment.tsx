@@ -5,6 +5,10 @@ import { useActions, useAppState } from '../../overmind'
 import type { Segment } from '../../overmind/state'
 import { DraggableQuestion } from './DraggableQuestion'
 
+export type DraggedItem = {
+  id: string
+}
+
 type Props = {
   segment: Segment
   index: number
@@ -12,6 +16,12 @@ type Props = {
 }
 
 export const DraggableSegment = ({ segment, index, move }: Props) => {
+  useAppState()
+  const {
+    reorderSegmentQuestion,
+    moveSegmentQuestion,
+    getQuestionSegment,
+  } = useActions()
   const [, questionDropArea] = useDrop(() => ({
     accept: 'QUESTION',
     drop() {
@@ -19,9 +29,22 @@ export const DraggableSegment = ({ segment, index, move }: Props) => {
         segmentId: segment.id,
       }
     },
+    hover({ id: draggedId }: DraggedItem) {
+      const draggedFromSegment = getQuestionSegment(draggedId)
+      if (!draggedFromSegment) return
+
+      if (segment.id === draggedFromSegment.id) {
+        return
+      }
+
+      moveQuestion(
+        draggedId,
+        draggedFromSegment.id,
+        segment.id,
+        segment.questions.length
+      )
+    },
   }))
-  const { reorderSegmentQuestion, moveSegmentQuestion } = useActions()
-  useAppState()
 
   const [{ isDragging }, segmentDragSource] = useDrag(
     () => ({
