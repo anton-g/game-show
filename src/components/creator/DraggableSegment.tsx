@@ -46,7 +46,7 @@ export const DraggableSegment = ({ segment, index, move }: Props) => {
     },
   }))
 
-  const [{ isDragging }, segmentDragSource] = useDrag(
+  const [{ isDragging }, segmentDragSource, preview] = useDrag(
     () => ({
       type: 'SEGMENT',
       item: { id: segment.id, index },
@@ -116,9 +116,9 @@ export const DraggableSegment = ({ segment, index, move }: Props) => {
   return (
     <Wrapper
       dragging={isDragging}
-      ref={(node) => segmentDragSource(segmentDropTarget(node))}
+      ref={(node) => preview(segmentDropTarget(node))}
     >
-      <Header>
+      <Header ref={segmentDragSource}>
         <Title>{segment.name}</Title>
       </Header>
       <QuestionsList ref={questionDropArea}>
@@ -149,6 +149,7 @@ const Wrapper = styled.div<{ dragging: boolean }>`
 
 const Header = styled.div`
   padding: 32px 8px;
+  cursor: move;
 `
 
 const Title = styled.h2`
