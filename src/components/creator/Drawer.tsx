@@ -1,12 +1,10 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
-import { Draggable, Droppable } from 'react-beautiful-dnd'
 import { useActions, useAppState } from '../../overmind'
-import { DraggableQuestion } from './DraggableQuestion'
+// import { DraggableQuestion } from './DraggableQuestion'
 
 export const Drawer = () => {
   const [open, setOpen] = useState(true)
-  const { unusedQuestions } = useAppState()
   const { addSegment } = useActions()
 
   return (
@@ -49,16 +47,17 @@ export const Drawer = () => {
 }
 
 const Wrapper = styled.div<{ open: boolean }>`
+  position: fixed;
+  right: 0;
+  top: 0;
   height: 100%;
   width: 350px;
   background-color: palegoldenrod;
   display: flex;
   flex-direction: column;
   align-items: center;
-  // Issue with DnD when using transform, so workaround \o/
-  margin-right: ${({ open }) => (open ? 0 : '-300px')};
-  /* transform: translateX(${({ open }) => (open ? 0 : 90)}%); */
-  transition: margin-right 0.3s ease-out;
+  transform: translateX(${({ open }) => (open ? 0 : 90)}%);
+  transition: transform 0.3s ease-out;
 `
 
 const QuestionsList = styled.div`
