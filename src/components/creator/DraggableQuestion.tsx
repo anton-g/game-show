@@ -5,12 +5,12 @@ import type { DraggedItem } from './DraggableSegment'
 
 type Props = {
   question: Question
-  segmentId: string
+  segmentId: string | null
   index: number
   move: (
     id: string,
-    fromSegmentId: string,
-    toSegmentId: string,
+    fromSegmentId: string | null,
+    toSegmentId: string | null,
     toIndex?: number
   ) => void
   reorder: (id: string, segmentId: string, toIndex: number) => void
@@ -61,7 +61,10 @@ export function DraggableQuestion({
         if (draggedId === question.id) return // Hovering itself
 
         const draggedFromSegment = getQuestionSegment(draggedId)
-        if (!draggedFromSegment) return
+        if (!draggedFromSegment) {
+          move(draggedId, null, segmentId, index)
+          return
+        }
 
         if (segmentId === draggedFromSegment.id) {
           reorder(draggedId, draggedFromSegment.id, index)

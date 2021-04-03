@@ -1,11 +1,35 @@
 import { useState } from 'react'
+import { useDrop } from 'react-dnd'
 import styled from 'styled-components'
 import { useActions, useAppState } from '../../overmind'
-// import { DraggableQuestion } from './DraggableQuestion'
+import { DraggableQuestion } from './DraggableQuestion'
+import { DraggedItem } from './DraggableSegment'
 
 export const Drawer = () => {
   const [open, setOpen] = useState(true)
-  const { addSegment } = useActions()
+  const { unusedQuestions } = useAppState()
+  const { addSegment, getQuestionSegment, removeSegmentQuestion } = useActions()
+
+  const [, questionDropArea] = useDrop(() => ({
+    accept: 'QUESTION',
+    drop() {
+      return {
+        segmentId: null,
+      }
+    },
+    hover({ id: draggedId }: DraggedItem) {
+      const draggedFromSegment = getQuestionSegment(draggedId)
+      if (!draggedFromSegment) return
+
+      removeSegmentQuestion({
+        segmentId: draggedFromSegment.id,
+        questionId: draggedId,
+      })
+    },
+  }))
+
+  const moveQuestion = () => {}
+  const reorderQuestion = () => {}
 
   return (
     <Wrapper open={open}>
@@ -19,29 +43,18 @@ export const Drawer = () => {
       <button onClick={() => addSegment()} style={{ marginBottom: 16 }}>
         Mock segment
       </button>
-      {/* <Droppable droppableId="DRAWER" type="QUESTION">
-        {(provided) => (
-          <QuestionsList ref={provided.innerRef} {...provided.droppableProps}>
-            {unusedQuestions.map((question, index) => (
-              <Draggable
-                key={question.id}
-                draggableId={question.id}
-                index={index}
-              >
-                {(provided, snapshot) => (
-                  <DraggableQuestion
-                    question={question}
-                    ref={provided.innerRef}
-                    draggableProps={provided.draggableProps}
-                    dragHandleProps={provided.dragHandleProps}
-                  />
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </QuestionsList>
-        )}
-      </Droppable> */}
+      <QuestionsList ref={questionDropArea}>
+        {unusedQuestions.map((question, index) => (
+          <DraggableQuestion
+            key={question.id}
+            question={question}
+            segmentId={null}
+            move={moveQuestion}
+            reorder={reorderQuestion}
+            index={index}
+          />
+        ))}
+      </QuestionsList>
     </Wrapper>
   )
 }
@@ -52,7 +65,7 @@ const Wrapper = styled.div<{ open: boolean }>`
   top: 0;
   height: 100%;
   width: 350px;
-  background-color: palegoldenrod;
+  background-color: hsl(0 0% 70%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -61,9 +74,8 @@ const Wrapper = styled.div<{ open: boolean }>`
 `
 
 const QuestionsList = styled.div`
-  height: 100%;
-  background-color: palegoldenrod;
+  min-height: 200px;
+  border: 2px dashed hsl(0 0% 90%);
   width: 300px;
-  height: 100%;
   overflow-y: scroll;
 `

@@ -34,7 +34,10 @@ export const removeSegmentQuestion: Action<{
   const questionIdx = segment.questions.findIndex((q) => q.id === questionId)
   if (questionIdx === -1) return
 
-  segment.questions.splice(questionIdx, 1)
+  const result = Array.from(segment.questions)
+  result.splice(questionIdx, 1)
+
+  segment.questions = result
 }
 
 export const reorderSegmentQuestion: Action<{
@@ -42,6 +45,10 @@ export const reorderSegmentQuestion: Action<{
   questionId: string
   targetPosition: number
 }> = ({ state }, { segmentId, questionId, targetPosition }) => {
+  console.log(
+    `Reordering question ${questionId} in seg ${segmentId} to idx ${targetPosition}`
+  )
+
   const segment = state.segments.find((x) => x.id === segmentId)
   if (!segment) return
 
@@ -55,27 +62,40 @@ export const reorderSegmentQuestion: Action<{
 }
 
 export const moveSegmentQuestion: Action<{
-  fromSegmentId: string
-  toSegmentId: string
+  fromSegmentId: string | null
+  toSegmentId: string | null
   questionId: string
   toIndex?: number
 }> = ({ state }, { fromSegmentId, toSegmentId, questionId, toIndex }) => {
+  if (fromSegmentId === toSegmentId) return
+
+  console.log(
+    `Moving question ${questionId} from segment ${fromSegmentId} to segment ${toSegmentId} ${toIndex}`
+  )
+
   const fromSegment = state.segments.find((x) => x.id === fromSegmentId)
   const toSegment = state.segments.find((x) => x.id === toSegmentId)
 
-  if (!fromSegment || !toSegment) return
+  if (!toSegment) return
 
-  const fromClone = Array.from(fromSegment.questions)
-  const toClone = Array.from(toSegment.questions)
+  if (fromSegment) {
+    const fromClone = Array.from(fromSegment.questions)
+    const questionIndex = fromClone.findIndex((x) => x.id === questionId)
+    if (questionIndex === -1) return
+    const [removedQuestion] = fromClone.splice(questionIndex, 1)
+    fromSegment.questions = fromClone
 
-  const questionIndex = fromClone.findIndex((x) => x.id === questionId)
-  if (questionIndex === -1) return
-  const [removedQuestion] = fromClone.splice(questionIndex, 1)
+    const toClone = Array.from(toSegment.questions)
+    toClone.splice(toIndex ?? toClone.length, 0, removedQuestion)
+    toSegment.questions = toClone
+  } else {
+    const question = state.unusedQuestions.find((x) => x.id === questionId)
+    if (!question) return
 
-  toClone.splice(toIndex ?? toClone.length, 0, removedQuestion)
-
-  fromSegment.questions = fromClone
-  toSegment.questions = toClone
+    const toClone = Array.from(toSegment.questions)
+    toClone.splice(toIndex ?? toClone.length, 0, question)
+    toSegment.questions = toClone
+  }
 }
 
 export const addSegment: Action = ({ state }) => {

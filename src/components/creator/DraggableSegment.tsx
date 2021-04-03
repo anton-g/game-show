@@ -21,6 +21,7 @@ export const DraggableSegment = ({ segment, index, move }: Props) => {
     reorderSegmentQuestion,
     moveSegmentQuestion,
     getQuestionSegment,
+    addSegmentQuestion,
   } = useActions()
   const [, questionDropArea] = useDrop(() => ({
     accept: 'QUESTION',
@@ -31,7 +32,13 @@ export const DraggableSegment = ({ segment, index, move }: Props) => {
     },
     hover({ id: draggedId }: DraggedItem) {
       const draggedFromSegment = getQuestionSegment(draggedId)
-      if (!draggedFromSegment) return
+      if (!draggedFromSegment) {
+        addSegmentQuestion({
+          segmentId: segment.id,
+          questionId: draggedId,
+        })
+        return // added instead of moved
+      }
 
       if (segment.id === draggedFromSegment.id) {
         return
@@ -80,36 +87,26 @@ export const DraggableSegment = ({ segment, index, move }: Props) => {
   const moveQuestion = useCallback(
     (
       id: string,
-      fromSegmentId: string,
-      toSegmentId: string,
+      fromSegmentId: string | null,
+      toSegmentId: string | null,
       toIndex?: number
-    ) => {
-      if (fromSegmentId === toSegmentId) return
-
-      console.log(
-        `Moving question ${id} from segment ${fromSegmentId} to segment ${toSegmentId} ${toIndex}`
-      )
+    ) =>
       moveSegmentQuestion({
         fromSegmentId: fromSegmentId,
         toSegmentId: toSegmentId,
         questionId: id,
         toIndex,
-      })
-    },
+      }),
     [moveSegmentQuestion]
   )
-  // insert
+
   const reorderQuestion = useCallback(
-    (id: string, segmentId: string, toIndex: number) => {
-      console.log(
-        `Reordering question ${id} in seg ${segmentId} to idx ${toIndex}`
-      )
+    (id: string, segmentId: string, toIndex: number) =>
       reorderSegmentQuestion({
         segmentId: segmentId,
         questionId: id,
         targetPosition: toIndex,
-      })
-    },
+      }),
     [reorderSegmentQuestion]
   )
 

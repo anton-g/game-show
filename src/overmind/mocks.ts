@@ -28,6 +28,15 @@ export const mockQuestions: Question[] = [
       value: 'Mock answer 3',
     },
   },
+  {
+    id: '4',
+    type: 'TEXT',
+    question: 'Mock question 4',
+    answer: {
+      type: 'PHYSICAL',
+      value: 'Mock answer 4',
+    },
+  },
 ]
 
 export const mockSegment1: Segment = {
@@ -37,7 +46,7 @@ export const mockSegment1: Segment = {
     type: 'VIDEO',
     src: '',
   },
-  questions: [...mockQuestions],
+  questions: [...mockQuestions.slice(0, 3)],
 }
 
 export const mockSegment2: Segment = {
