@@ -7,7 +7,7 @@ import { useQuestionDrop } from './useQuestionDrop'
 export const Drawer = () => {
   const [open, setOpen] = useState(true)
   const { unusedQuestions } = useAppState()
-  const { addSegment, getQuestionSegment, removeSegmentQuestion } = useActions()
+  const { getQuestionSegment, removeSegmentQuestion } = useActions()
 
   const questionDropArea = useQuestionDrop(null, {
     hover({ id: draggedId }) {
@@ -33,9 +33,6 @@ export const Drawer = () => {
         X
       </button>
       <h1>Drawer</h1>
-      <button onClick={() => addSegment()} style={{ marginBottom: 16 }}>
-        Mock segment
-      </button>
       <QuestionsList ref={questionDropArea}>
         {unusedQuestions.map((question, index) => (
           <BoardQuestion
