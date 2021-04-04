@@ -34,7 +34,8 @@ function SegmentPlaceholder() {
 
 const MockSegmentButton = styled.button`
   background: none;
-  border: 2px dashed hsl(0 0% 50%);
+  border: 2px dashed hsl(0 0% 90%);
+  color: hsl(0 0% 40%);
   border-radius: 8px;
   font-size: 20px;
   padding: 8px 16px;
@@ -43,6 +44,7 @@ const MockSegmentButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    background: hsl(0 0% 90%);
+    background: hsl(0 0% 98%);
+    border-color: hsl(0 0% 80%);
   }
 `

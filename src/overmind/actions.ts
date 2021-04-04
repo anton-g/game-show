@@ -121,3 +121,7 @@ export const reorderSegment: Action<{
 
   state.segments = result
 }
+
+export const removeSegment: Action<string> = ({ state }, segmentId) => {
+  state.segments = state.segments.filter((x) => x.id !== segmentId)
+}

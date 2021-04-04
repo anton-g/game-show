@@ -1,10 +1,12 @@
 import { useCallback } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import styled from 'styled-components'
-import { useActions, useAppState } from '../../overmind'
-import type { Segment } from '../../overmind/state'
-import { BoardQuestion } from './BoardQuestion/BoardQuestion'
-import { useQuestionDrop } from './useQuestionDrop'
+import { useActions, useAppState } from '../../../overmind'
+import { removeSegment } from '../../../overmind/actions'
+import type { Segment } from '../../../overmind/state'
+import { BoardQuestion } from '../BoardQuestion/BoardQuestion'
+import { useQuestionDrop } from '../useQuestionDrop'
+import { SegmentOptions } from './SegmentOptions'
 
 type Props = {
   segment: Segment
@@ -19,6 +21,7 @@ export const BoardSegment = ({ segment, index, move }: Props) => {
     moveSegmentQuestion,
     getQuestionSegment,
     addSegmentQuestion,
+    removeSegment,
   } = useActions()
   const questionDropArea = useQuestionDrop(segment.id, {
     hover({ id: draggedId }) {
@@ -108,6 +111,16 @@ export const BoardSegment = ({ segment, index, move }: Props) => {
     >
       <Header ref={segmentDragSource}>
         <Title>{segment.name}</Title>
+        <SegmentOptions
+          onRemove={() => {
+            if (
+              segment.questions.length === 0 ||
+              window.confirm('Are you sure?')
+            ) {
+              removeSegment(segment.id)
+            }
+          }}
+        ></SegmentOptions>
       </Header>
       <QuestionsList ref={questionDropArea}>
         {segment.questions.map((question, index) => (
@@ -129,6 +142,7 @@ const Wrapper = styled.div<{ dragging: boolean }>`
   display: flex;
   flex-direction: column;
   min-width: 300px;
+  max-width: 300px;
   background-color: hsl(0, 0%, 90%);
   margin-right: 16px;
   padding: 0 8px;
@@ -136,13 +150,21 @@ const Wrapper = styled.div<{ dragging: boolean }>`
 `
 
 const Header = styled.div`
-  padding: 32px 8px;
+  padding: 16px 8px;
   cursor: move;
+  min-height: 60px;
+  display: flex;
+  justify-content: space-between;
 `
 
 const Title = styled.h2`
   margin: 0;
   padding: 0;
+  padding-right: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 `
 
 const QuestionsList = styled.div`
