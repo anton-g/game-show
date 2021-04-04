@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import { useActions, useAppState } from '../../overmind'
-import { DraggableQuestion } from './DraggableQuestion'
+import { DraggableQuestion } from './BoardQuestion'
 import { useQuestionDrop } from './useQuestionDrop'
 
 export const Drawer = () => {

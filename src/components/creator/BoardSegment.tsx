@@ -3,7 +3,7 @@ import { useDrag, useDrop } from 'react-dnd'
 import styled from 'styled-components'
 import { useActions, useAppState } from '../../overmind'
 import type { Segment } from '../../overmind/state'
-import { DraggableQuestion } from './DraggableQuestion'
+import { DraggableQuestion } from './BoardQuestion'
 import { useQuestionDrop } from './useQuestionDrop'
 
 type Props = {
