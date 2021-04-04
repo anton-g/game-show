@@ -1,23 +1,16 @@
 import { useState } from 'react'
-import { useDrop } from 'react-dnd'
 import styled from 'styled-components'
 import { useActions, useAppState } from '../../overmind'
 import { DraggableQuestion } from './DraggableQuestion'
-import { DraggedItem } from './DraggableSegment'
+import { DraggedQuestion, useQuestionDrop } from './useQuestionDrop'
 
 export const Drawer = () => {
   const [open, setOpen] = useState(true)
   const { unusedQuestions } = useAppState()
   const { addSegment, getQuestionSegment, removeSegmentQuestion } = useActions()
 
-  const [, questionDropArea] = useDrop(() => ({
-    accept: 'QUESTION',
-    drop() {
-      return {
-        segmentId: null,
-      }
-    },
-    hover({ id: draggedId }: DraggedItem) {
+  const questionDropArea = useQuestionDrop(null, {
+    hover({ id: draggedId }: DraggedQuestion) {
       const draggedFromSegment = getQuestionSegment(draggedId)
       if (!draggedFromSegment) return
 
@@ -26,7 +19,7 @@ export const Drawer = () => {
         questionId: draggedId,
       })
     },
-  }))
+  })
 
   const moveQuestion = () => {}
   const reorderQuestion = () => {}

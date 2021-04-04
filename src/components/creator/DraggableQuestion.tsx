@@ -1,7 +1,7 @@
 import { useDrag, useDrop } from 'react-dnd'
 import { useActions, useAppState } from '../../overmind'
 import type { Question } from '../../overmind/state'
-import type { DraggedItem } from './DraggableSegment'
+import { DraggedQuestion } from './useQuestionDrop'
 
 type Props = {
   question: Question
@@ -29,7 +29,7 @@ export function DraggableQuestion({
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: 'QUESTION',
-      item: { id: question.id } as DraggedItem,
+      item: { id: question.id } as DraggedQuestion,
       collect: (monitor) => ({
         isDragging: monitor.isDragging(),
       }),
@@ -57,7 +57,7 @@ export function DraggableQuestion({
     () => ({
       accept: 'QUESTION',
       canDrop: () => false,
-      hover({ id: draggedId }: DraggedItem) {
+      hover({ id: draggedId }: DraggedQuestion) {
         if (draggedId === question.id) return // Hovering itself
 
         const draggedFromSegment = getQuestionSegment(draggedId)
