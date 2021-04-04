@@ -1,7 +1,8 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import styled from 'styled-components'
+import * as Dialog from '@radix-ui/react-dialog'
 import { useActions, useAppState } from '../../overmind'
-import type { Question } from '../../overmind/state'
+import type { Question, Segment } from '../../overmind/state'
 import { DropdownMenu } from '../common/DropdownMenu'
 import { useQuestionDrag } from './useQuestionDrag'
 import { useQuestionDrop } from './useQuestionDrop'
@@ -26,8 +27,13 @@ export function BoardQuestion({
   move,
   reorder,
 }: Props) {
-  useAppState()
-  const { getQuestionSegment, removeSegmentQuestion } = useActions()
+  const [showMoveDialog, setShowMoveDialog] = useState(false)
+  const { segments } = useAppState()
+  const {
+    getQuestionSegment,
+    removeSegmentQuestion,
+    moveSegmentQuestion,
+  } = useActions()
 
   const [isDragging, drag] = useQuestionDrag(question.id, {
     onMove: useCallback(
@@ -78,12 +84,24 @@ export function BoardQuestion({
               questionId: question.id,
             })
           }
-          onMove={() => {}}
+          onMove={() => setShowMoveDialog(true)}
         ></QuestionOptions>
       </Header>
       <p>
         {segmentId} - {index}
       </p>
+      <QuestionMoveDialog
+        open={showMoveDialog}
+        segments={segments.filter((x) => x.id !== segmentId)}
+        onOpenChange={setShowMoveDialog}
+        onSelectedSegment={(targetSegmentId) =>
+          moveSegmentQuestion({
+            fromSegmentId: segmentId,
+            toSegmentId: targetSegmentId,
+            questionId: question.id,
+          })
+        }
+      ></QuestionMoveDialog>
     </Wrapper>
   )
 }
@@ -99,6 +117,81 @@ const Wrapper = styled.div<{ isDragging: boolean }>`
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
+`
+
+type DialogProps = {
+  open: boolean
+  segments: Segment[]
+  onOpenChange: (open: boolean) => void
+  onSelectedSegment: (segmentId: string) => void
+}
+function QuestionMoveDialog({
+  open,
+  segments,
+  onOpenChange,
+  onSelectedSegment,
+}: DialogProps) {
+  return (
+    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+      <StyledOverlay />
+      <StyledContent>
+        <Title>Select segment</Title>
+        {segments.map((segment) => (
+          <SegmentButton onClick={() => onSelectedSegment(segment.id)}>
+            {segment.name}
+          </SegmentButton>
+        ))}
+        <Dialog.Close>Close</Dialog.Close>
+      </StyledContent>
+    </Dialog.Root>
+  )
+}
+
+const StyledOverlay = styled(Dialog.Overlay)`
+  background-color: hsl(0 0% 0% / 0.15);
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+`
+
+const StyledContent = styled(Dialog.Content)`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 200px;
+  max-width: fit-content;
+  max-height: 85vh;
+  margin-top: -5vh;
+  background-color: white;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 4px;
+  &:focus {
+    outline: none;
+  }
+`
+
+const Title = styled.h2`
+  margin: 0;
+  font-size: 16px;
+  padding: 8px 2px;
+`
+
+const SegmentButton = styled.button`
+  padding: 8px 4px;
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  text-align: left;
+  font-size: 16px;
+  &:hover {
+    background-color: dodgerblue;
+    color: white;
+  }
 `
 
 type OptionsProps = {
@@ -118,7 +211,7 @@ function QuestionOptions({ onMove, onRemove }: OptionsProps) {
         </svg>
       </Trigger>
       <DropdownMenu.Content>
-        {/* <DropdownMenu.Item onSelect={onMove}>Move</DropdownMenu.Item> */}
+        <DropdownMenu.Item onSelect={onMove}>Move</DropdownMenu.Item>
         <DropdownMenu.Item onSelect={onRemove}>Remove</DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu>

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@radix-ui/react-dialog": "0.0.15",
     "@radix-ui/react-dropdown-menu": "0.0.17",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.0.4",
