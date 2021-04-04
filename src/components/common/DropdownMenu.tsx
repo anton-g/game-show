@@ -2,15 +2,24 @@ import styled from 'styled-components'
 import * as RadixDropdownMenu from '@radix-ui/react-dropdown-menu'
 import { ReactNode } from 'react'
 
-const StyledContent = styled(RadixDropdownMenu.Content)`
+type Props = {
+  children: ReactNode
+}
+export function DropdownMenu({ children }: Props) {
+  return <RadixDropdownMenu.Root>{children}</RadixDropdownMenu.Root>
+}
+
+DropdownMenu.Trigger = RadixDropdownMenu.Trigger
+
+DropdownMenu.Content = styled(RadixDropdownMenu.Content)`
   min-width: 130;
   background-color: white;
   border-radius: 6px;
   padding: 5px;
-  box-shadow: 0px 5px 15px -5px hsla(206, 22%, 7%, 0.15);
+  box-shadow: 0px 4px 6px hsla(0, 0%, 0%, 0.1);
 `
 
-const StyledItem = styled(RadixDropdownMenu.Item)`
+DropdownMenu.Item = styled(RadixDropdownMenu.Item)`
   font-size: 13px;
   padding: 5px 10px;
   border-radius: 3px;
@@ -21,14 +30,3 @@ const StyledItem = styled(RadixDropdownMenu.Item)`
     color: white;
   }
 `
-
-type Props = {
-  children: ReactNode
-}
-export function DropdownMenu({ children }: Props) {
-  return <RadixDropdownMenu.Root>{children}</RadixDropdownMenu.Root>
-}
-
-DropdownMenu.Trigger = RadixDropdownMenu.Trigger
-DropdownMenu.Content = StyledContent
-DropdownMenu.Item = StyledItem

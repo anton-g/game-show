@@ -21,17 +21,25 @@ export const Drawer = () => {
     },
   })
 
-  const moveQuestion = () => {}
-  const reorderQuestion = () => {}
+  const moveQuestion = () => {} // TODO wat, probably bug?
 
   return (
     <Wrapper open={open}>
-      <button
-        style={{ alignSelf: 'flex-start' }}
-        onClick={() => setOpen((x) => !x)}
-      >
-        X
-      </button>
+      <DrawerButton onClick={() => setOpen((x) => !x)}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d={open ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'}
+          />
+        </svg>
+      </DrawerButton>
       <h1>Drawer</h1>
       <QuestionsList ref={questionDropArea}>
         {unusedQuestions.map((question, index) => (
@@ -40,7 +48,6 @@ export const Drawer = () => {
             question={question}
             segmentId={null}
             move={moveQuestion}
-            reorder={reorderQuestion}
             index={index}
           />
         ))}
@@ -55,17 +62,32 @@ const Wrapper = styled.div<{ open: boolean }>`
   top: 0;
   height: 100%;
   width: 350px;
-  background-color: hsl(0 0% 70%);
+  background-color: hsl(0 0% 90%);
   display: flex;
   flex-direction: column;
   align-items: center;
   transform: translateX(${({ open }) => (open ? 0 : 90)}%);
   transition: transform 0.3s ease-out;
+  box-shadow: -10px 0px 35px hsla(0, 0%, 0%, 0.2);
+`
+
+const DrawerButton = styled.button`
+  align-self: flex-start;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0;
+  background: none;
+  border: 0;
 `
 
 const QuestionsList = styled.div`
   min-height: 200px;
-  border: 2px dashed hsl(0 0% 90%);
+  border: 2px dashed hsl(0 0% 80%);
+  border-radius: 8px;
   width: 300px;
   overflow-y: scroll;
+
+  > *:not(:last-child) {
+    margin-bottom: 8px;
+  }
 `

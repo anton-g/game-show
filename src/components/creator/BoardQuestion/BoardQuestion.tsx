@@ -17,7 +17,7 @@ type Props = {
     toSegmentId: string | null,
     toIndex?: number
   ) => void
-  reorder: (id: string, segmentId: string, toIndex: number) => void
+  reorder?: (id: string, segmentId: string, toIndex: number) => void
 }
 
 export function BoardQuestion({
@@ -44,7 +44,7 @@ export function BoardQuestion({
     ),
     onReorder: useCallback(
       (id, fromSegmentId) => {
-        reorder(id, fromSegmentId, index)
+        reorder && reorder(id, fromSegmentId, index)
       },
       [index, reorder]
     ),
@@ -64,7 +64,7 @@ export function BoardQuestion({
         }
 
         if (segmentId === draggedFromSegment.id) {
-          reorder(draggedId, draggedFromSegment.id, index)
+          reorder && reorder(draggedId, draggedFromSegment.id, index)
         } else {
           move(draggedId, draggedFromSegment.id, segmentId, index)
         }
@@ -74,7 +74,8 @@ export function BoardQuestion({
   )
 
   return (
-    <Wrapper ref={(node) => drag(drop(node))} isDragging={isDragging}>
+    <Wrapper ref={(node) => drag(drop(node))}>
+      {isDragging && <TargetDropArea />}
       <Header>
         <span>{question.question}</span>
         <QuestionOptions
@@ -107,15 +108,25 @@ export function BoardQuestion({
   )
 }
 
-const Wrapper = styled.div<{ isDragging: boolean }>`
+const Wrapper = styled.div`
+  position: relative;
   padding: 8px;
   cursor: move;
   background-color: white;
-  border: 1px dashed hsl(0 0% 70%);
-  opacity: ${(p) => (p.isDragging ? 0.1 : 1)};
+  border-radius: 8px;
+  overflow: hidden;
 `
 
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
+`
+
+const TargetDropArea = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: hsl(0 0% 75%);
 `

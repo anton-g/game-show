@@ -2,7 +2,6 @@ import { useCallback } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import styled from 'styled-components'
 import { useActions, useAppState } from '../../../overmind'
-import { removeSegment } from '../../../overmind/actions'
 import type { Segment } from '../../../overmind/state'
 import { BoardQuestion } from '../BoardQuestion/BoardQuestion'
 import { useQuestionDrop } from '../useQuestionDrop'
@@ -145,7 +144,7 @@ const Wrapper = styled.div<{ dragging: boolean }>`
   max-width: 300px;
   background-color: hsl(0, 0%, 90%);
   margin-right: 16px;
-  padding: 0 8px;
+  padding: 0 8px 8px;
   opacity: ${(p) => (p.dragging ? 0 : 1)};
 `
 
@@ -169,7 +168,12 @@ const Title = styled.h2`
 
 const QuestionsList = styled.div`
   height: 100%;
-  background-color: hsl(0, 0%, 80%);
+  border: 2px dashed hsl(0, 0%, 80%);
+  border-radius: 8px;
   min-width: 150px;
   overflow-y: scroll;
+
+  > *:not(:last-child) {
+    margin-bottom: 8px;
+  }
 `
