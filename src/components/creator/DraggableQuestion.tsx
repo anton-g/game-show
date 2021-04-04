@@ -1,7 +1,7 @@
 import { useDrag, useDrop } from 'react-dnd'
 import { useActions, useAppState } from '../../overmind'
 import type { Question } from '../../overmind/state'
-import { DraggedQuestion } from './useQuestionDrop'
+import { DraggedQuestion, useQuestionDrop } from './useQuestionDrop'
 
 type Props = {
   question: Question
@@ -53,9 +53,9 @@ export function DraggableQuestion({
     [question.id, move, segmentId, getQuestionSegment, reorder, index]
   )
 
-  const [, drop] = useDrop(
-    () => ({
-      accept: 'QUESTION',
+  const drop = useQuestionDrop(
+    segmentId,
+    {
       canDrop: () => false,
       hover({ id: draggedId }: DraggedQuestion) {
         if (draggedId === question.id) return // Hovering itself
@@ -72,8 +72,8 @@ export function DraggableQuestion({
           move(draggedId, draggedFromSegment.id, segmentId, index)
         }
       },
-    }),
-    [question, segmentId, index, move]
+    },
+    [question, index, move]
   )
 
   return (
