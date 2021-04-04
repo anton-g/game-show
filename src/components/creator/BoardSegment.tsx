@@ -3,7 +3,7 @@ import { useDrag, useDrop } from 'react-dnd'
 import styled from 'styled-components'
 import { useActions, useAppState } from '../../overmind'
 import type { Segment } from '../../overmind/state'
-import { DraggableQuestion } from './BoardQuestion'
+import { BoardQuestion } from './BoardQuestion'
 import { useQuestionDrop } from './useQuestionDrop'
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
   move: (segmentId: string, toIndex: number) => void
 }
 
-export const DraggableSegment = ({ segment, index, move }: Props) => {
+export const BoardSegment = ({ segment, index, move }: Props) => {
   useAppState()
   const {
     reorderSegmentQuestion,
@@ -111,7 +111,7 @@ export const DraggableSegment = ({ segment, index, move }: Props) => {
       </Header>
       <QuestionsList ref={questionDropArea}>
         {segment.questions.map((question, index) => (
-          <DraggableQuestion
+          <BoardQuestion
             key={question.id}
             question={question}
             segmentId={segment.id}

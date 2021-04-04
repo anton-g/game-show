@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import { useActions, useAppState } from '../../overmind'
-import { DraggableQuestion } from './BoardQuestion'
+import { BoardQuestion } from './BoardQuestion'
 import { useQuestionDrop } from './useQuestionDrop'
 
 export const Drawer = () => {
@@ -38,7 +38,7 @@ export const Drawer = () => {
       </button>
       <QuestionsList ref={questionDropArea}>
         {unusedQuestions.map((question, index) => (
-          <DraggableQuestion
+          <BoardQuestion
             key={question.id}
             question={question}
             segmentId={null}

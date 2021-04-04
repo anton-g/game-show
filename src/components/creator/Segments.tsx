@@ -2,7 +2,7 @@ import { ReactNode, useCallback } from 'react'
 import { useDrop } from 'react-dnd'
 import styled from 'styled-components'
 import { useAppState, useActions } from '../../overmind'
-import { DraggableSegment } from './BoardSegment'
+import { BoardSegment } from './BoardSegment'
 
 export function Segments({ children }: { children: ReactNode }) {
   const { segments } = useAppState()
@@ -26,12 +26,12 @@ export function Segments({ children }: { children: ReactNode }) {
   return (
     <Wrapper ref={drop}>
       {segments.map((segment, index) => (
-        <DraggableSegment
+        <BoardSegment
           key={segment.id}
           index={index}
           segment={segment}
           move={move}
-        ></DraggableSegment>
+        ></BoardSegment>
       ))}
       {children}
     </Wrapper>
