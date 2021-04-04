@@ -2,11 +2,12 @@ import styled from 'styled-components'
 import { DropdownMenu } from '../../common/DropdownMenu'
 
 type Props = {
+  inLibrary: boolean
   onMove: () => void
   onRemove: () => void
 }
 
-export function QuestionOptions({ onMove, onRemove }: Props) {
+export function QuestionOptions({ inLibrary, onMove, onRemove }: Props) {
   return (
     <DropdownMenu>
       <Trigger>
@@ -19,8 +20,12 @@ export function QuestionOptions({ onMove, onRemove }: Props) {
         </svg>
       </Trigger>
       <DropdownMenu.Content>
-        <DropdownMenu.Item onSelect={onMove}>Move</DropdownMenu.Item>
-        <DropdownMenu.Item onSelect={onRemove}>Remove</DropdownMenu.Item>
+        <DropdownMenu.Item onSelect={onMove}>
+          {inLibrary ? 'Add' : 'Move'}
+        </DropdownMenu.Item>
+        {!inLibrary && (
+          <DropdownMenu.Item onSelect={onRemove}>Remove</DropdownMenu.Item>
+        )}
       </DropdownMenu.Content>
     </DropdownMenu>
   )

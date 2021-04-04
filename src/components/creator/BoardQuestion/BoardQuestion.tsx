@@ -78,6 +78,7 @@ export function BoardQuestion({
       <Header>
         <span>{question.question}</span>
         <QuestionOptions
+          inLibrary={!Boolean(segmentId)}
           onRemove={() =>
             removeSegmentQuestion({
               segmentId: segmentId!,
