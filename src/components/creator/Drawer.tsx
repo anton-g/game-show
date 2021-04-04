@@ -2,7 +2,7 @@ import { useState } from 'react'
 import styled from 'styled-components'
 import { useActions, useAppState } from '../../overmind'
 import { DraggableQuestion } from './DraggableQuestion'
-import { DraggedQuestion, useQuestionDrop } from './useQuestionDrop'
+import { useQuestionDrop } from './useQuestionDrop'
 
 export const Drawer = () => {
   const [open, setOpen] = useState(true)
@@ -10,7 +10,7 @@ export const Drawer = () => {
   const { addSegment, getQuestionSegment, removeSegmentQuestion } = useActions()
 
   const questionDropArea = useQuestionDrop(null, {
-    hover({ id: draggedId }: DraggedQuestion) {
+    hover({ id: draggedId }) {
       const draggedFromSegment = getQuestionSegment(draggedId)
       if (!draggedFromSegment) return
 

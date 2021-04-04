@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { useActions, useAppState } from '../../overmind'
 import type { Segment } from '../../overmind/state'
 import { DraggableQuestion } from './DraggableQuestion'
-import { DraggedQuestion, useQuestionDrop } from './useQuestionDrop'
+import { useQuestionDrop } from './useQuestionDrop'
 
 type Props = {
   segment: Segment
@@ -21,7 +21,7 @@ export const DraggableSegment = ({ segment, index, move }: Props) => {
     addSegmentQuestion,
   } = useActions()
   const questionDropArea = useQuestionDrop(segment.id, {
-    hover({ id: draggedId }: DraggedQuestion) {
+    hover({ id: draggedId }) {
       const draggedFromSegment = getQuestionSegment(draggedId)
       if (!draggedFromSegment) {
         addSegmentQuestion({
