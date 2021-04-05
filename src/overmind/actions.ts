@@ -125,3 +125,12 @@ export const reorderSegment: Action<{
 export const removeSegment: Action<string> = ({ state }, segmentId) => {
   state.segments = state.segments.filter((x) => x.id !== segmentId)
 }
+
+export const updateSegment: Action<{ id: string } & Partial<Segment>> = (
+  { state },
+  update
+) => {
+  const segmentIdx = state.segments.findIndex((x) => x.id === update.id)
+  const segment = state.segments[segmentIdx]
+  state.segments[segmentIdx] = { ...segment, ...update }
+}

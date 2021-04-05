@@ -108,6 +108,11 @@ export function BoardQuestion({
   )
 }
 
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
 const Wrapper = styled.div`
   position: relative;
   padding: 8px;
@@ -115,11 +120,6 @@ const Wrapper = styled.div`
   background-color: white;
   border-radius: 8px;
   overflow: hidden;
-`
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
 `
 
 const TargetDropArea = styled.div`

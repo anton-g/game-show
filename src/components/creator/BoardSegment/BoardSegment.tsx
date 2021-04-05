@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import styled from 'styled-components'
 import { useActions, useAppState } from '../../../overmind'
@@ -14,6 +14,7 @@ type Props = {
 }
 
 export const BoardSegment = ({ segment, index, move }: Props) => {
+  const [editing, setEditing] = useState(false)
   useAppState()
   const {
     reorderSegmentQuestion,
@@ -21,6 +22,7 @@ export const BoardSegment = ({ segment, index, move }: Props) => {
     getQuestionSegment,
     addSegmentQuestion,
     removeSegment,
+    updateSegment,
   } = useActions()
   const questionDropArea = useQuestionDrop(segment.id, {
     hover({ id: draggedId }) {
@@ -109,7 +111,17 @@ export const BoardSegment = ({ segment, index, move }: Props) => {
       ref={(node) => preview(segmentDropTarget(node))}
     >
       <Header ref={segmentDragSource}>
-        <Title>{segment.name}</Title>
+        {editing ? (
+          <TitleInput
+            defaultValue={segment.name}
+            onChange={(name) => {
+              updateSegment({ name, id: segment.id })
+              setEditing(false)
+            }}
+          ></TitleInput>
+        ) : (
+          <Title onClick={() => setEditing(true)}>{segment.name}</Title>
+        )}
         <SegmentOptions
           onRemove={() => {
             if (
@@ -143,7 +155,6 @@ const Wrapper = styled.div<{ dragging: boolean }>`
   min-width: 300px;
   max-width: 300px;
   background-color: hsl(0, 0%, 90%);
-  margin-right: 16px;
   padding: 0 8px 8px;
   opacity: ${(p) => (p.dragging ? 0 : 1)};
 `
@@ -164,6 +175,9 @@ const Title = styled.h2`
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
+  width: 100%;
+  font-size: 24px;
+  cursor: pointer;
 `
 
 const QuestionsList = styled.div`
@@ -176,4 +190,49 @@ const QuestionsList = styled.div`
   > *:not(:last-child) {
     margin-bottom: 8px;
   }
+`
+
+type TitleProps = {
+  onChange: (value: string) => void
+  defaultValue: string
+}
+function TitleInput({ onChange, defaultValue }: TitleProps) {
+  return (
+    <Input
+      autoFocus
+      defaultValue={defaultValue}
+      onKeyDown={(e) => {
+        switch (e.code) {
+          case 'Enter':
+            onChange(e.currentTarget.value || defaultValue)
+            break
+          case 'Escape':
+            onChange(defaultValue)
+            break
+        }
+      }}
+      onFocus={(e) => e.target.select()}
+      onBlur={(e) => {
+        onChange(e.target.value || defaultValue)
+      }}
+    ></Input>
+  )
+}
+
+const Input = styled.input`
+  margin: 0;
+  padding: 0;
+  padding-left: 4px;
+  margin-left: -5px;
+  margin-top: -3px;
+  width: 100%;
+  max-width: 100%;
+  height: 32px;
+  font-size: 24px;
+  border-radius: 4px;
+  border: 1px solid hsl(0 0% 90%);
+  font-weight: bold;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
 `

@@ -75,9 +75,10 @@ const DrawerButton = styled.button`
   align-self: flex-start;
   min-width: 24px;
   min-height: 24px;
-  padding: 0;
+  padding: 4px;
   background: none;
   border: 0;
+  box-sizing: content-box;
 `
 
 const QuestionsList = styled.div`

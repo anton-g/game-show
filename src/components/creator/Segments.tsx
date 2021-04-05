@@ -41,4 +41,8 @@ export function Segments({ children }: { children: ReactNode }) {
 const Wrapper = styled.div`
   display: flex;
   height: 100%;
+
+  > * {
+    margin-left: 16px;
+  }
 `
