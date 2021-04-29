@@ -111,27 +111,29 @@ export const BoardSegment = ({ segment, index, move }: Props) => {
       ref={(node) => preview(segmentDropTarget(node))}
     >
       <Header ref={segmentDragSource}>
-        {editing ? (
-          <TitleInput
-            defaultValue={segment.name}
-            onChange={(name) => {
-              updateSegment({ name, id: segment.id })
-              setEditing(false)
+        <TitleRow>
+          {editing ? (
+            <TitleInput
+              defaultValue={segment.name}
+              onChange={(name) => {
+                updateSegment({ name, id: segment.id })
+                setEditing(false)
+              }}
+            ></TitleInput>
+          ) : (
+            <Title onClick={() => setEditing(true)}>{segment.name}</Title>
+          )}
+          <SegmentOptions
+            onRemove={() => {
+              if (
+                segment.questions.length === 0 ||
+                window.confirm('Are you sure?')
+              ) {
+                removeSegment(segment.id)
+              }
             }}
-          ></TitleInput>
-        ) : (
-          <Title onClick={() => setEditing(true)}>{segment.name}</Title>
-        )}
-        <SegmentOptions
-          onRemove={() => {
-            if (
-              segment.questions.length === 0 ||
-              window.confirm('Are you sure?')
-            ) {
-              removeSegment(segment.id)
-            }
-          }}
-        ></SegmentOptions>
+          ></SegmentOptions>
+        </TitleRow>
       </Header>
       <QuestionsList ref={questionDropArea}>
         {segment.questions.map((question, index) => (
@@ -163,14 +165,16 @@ const Header = styled.div`
   padding: 16px 8px;
   cursor: move;
   min-height: 60px;
+`
+
+const TitleRow = styled.div`
   display: flex;
-  justify-content: space-between;
+  align-items: center;
 `
 
 const Title = styled.h2`
   margin: 0;
   padding: 0;
-  padding-right: 16px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -225,6 +229,7 @@ const Input = styled.input`
   padding-left: 4px;
   margin-left: -5px;
   margin-top: -3px;
+  margin-bottom: -3px;
   width: 100%;
   max-width: 100%;
   height: 32px;
@@ -232,7 +237,6 @@ const Input = styled.input`
   border-radius: 4px;
   border: 1px solid hsl(0 0% 90%);
   font-weight: bold;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+
+  margin-right: 16px;
 `

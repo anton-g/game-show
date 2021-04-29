@@ -18,7 +18,10 @@ export function SegmentOptions({ onRemove }: Props) {
         </svg>
       </Trigger>
       <DropdownMenu.Content>
-        <DropdownMenu.Item onSelect={onRemove}>Remove</DropdownMenu.Item>
+        <DropdownMenu.Item onSelect={onRemove}>
+          Remove segment
+        </DropdownMenu.Item>
+        <DropdownMenu.Item disabled>Preview segment</DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu>
   )

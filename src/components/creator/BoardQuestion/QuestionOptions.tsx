@@ -21,10 +21,12 @@ export function QuestionOptions({ inLibrary, onMove, onRemove }: Props) {
       </Trigger>
       <DropdownMenu.Content>
         <DropdownMenu.Item onSelect={onMove}>
-          {inLibrary ? 'Add' : 'Move'}
+          {inLibrary ? 'Add to segment' : 'Move to segment'}
         </DropdownMenu.Item>
         {!inLibrary && (
-          <DropdownMenu.Item onSelect={onRemove}>Remove</DropdownMenu.Item>
+          <DropdownMenu.Item onSelect={onRemove}>
+            Remove question
+          </DropdownMenu.Item>
         )}
       </DropdownMenu.Content>
     </DropdownMenu>

@@ -29,4 +29,7 @@ DropdownMenu.Item = styled(RadixDropdownMenu.Item)`
     background-color: dodgerblue;
     color: white;
   }
+  &[data-disabled] {
+    color: hsl(0 0% 60%);
+  }
 `
