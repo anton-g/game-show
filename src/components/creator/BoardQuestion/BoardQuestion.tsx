@@ -86,6 +86,7 @@ export function BoardQuestion({
               questionId: question.id,
             })
           }
+          // TODO replace with submenu when released https://github.com/radix-ui/primitives/issues/383
           onMove={() => setShowMoveDialog(true)}
         ></QuestionOptions>
       </Header>

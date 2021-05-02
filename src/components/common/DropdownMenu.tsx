@@ -4,9 +4,10 @@ import { ReactNode } from 'react'
 
 type Props = {
   children: ReactNode
-}
-export function DropdownMenu({ children }: Props) {
-  return <RadixDropdownMenu.Root>{children}</RadixDropdownMenu.Root>
+} & RadixDropdownMenu.DropdownMenuOwnProps
+
+export function DropdownMenu({ children, ...props }: Props) {
+  return <RadixDropdownMenu.Root {...props}>{children}</RadixDropdownMenu.Root>
 }
 
 DropdownMenu.Trigger = RadixDropdownMenu.Trigger

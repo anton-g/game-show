@@ -4,9 +4,10 @@ import { Link } from 'react-router-dom'
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
+      <header style={{ display: 'flex', flexDirection: 'column' }}>
         <h1>Ditt å Datt</h1>
-        <Link to="/creator">Show creator</Link>
+        <Link to="/creator">Build show</Link>
+        <Link to="/library">Library</Link>
       </header>
     </div>
   )

@@ -4,37 +4,37 @@ export const mockQuestions: Question[] = [
   {
     id: '1',
     type: 'TEXT',
-    question: 'Mock question 1',
+    question: 'Vad heter låten?',
     answer: {
       type: 'BUZZ_SINGLE',
-      value: 'Mock answer',
+      value: 'Campione 2000',
     },
   },
   {
     id: '2',
     type: 'SOUND',
-    question: 'Mock question 2',
+    question: 'Hur stavas "encyklopedi"?',
     answer: {
       type: 'PHYSICAL',
-      value: 'Mock answer 2',
+      value: 'ENCYKLOPEDI',
     },
   },
   {
     id: '3',
-    type: 'TEXT',
-    question: 'Mock question 3',
+    type: 'IMAGE',
+    question: 'Vem är det här?',
     answer: {
-      type: 'PHYSICAL',
-      value: 'Mock answer 3',
+      type: 'BUZZ_SINGLE',
+      value: 'Nils Karlsson Pyssling',
     },
   },
   {
     id: '4',
-    type: 'TEXT',
-    question: 'Mock question 4',
+    type: 'VIDEO',
+    question: 'Vart är vi på väg?',
     answer: {
-      type: 'PHYSICAL',
-      value: 'Mock answer 4',
+      type: 'BUZZ_SINGLE',
+      value: 'Söderhamn',
     },
   },
 ]

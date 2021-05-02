@@ -17,10 +17,13 @@ type Answer = {
   value: string
 }
 
+type Scoring = {}
+
 type BaseQuestion = {
   id: string
   question: string
   answer: Answer
+  scoring?: Scoring
 }
 
 type TextQuestion = {
@@ -31,7 +34,19 @@ type SoundQuestion = {
   type: 'SOUND'
 } & BaseQuestion
 
-export type Question = TextQuestion | SoundQuestion
+type ImageQuestion = {
+  type: 'IMAGE'
+} & BaseQuestion
+
+type VideoQuestion = {
+  type: 'VIDEO'
+} & BaseQuestion
+
+export type Question =
+  | TextQuestion
+  | SoundQuestion
+  | ImageQuestion
+  | VideoQuestion
 
 type IntroType = 'VIDEO' | 'COMPONENT'
 

@@ -9,6 +9,8 @@ import App from './App'
 import { Router, Route, Switch } from 'react-router-dom'
 import history from './history'
 import { Creator } from './pages/Creator'
+import { Question } from './pages/Question'
+import { Library } from './pages/Library'
 
 const overmind = createOvermind(config, {
   devtools: true,
@@ -24,6 +26,12 @@ ReactDOM.render(
           </Route>
           <Route path="/creator">
             <Creator />
+          </Route>
+          <Route path="/library" exact>
+            <Library />
+          </Route>
+          <Route path="/library/question/:questionId">
+            <Question />
           </Route>
         </Switch>
       </Provider>
