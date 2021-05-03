@@ -71,6 +71,10 @@ const QuestionWrapper = styled(Link)`
   &:hover {
     box-shadow: 0px 4px 6px hsl(0 0% 0% / 0.2);
   }
+
+  &:active {
+    box-shadow: 0px 1px 1px hsl(0 0% 0% / 0.2);
+  }
 `
 
 const QuestionTitle = styled.h2`

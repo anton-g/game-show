@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './index.css'
 import reportWebVitals from './reportWebVitals'
 import { createOvermind } from 'overmind'
 import { Provider } from 'overmind-react'
@@ -11,13 +10,43 @@ import history from './history'
 import { Creator } from './pages/Creator'
 import { Question } from './pages/Question'
 import { Library } from './pages/Library'
+import { createGlobalStyle } from 'styled-components'
 
 const overmind = createOvermind(config, {
   devtools: true,
 })
 
+const GlobalStyle = createGlobalStyle`
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+  }
+
+  body,
+  html,
+  #root {
+    height: 100%;
+  }
+
+  input {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+  }
+`
+
 ReactDOM.render(
   <React.StrictMode>
+    <GlobalStyle></GlobalStyle>
     <Router history={history}>
       <Provider value={overmind}>
         <Switch>
