@@ -11,6 +11,7 @@ import { Creator } from './pages/Creator'
 import { Question } from './pages/Question'
 import { Library } from './pages/Library'
 import { createGlobalStyle } from 'styled-components'
+import 'modern-css-reset'
 
 const overmind = createOvermind(config, {
   devtools: true,
