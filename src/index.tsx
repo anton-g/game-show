@@ -8,7 +8,7 @@ import App from './App'
 import { Router, Route, Switch } from 'react-router-dom'
 import history from './history'
 import { Creator } from './pages/Creator'
-import { Question } from './pages/Question'
+import { QuestionPage } from './pages/QuestionPage'
 import { Library } from './pages/Library'
 import { createGlobalStyle } from 'styled-components'
 import 'modern-css-reset'
@@ -61,7 +61,7 @@ ReactDOM.render(
             <Library />
           </Route>
           <Route path="/library/question/:questionId">
-            <Question />
+            <QuestionPage />
           </Route>
         </Switch>
       </Provider>

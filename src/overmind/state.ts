@@ -6,16 +6,32 @@ import {
   mockSegment3,
 } from './mocks'
 
-type AnswerType =
+export type AnswerType =
   | 'BUZZ_SINGLE'
   | 'OPTIONS_SINGLE'
   | 'OPTIONS_MULTI'
   | 'PHYSICAL'
 
-type Answer = {
+type BaseAnswer = {
   type: AnswerType
+}
+
+type SingleBuzzAnswer = {
+  type: 'BUZZ_SINGLE'
   value: string
 }
+
+type OptionsAnswer = {
+  type: 'OPTIONS_SINGLE'
+  options: {
+    a: string
+    b: string
+    c?: string
+    d?: string
+  }
+}
+
+type Answer = BaseAnswer & (SingleBuzzAnswer | OptionsAnswer)
 
 type Scoring = {}
 

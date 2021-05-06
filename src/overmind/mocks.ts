@@ -10,15 +10,15 @@ export const mockQuestions: Question[] = [
       value: 'Campione 2000',
     },
   },
-  {
-    id: '2',
-    type: 'SOUND',
-    question: 'Hur stavas "encyklopedi"?',
-    answer: {
-      type: 'PHYSICAL',
-      value: 'ENCYKLOPEDI',
-    },
-  },
+  // {
+  //   id: '2',
+  //   type: 'SOUND',
+  //   question: 'Hur stavas "encyklopedi"?',
+  //   answer: {
+  //     type: 'PHYSICAL',
+  //     value: 'ENCYKLOPEDI',
+  //   },
+  // },
   {
     id: '3',
     type: 'IMAGE',
@@ -33,8 +33,13 @@ export const mockQuestions: Question[] = [
     type: 'VIDEO',
     question: 'Vart är vi på väg?',
     answer: {
-      type: 'BUZZ_SINGLE',
-      value: 'Söderhamn',
+      type: 'OPTIONS_SINGLE',
+      options: {
+        a: 'Söderhamn',
+        b: 'Södertälje',
+        c: 'Söderköping',
+        d: 'Södertörn',
+      },
     },
   },
 ]
