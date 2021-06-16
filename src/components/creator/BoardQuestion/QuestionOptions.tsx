@@ -24,14 +24,15 @@ export function QuestionOptions({ activeSegmentId, onMove, onRemove }: Props) {
       </Trigger>
       <DropdownMenu.Content>
         <DropdownMenu>
-          <DropdownMenu.NestedTrigger>
+          <DropdownMenu.TriggerItem>
             {!activeSegmentId ? 'Add to segment' : 'Move to segment'}
-          </DropdownMenu.NestedTrigger>
-          <DropdownMenu.Content>
+            <DropdownMenu.TriggerItemIcon></DropdownMenu.TriggerItemIcon>
+          </DropdownMenu.TriggerItem>
+          <DropdownMenu.Content sideOffset={10}>
             {segments
               .filter((x) => x.id !== activeSegmentId)
               .map((s) => (
-                <DropdownMenu.Item onSelect={() => onMove(s.id)}>
+                <DropdownMenu.Item key={s.id} onSelect={() => onMove(s.id)}>
                   {s.name}
                 </DropdownMenu.Item>
               ))}

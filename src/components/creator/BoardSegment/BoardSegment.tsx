@@ -24,29 +24,33 @@ export const BoardSegment = ({ segment, index, move }: Props) => {
     removeSegment,
     updateSegment,
   } = useActions()
-  const questionDropArea = useQuestionDrop(segment.id, {
-    hover({ id: draggedId }) {
-      const draggedFromSegment = getQuestionSegment(draggedId)
-      if (!draggedFromSegment) {
-        addSegmentQuestion({
-          segmentId: segment.id,
-          questionId: draggedId,
-        })
-        return
-      }
+  const questionDropArea = useQuestionDrop(
+    segment.id,
+    {
+      hover({ id: draggedId }) {
+        const draggedFromSegment = getQuestionSegment(draggedId)
+        if (!draggedFromSegment) {
+          addSegmentQuestion({
+            segmentId: segment.id,
+            questionId: draggedId,
+          })
+          return
+        }
 
-      if (segment.id === draggedFromSegment.id) {
-        return
-      }
+        if (segment.id === draggedFromSegment.id) {
+          return
+        }
 
-      moveQuestion(
-        draggedId,
-        draggedFromSegment.id,
-        segment.id,
-        segment.questions.length
-      )
+        moveQuestion(
+          draggedId,
+          draggedFromSegment.id,
+          segment.id,
+          segment.questions.length
+        )
+      },
     },
-  })
+    [segment]
+  )
 
   const [{ isDragging }, segmentDragSource, preview] = useDrag(
     () => ({

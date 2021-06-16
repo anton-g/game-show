@@ -1,10 +1,9 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import styled from 'styled-components'
-import { useActions, useAppState } from '../../../overmind'
+import { useActions } from '../../../overmind'
 import type { Question } from '../../../overmind/state'
 import { useQuestionDrag } from '../useQuestionDrag'
 import { useQuestionDrop } from '../useQuestionDrop'
-import { QuestionMoveDialog } from './QuestionMoveDialog'
 import { QuestionOptions } from './QuestionOptions'
 
 type Props = {
@@ -27,10 +26,8 @@ export function BoardQuestion({
   move,
   reorder,
 }: Props) {
-  const [showMoveDialog, setShowMoveDialog] = useState(false)
   const { getQuestionSegment, removeSegmentQuestion, moveSegmentQuestion } =
     useActions()
-  const { segments } = useAppState()
 
   const [isDragging, drag] = useQuestionDrag(question.id, {
     onMove: useCallback(
@@ -95,18 +92,6 @@ export function BoardQuestion({
       <p>
         {segmentId} - {index}
       </p>
-      <QuestionMoveDialog
-        open={showMoveDialog}
-        segments={segments.filter((x) => x.id !== segmentId)}
-        onOpenChange={setShowMoveDialog}
-        onSelectedSegment={(targetSegmentId) =>
-          moveSegmentQuestion({
-            fromSegmentId: segmentId,
-            toSegmentId: targetSegmentId,
-            questionId: question.id,
-          })
-        }
-      ></QuestionMoveDialog>
     </Wrapper>
   )
 }
