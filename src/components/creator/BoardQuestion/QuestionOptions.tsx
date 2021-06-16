@@ -1,13 +1,16 @@
 import styled from 'styled-components'
+import { useAppState } from '../../../overmind'
 import { DropdownMenu } from '../../common/DropdownMenu'
 
 type Props = {
-  inLibrary: boolean
-  onMove: () => void
+  activeSegmentId: string | null
+  onMove: (segmentId: string) => void
   onRemove: () => void
 }
 
-export function QuestionOptions({ inLibrary, onMove, onRemove }: Props) {
+export function QuestionOptions({ activeSegmentId, onMove, onRemove }: Props) {
+  const { segments } = useAppState()
+
   return (
     <DropdownMenu>
       <Trigger>
@@ -20,10 +23,21 @@ export function QuestionOptions({ inLibrary, onMove, onRemove }: Props) {
         </svg>
       </Trigger>
       <DropdownMenu.Content>
-        <DropdownMenu.Item onSelect={onMove}>
-          {inLibrary ? 'Add to segment' : 'Move to segment'}
-        </DropdownMenu.Item>
-        {!inLibrary && (
+        <DropdownMenu>
+          <DropdownMenu.NestedTrigger>
+            {!activeSegmentId ? 'Add to segment' : 'Move to segment'}
+          </DropdownMenu.NestedTrigger>
+          <DropdownMenu.Content>
+            {segments
+              .filter((x) => x.id !== activeSegmentId)
+              .map((s) => (
+                <DropdownMenu.Item onSelect={() => onMove(s.id)}>
+                  {s.name}
+                </DropdownMenu.Item>
+              ))}
+          </DropdownMenu.Content>
+        </DropdownMenu>
+        {activeSegmentId && (
           <DropdownMenu.Item onSelect={onRemove}>
             Remove question
           </DropdownMenu.Item>

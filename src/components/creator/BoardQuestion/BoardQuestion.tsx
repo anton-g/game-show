@@ -28,12 +28,9 @@ export function BoardQuestion({
   reorder,
 }: Props) {
   const [showMoveDialog, setShowMoveDialog] = useState(false)
+  const { getQuestionSegment, removeSegmentQuestion, moveSegmentQuestion } =
+    useActions()
   const { segments } = useAppState()
-  const {
-    getQuestionSegment,
-    removeSegmentQuestion,
-    moveSegmentQuestion,
-  } = useActions()
 
   const [isDragging, drag] = useQuestionDrag(question.id, {
     onMove: useCallback(
@@ -79,15 +76,20 @@ export function BoardQuestion({
       <Header>
         <span>{question.question}</span>
         <QuestionOptions
-          inLibrary={!Boolean(segmentId)}
+          activeSegmentId={segmentId}
           onRemove={() =>
             removeSegmentQuestion({
               segmentId: segmentId!,
               questionId: question.id,
             })
           }
-          // TODO replace with submenu when released https://github.com/radix-ui/primitives/issues/383
-          onMove={() => setShowMoveDialog(true)}
+          onMove={(targetSegmentId) =>
+            moveSegmentQuestion({
+              fromSegmentId: segmentId,
+              toSegmentId: targetSegmentId,
+              questionId: question.id,
+            })
+          }
         ></QuestionOptions>
       </Header>
       <p>

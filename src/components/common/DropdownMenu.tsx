@@ -34,3 +34,18 @@ DropdownMenu.Item = styled(RadixDropdownMenu.Item)`
     color: hsl(0 0% 60%);
   }
 `
+
+DropdownMenu.NestedTrigger = styled(RadixDropdownMenu.TriggerItem)`
+  font-size: 13px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: default;
+  &:focus {
+    outline: none;
+    background-color: dodgerblue;
+    color: white;
+  }
+  &[data-disabled] {
+    color: hsl(0 0% 60%);
+  }
+`
