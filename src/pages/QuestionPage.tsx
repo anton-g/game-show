@@ -55,8 +55,6 @@ export function QuestionPage() {
             <Select {...register('type')} id="questionType">
               <option value="TEXT">Text</option>
               <option value="VIDEO">Video</option>
-              {/* <option value="SOUND">Sound</option>
-              <option value="IMAGE">Image</option> */}
             </Select>
           </Field>
           <Spacer size={32} />
@@ -128,6 +126,19 @@ export function QuestionPage() {
               </Field>
             </>
           )}
+          <Spacer size={32} />
+          <SubTitle>Scoring</SubTitle>
+          <Spacer size={8} />
+          <Field>
+            <Label htmlFor="score">Score</Label>
+            <Input
+              {...register('scoring.value', {
+                valueAsNumber: true, // TODO more robust handling
+              })}
+              id="score"
+              type="number"
+            ></Input>
+          </Field>
           <Spacer size={24} />
           <Button type="submit">Submit</Button>
           <Spacer size={24} />

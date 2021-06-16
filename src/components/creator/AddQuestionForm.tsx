@@ -12,7 +12,7 @@ function AddQuestionForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
+      {/* <div>
         <label>Type</label>
         <select name="type" ref={register}>
           <option value="TEXT">text</option>
@@ -23,7 +23,7 @@ function AddQuestionForm() {
         <label>Question</label>
         <input name="question" ref={register} />
       </div>
-      <button type="submit">submit</button>
+      <button type="submit">submit</button> */}
     </form>
   )
 }

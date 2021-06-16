@@ -33,11 +33,14 @@ type OptionsAnswer = {
 
 type Answer = BaseAnswer & (SingleBuzzAnswer | OptionsAnswer)
 
-type Scoring = {}
+type Scoring = {
+  value: number
+}
 
 type BaseQuestion = {
   id: string
   question: string
+  lore?: string
   answer: Answer
   scoring?: Scoring
 }
