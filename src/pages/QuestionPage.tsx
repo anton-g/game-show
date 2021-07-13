@@ -1,7 +1,7 @@
 import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { DropdownMenu } from '../components/common/DropdownMenu'
 import {
   Field,
@@ -18,7 +18,7 @@ import { AnswerType, Question } from '../overmind/state'
 export function QuestionPage() {
   const { questionId } = useParams<{ questionId?: string }>()
   const { questions } = useAppState()
-  const { createQuestion, updateQuestion } = useActions()
+  const { createQuestion, updateQuestion, deleteQuestion } = useActions()
   const question = questionId ? questions[questionId] : undefined
   const {
     register,
@@ -40,7 +40,13 @@ export function QuestionPage() {
   }
   const onSubmitAsNew: SubmitHandler<Question> = (data) => {
     createQuestion(data)
-    console.log('foo')
+  }
+  const handleDelete = () => {
+    if (!questionId) return
+
+    // show confirm
+
+    deleteQuestion(questionId)
   }
 
   const answerType = watch('answer.type') as AnswerType
@@ -166,40 +172,14 @@ export function QuestionPage() {
               <FieldError>{errors.scoring.value.message}</FieldError>
             )}
           </Field>
-          <Spacer size={24} />
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Button type="submit" onClick={handleSubmit(onSubmit)}>
-              Save
-            </Button>
-            <DropdownMenu>
-              <DropdownButton>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  style={{
-                    height: 20,
-                    width: 20,
-                  }}
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </DropdownButton>
-              <DropdownMenu.Content>
-                <DropdownMenu.Item
-                  onSelect={() => handleSubmit(onSubmitAsNew)()}
-                >
-                  Save as new
-                </DropdownMenu.Item>
-              </DropdownMenu.Content>
-            </DropdownMenu>
-          </div>
-          <Spacer size={24} />
+          <Spacer size={48} />
+          <QuestionFormButtons
+            editing={Boolean(questionId)}
+            onSave={handleSubmit(onSubmit)}
+            onSaveAsNew={() => handleSubmit(onSubmitAsNew)()}
+            onDelete={handleDelete}
+          ></QuestionFormButtons>
+          <Spacer size={48} />
         </Form>
         <Preview>
           <h2>Preview</h2>
@@ -232,12 +212,83 @@ const Form = styled.form`
   padding: 8px 16px;
 `
 
-const Button = styled.button`
+const Preview = styled.div`
+  flex-grow: 2;
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  background-color: #ffffff;
+  background-size: 20px 20px;
+  background-image: repeating-linear-gradient(
+    45deg,
+    #eeeeee 0,
+    #eeeeee 2px,
+    #ffffff 0,
+    #ffffff 50%
+  );
+`
+
+type Props = {
+  onSave: () => void
+  onSaveAsNew: () => void
+  onDelete: () => void
+  editing: boolean
+}
+
+function QuestionFormButtons({
+  onSave,
+  onSaveAsNew,
+  onDelete,
+  editing,
+}: Props) {
+  return (
+    <ButtonWrapper>
+      <Button type="submit" onClick={onSave} grouped={editing}>
+        Save
+      </Button>
+      {editing && (
+        <DropdownMenu>
+          <DropdownButton>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              style={{
+                height: 20,
+                width: 20,
+              }}
+            >
+              <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </DropdownButton>
+          <DropdownMenu.Content>
+            <DropdownMenu.Item onSelect={onDelete}>Delete</DropdownMenu.Item>
+            <DropdownMenu.Item onSelect={onSaveAsNew}>
+              Save as new
+            </DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu>
+      )}
+    </ButtonWrapper>
+  )
+}
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const Button = styled.button<{ grouped: boolean }>`
   background-color: ${({ theme }) => theme.colors.gray9};
   border: 0;
   border-radius: 4px;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
   padding: 6px 12px;
   color: ${({ theme }) => theme.colors.gray1};
   cursor: pointer;
@@ -246,6 +297,13 @@ const Button = styled.button`
   &:hover {
     background-color: ${({ theme }) => theme.colors.gray10};
   }
+
+  ${({ grouped }) =>
+    grouped &&
+    css`
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    `}
 `
 
 const DropdownButton = styled(DropdownMenu.Trigger)`
@@ -265,22 +323,4 @@ const DropdownButton = styled(DropdownMenu.Trigger)`
   &:hover {
     background-color: ${({ theme }) => theme.colors.gray10};
   }
-`
-
-const Preview = styled.div`
-  flex-grow: 2;
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-  font-size: 48px;
-  background-color: #ffffff;
-  background-size: 20px 20px;
-  background-image: repeating-linear-gradient(
-    45deg,
-    #eeeeee 0,
-    #eeeeee 2px,
-    #ffffff 0,
-    #ffffff 50%
-  );
 `

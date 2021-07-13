@@ -9,6 +9,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
       type: 'BUZZ_SINGLE',
       value: 'Campione 2000',
     },
+    scoring: {
+      value: 1,
+    },
   },
   // '2': {
   //   id: '2',
@@ -18,6 +21,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
   //     type: 'PHYSICAL',
   //     value: 'ENCYKLOPEDI',
   //   },
+  //   scoring: {
+  //     value: 1
+  //   }
   // },
   '3': {
     id: '3',
@@ -26,6 +32,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     answer: {
       type: 'BUZZ_SINGLE',
       value: 'Nils Karlsson Pyssling',
+    },
+    scoring: {
+      value: 1,
     },
   },
   '4': {
@@ -40,6 +49,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
         c: 'Söderköping',
         d: 'Södertörn',
       },
+    },
+    scoring: {
+      value: 1,
     },
   },
 }

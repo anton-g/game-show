@@ -42,7 +42,7 @@ type BaseQuestion = {
   question: string
   lore?: string
   answer: Answer
-  scoring?: Scoring
+  scoring: Scoring
 }
 
 type TextQuestion = {

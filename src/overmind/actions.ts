@@ -24,6 +24,14 @@ export const updateQuestion: Action<Question> = (
   effects.router.goTo('/library')
 }
 
+export const deleteQuestion: Action<string> = (
+  { state, effects },
+  questionId
+) => {
+  delete state.questions[questionId]
+  effects.router.goTo('/library')
+}
+
 export const getQuestionSegment: Action<string, Segment | undefined> = (
   { state },
   questionId
