@@ -1,7 +1,15 @@
+import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { DropdownMenu } from '../components/common/DropdownMenu'
+import {
+  Field,
+  FieldError,
+  Input,
+  Label,
+  TextArea,
+} from '../components/common/forms'
 import { Select } from '../components/common/Select'
 import { Spacer } from '../components/common/Spacer'
 import { useActions, useAppState } from '../overmind'
@@ -23,7 +31,6 @@ export function QuestionPage() {
   })
 
   const onSubmit: SubmitHandler<Question> = (data) => {
-    console.log(data)
     if (!data.id) {
       createQuestion(data)
       return
@@ -31,13 +38,17 @@ export function QuestionPage() {
 
     updateQuestion(data)
   }
+  const onSubmitAsNew: SubmitHandler<Question> = (data) => {
+    createQuestion(data)
+    console.log('foo')
+  }
 
   const answerType = watch('answer.type') as AnswerType
 
   return (
     <Wrapper>
       <Columns>
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form>
           <Input {...register('id')} id="id" type="hidden"></Input>
           <Spacer size={16} />
           <Title>{watch('question') || '-'}</Title>
@@ -157,7 +168,9 @@ export function QuestionPage() {
           </Field>
           <Spacer size={24} />
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Button type="submit">Save</Button>
+            <Button type="submit" onClick={handleSubmit(onSubmit)}>
+              Save
+            </Button>
             <DropdownMenu>
               <DropdownButton>
                 <svg
@@ -178,7 +191,11 @@ export function QuestionPage() {
                 </svg>
               </DropdownButton>
               <DropdownMenu.Content>
-                <DropdownMenu.Item disabled>Save as new</DropdownMenu.Item>
+                <DropdownMenu.Item
+                  onSelect={() => handleSubmit(onSubmitAsNew)()}
+                >
+                  Save as new
+                </DropdownMenu.Item>
               </DropdownMenu.Content>
             </DropdownMenu>
           </div>
@@ -213,45 +230,6 @@ const Form = styled.form`
   max-height: 100%;
   overflow-y: scroll;
   padding: 8px 16px;
-`
-
-const Field = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-
-const Label = styled.label`
-  padding: 4px 0 8px;
-  font-size: 14px;
-  font-weight: 500;
-`
-
-const Input = styled.input<{ error?: boolean }>`
-  border-radius: 4px;
-  font-size: 16px;
-  background-color: ${({ theme }) => theme.colors.gray2};
-  border: 1px solid ${({ theme }) => theme.colors.gray7};
-  padding: 10px 14px;
-
-  ${(p) =>
-    p.error &&
-    css`
-      border-color: ${({ theme }) => theme.colors.tomato7};
-    `}
-`
-
-const FieldError = styled.span`
-  font-size: 14px;
-  color: ${({ theme }) => theme.colors.tomato11};
-  font-weight: 500;
-`
-
-const TextArea = styled.textarea`
-  border-radius: 4px;
-  font-size: 16px;
-  background-color: ${({ theme }) => theme.colors.gray2};
-  border: 1px solid ${({ theme }) => theme.colors.gray7};
-  padding: 10px 14px;
 `
 
 const Button = styled.button`
