@@ -105,7 +105,7 @@ const Wrapper = styled.div`
   position: relative;
   padding: 8px;
   cursor: move;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.gray1};
   border-radius: 8px;
   overflow: hidden;
 `

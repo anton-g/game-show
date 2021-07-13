@@ -24,6 +24,7 @@ export function QuestionOptions({ activeSegmentId, onMove, onRemove }: Props) {
       </Trigger>
       <DropdownMenu.Content>
         <DropdownMenu>
+          <DropdownMenu.Item disabled>Edit</DropdownMenu.Item>
           <DropdownMenu.TriggerItem>
             {!activeSegmentId ? 'Add to segment' : 'Move to segment'}
             <DropdownMenu.TriggerItemIcon></DropdownMenu.TriggerItemIcon>
@@ -43,6 +44,7 @@ export function QuestionOptions({ activeSegmentId, onMove, onRemove }: Props) {
             Remove question
           </DropdownMenu.Item>
         )}
+        <DropdownMenu.Item disabled>Open in library</DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu>
   )

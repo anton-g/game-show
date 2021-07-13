@@ -19,8 +19,8 @@ const Chevron = styled.svg`
 const StyledSelect = styled.select`
   border-radius: 4px;
   font-size: 16px;
-  background-color: #f3f4f6;
-  border: 1px solid #d1d5db;
+  background-color: ${({ theme }) => theme.colors.gray2};
+  border: 1px solid ${({ theme }) => theme.colors.gray7};
   appearance: none;
   width: 100%;
   grid-area: select;

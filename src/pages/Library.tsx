@@ -28,7 +28,7 @@ const Wrapper = styled.div`
 const Title = styled.h1``
 
 const Questions = styled.div`
-  --gap: 12px;
+  --gap: 18px;
   display: flex;
   margin: calc(-1 * var(--gap)) 0 0 calc(-1 * var(--gap));
   width: calc(100% + var(--gap));
@@ -40,7 +40,7 @@ const Questions = styled.div`
 
 function LibraryQuestion({ question, to }: { question: Question; to: string }) {
   return (
-    <QuestionWrapper to={to} color={typeColors[question.type]}>
+    <QuestionWrapper to={to} type={question.type}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <QuestionIcon type={question.type}></QuestionIcon>
         <QuestionTitle>{question.question}</QuestionTitle>
@@ -50,14 +50,7 @@ function LibraryQuestion({ question, to }: { question: Question; to: string }) {
   )
 }
 
-const typeColors = {
-  TEXT: '#FECACA',
-  SOUND: '#A7F3D0',
-  IMAGE: '#BFDBFE',
-  VIDEO: '#FDE68A',
-}
-
-const QuestionWrapper = styled(Link)`
+const QuestionWrapper = styled(Link)<{ type: Question['type'] }>`
   display: flex;
   color: inherit;
   text-decoration: none;
@@ -65,7 +58,7 @@ const QuestionWrapper = styled(Link)`
   padding: 8px 16px;
   box-shadow: 0px 1px 3px hsl(0 0% 0% / 0.2);
   border-radius: 4px;
-  border-top: 4px solid ${(p) => p.color};
+  border-top: 4px solid ${({ type, theme }) => theme.colors.types[type]};
   transition: box-shadow 0.2s ease-in-out;
 
   &:hover {

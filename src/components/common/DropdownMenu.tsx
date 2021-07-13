@@ -14,7 +14,7 @@ DropdownMenu.Trigger = RadixDropdownMenu.Trigger
 
 DropdownMenu.Content = styled(RadixDropdownMenu.Content)`
   min-width: 180;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.gray1};
   border-radius: 6px;
   padding: 5px;
   box-shadow: 0px 0px 15px hsla(206, 22%, 7%, 0.35);
@@ -30,11 +30,10 @@ const itemStyle = css`
   cursor: default;
   &:focus {
     outline: none;
-    background-color: dodgerblue;
-    color: white;
+    background-color: ${({ theme }) => theme.colors.blue4};
   }
   &[data-disabled] {
-    color: hsl(0 0% 60%);
+    color: ${({ theme }) => theme.colors.gray11};
   }
 `
 
@@ -44,7 +43,7 @@ DropdownMenu.Item = styled(RadixDropdownMenu.Item)`
 
 DropdownMenu.TriggerItem = styled(RadixDropdownMenu.TriggerItem)`
   &[data-state='open'] {
-    background-color: palevioletred;
+    background-color: ${({ theme }) => theme.colors.blue4};
   }
 
   ${itemStyle}

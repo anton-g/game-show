@@ -150,6 +150,7 @@ export const BoardSegment = ({ segment, index, move }: Props) => {
             index={index}
           />
         ))}
+        <BoardNewQuestion></BoardNewQuestion>
       </QuestionsList>
     </Wrapper>
   )
@@ -243,4 +244,21 @@ const Input = styled.input`
   font-weight: bold;
 
   margin-right: 16px;
+`
+
+function BoardNewQuestion() {
+  return <NewWrapper>Add question</NewWrapper>
+}
+
+const NewWrapper = styled.button`
+  border: none;
+  background-color: transparent;
+  width: 100%;
+  padding: 16px 0;
+  color: ${({ theme }) => theme.colors.gray12};
+  border-radius: 8px;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.gray2};
+  }
 `

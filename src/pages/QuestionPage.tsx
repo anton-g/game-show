@@ -30,7 +30,7 @@ export function QuestionPage() {
       <Columns>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Spacer size={16} />
-          <Title>{watch('question')} </Title>
+          <Title>{watch('question') || '-'}</Title>
           <Spacer size={16} />
           <Field>
             <Label htmlFor="question">Question</Label>
@@ -140,7 +140,25 @@ export function QuestionPage() {
             ></Input>
           </Field>
           <Spacer size={24} />
-          <Button type="submit">Submit</Button>
+          <Button type="submit">Save</Button>
+          <DropdownButton>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              style={{
+                height: 20,
+                width: 20,
+              }}
+            >
+              <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </DropdownButton>
           <Spacer size={24} />
         </Form>
         <Preview>
@@ -188,42 +206,60 @@ const Label = styled.label`
 const Input = styled.input<{ error?: boolean }>`
   border-radius: 4px;
   font-size: 16px;
-  background-color: #f3f4f6;
-  border: 1px solid #d1d5db;
+  background-color: ${({ theme }) => theme.colors.gray2};
+  border: 1px solid ${({ theme }) => theme.colors.gray7};
   padding: 10px 14px;
 
   ${(p) =>
     p.error &&
     css`
-      border-color: #f87171;
+      border-color: ${({ theme }) => theme.colors.tomato7};
     `}
 `
 
 const FieldError = styled.span`
   font-size: 14px;
-  color: #dc2626;
+  color: ${({ theme }) => theme.colors.tomato11};
   font-weight: 500;
 `
 
 const TextArea = styled.textarea`
   border-radius: 4px;
   font-size: 16px;
-  background-color: #f3f4f6;
-  border: 1px solid #d1d5db;
+  background-color: ${({ theme }) => theme.colors.gray2};
+  border: 1px solid ${({ theme }) => theme.colors.gray7};
   padding: 10px 14px;
 `
 
 const Button = styled.button`
-  background-color: #4b5563;
+  background-color: ${({ theme }) => theme.colors.gray9};
   border: 0;
   border-radius: 4px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
   padding: 6px 12px;
-  color: #f9fafb;
+  color: ${({ theme }) => theme.colors.gray1};
   cursor: pointer;
   transition: background-color 0.15s;
 
   &:hover {
-    background-color: #374151;
+    background-color: ${({ theme }) => theme.colors.gray10};
+  }
+`
+
+const DropdownButton = styled.button`
+  background-color: ${({ theme }) => theme.colors.gray9};
+  border: 0;
+  border-radius: 4px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding: 6px 12px;
+  color: ${({ theme }) => theme.colors.gray1};
+  cursor: pointer;
+  transition: background-color 0.15s;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.gray10};
   }
 `
 
