@@ -1,6 +1,7 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 import styled, { css } from 'styled-components'
+import { DropdownMenu } from '../components/common/DropdownMenu'
 import { Select } from '../components/common/Select'
 import { Spacer } from '../components/common/Spacer'
 import { useAppState } from '../overmind'
@@ -140,25 +141,32 @@ export function QuestionPage() {
             ></Input>
           </Field>
           <Spacer size={24} />
-          <Button type="submit">Save</Button>
-          <DropdownButton>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              style={{
-                height: 20,
-                width: 20,
-              }}
-            >
-              <path
-                fillRule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </DropdownButton>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Button type="submit">Save</Button>
+            <DropdownMenu>
+              <DropdownButton>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  style={{
+                    height: 20,
+                    width: 20,
+                  }}
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </DropdownButton>
+              <DropdownMenu.Content>
+                <DropdownMenu.Item disabled>Save as new</DropdownMenu.Item>
+              </DropdownMenu.Content>
+            </DropdownMenu>
+          </div>
           <Spacer size={24} />
         </Form>
         <Preview>
@@ -247,16 +255,19 @@ const Button = styled.button`
   }
 `
 
-const DropdownButton = styled.button`
+const DropdownButton = styled(DropdownMenu.Trigger)`
   background-color: ${({ theme }) => theme.colors.gray9};
   border: 0;
+  border-left: 1px solid ${({ theme }) => theme.colors.gray10};
   border-radius: 4px;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-  padding: 6px 12px;
+  padding: 8px;
   color: ${({ theme }) => theme.colors.gray1};
   cursor: pointer;
   transition: background-color 0.15s;
+  display: inline-flex;
+  align-items: center;
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.gray10};
