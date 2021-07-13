@@ -83,16 +83,18 @@ export type Segment = {
 
 type State = {
   segments: Segment[]
-  questions: Question[]
+  questions: Record<Question['id'], Question>
+  questionsList: Question[]
   unusedQuestions: Question[]
 }
 
 export const state: State = {
   segments: [mockSegment1, mockSegment2, mockSegment3],
-  questions: [...mockQuestions],
+  questions: mockQuestions,
+  questionsList: derived((state: State) => Object.values(state.questions)),
   unusedQuestions: derived((state: State) => {
     const usedQuestions = state.segments.flatMap((x) => x.questions)
-    return state.questions.filter(
+    return state.questionsList.filter(
       (x) => usedQuestions.findIndex((q) => q.id === x.id) === -1
     )
   }),

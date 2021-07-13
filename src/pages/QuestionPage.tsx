@@ -4,14 +4,14 @@ import styled, { css } from 'styled-components'
 import { DropdownMenu } from '../components/common/DropdownMenu'
 import { Select } from '../components/common/Select'
 import { Spacer } from '../components/common/Spacer'
-import { useAppState } from '../overmind'
+import { useActions, useAppState } from '../overmind'
 import { AnswerType, Question } from '../overmind/state'
 
 export function QuestionPage() {
-  const { questionId } = useParams<{ questionId: string }>()
+  const { questionId } = useParams<{ questionId?: string }>()
   const { questions } = useAppState()
-  const question = questions.find((x) => x.id === questionId)
-
+  const { createQuestion, updateQuestion } = useActions()
+  const question = questionId ? questions[questionId] : undefined
   const {
     register,
     handleSubmit,
@@ -22,7 +22,15 @@ export function QuestionPage() {
     shouldUnregister: true,
   })
 
-  const onSubmit: SubmitHandler<Question> = (data) => console.log(data)
+  const onSubmit: SubmitHandler<Question> = (data) => {
+    console.log(data)
+    if (!data.id) {
+      createQuestion(data)
+      return
+    }
+
+    updateQuestion(data)
+  }
 
   const answerType = watch('answer.type') as AnswerType
 
@@ -30,6 +38,7 @@ export function QuestionPage() {
     <Wrapper>
       <Columns>
         <Form onSubmit={handleSubmit(onSubmit)}>
+          <Input {...register('id')} id="id" type="hidden"></Input>
           <Spacer size={16} />
           <Title>{watch('question') || '-'}</Title>
           <Spacer size={16} />
@@ -43,7 +52,9 @@ export function QuestionPage() {
               type="text"
               error={Boolean(errors.question)}
             ></Input>
-            {errors.question && <FieldError>This field is required</FieldError>}
+            {errors.question && (
+              <FieldError>{errors.question.message}</FieldError>
+            )}
           </Field>
           <Spacer size={16} />
           <Field>
@@ -135,10 +146,14 @@ export function QuestionPage() {
             <Input
               {...register('scoring.value', {
                 valueAsNumber: true, // TODO more robust handling
+                required: 'You need to specify a score',
               })}
               id="score"
               type="number"
             ></Input>
+            {errors.scoring?.value && (
+              <FieldError>{errors.scoring.value.message}</FieldError>
+            )}
           </Field>
           <Spacer size={24} />
           <div style={{ display: 'flex', alignItems: 'center' }}>

@@ -1,5 +1,28 @@
+import { nanoid } from 'nanoid'
 import { Action } from 'overmind'
-import { Segment } from './state'
+import { Question, Segment } from './state'
+
+export const createQuestion: Action<Question> = (
+  { state, effects },
+  question
+) => {
+  question.id = nanoid()
+  state.questions[question.id] = question
+  effects.router.goTo('/library')
+}
+
+export const updateQuestion: Action<Question> = (
+  { state, effects },
+  question
+) => {
+  if (!state.questions[question.id]) {
+    console.log('error')
+    return
+  }
+
+  state.questions[question.id] = question
+  effects.router.goTo('/library')
+}
 
 export const getQuestionSegment: Action<string, Segment | undefined> = (
   { state },
@@ -17,7 +40,7 @@ export const addSegmentQuestion: Action<{
   const segment = state.segments.find((x) => x.id === segmentId)
   if (!segment) return
 
-  const question = state.questions.find((x) => x.id === questionId)
+  const question = state.questionsList.find((x) => x.id === questionId)
   if (!question) return
 
   // TODO why doesn't push work here?

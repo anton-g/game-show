@@ -65,7 +65,7 @@ ReactDOM.render(
             <Route path="/library" exact>
               <Library />
             </Route>
-            <Route path="/library/question/:questionId">
+            <Route path="/library/question/:questionId?">
               <QuestionPage />
             </Route>
           </Switch>

@@ -1,7 +1,7 @@
 import { Question, Segment } from './state'
 
-export const mockQuestions: Question[] = [
-  {
+export const mockQuestions: Record<Question['id'], Question> = {
+  '1': {
     id: '1',
     type: 'TEXT',
     question: 'Vad heter låten?',
@@ -10,7 +10,7 @@ export const mockQuestions: Question[] = [
       value: 'Campione 2000',
     },
   },
-  // {
+  // '2': {
   //   id: '2',
   //   type: 'SOUND',
   //   question: 'Hur stavas "encyklopedi"?',
@@ -19,7 +19,7 @@ export const mockQuestions: Question[] = [
   //     value: 'ENCYKLOPEDI',
   //   },
   // },
-  {
+  '3': {
     id: '3',
     type: 'IMAGE',
     question: 'Vem är det här?',
@@ -28,7 +28,7 @@ export const mockQuestions: Question[] = [
       value: 'Nils Karlsson Pyssling',
     },
   },
-  {
+  '4': {
     id: '4',
     type: 'VIDEO',
     question: 'Vart är vi på väg?',
@@ -42,7 +42,7 @@ export const mockQuestions: Question[] = [
       },
     },
   },
-]
+}
 
 export const mockSegment1: Segment = {
   id: '1',
@@ -51,7 +51,7 @@ export const mockSegment1: Segment = {
     type: 'VIDEO',
     src: '',
   },
-  questions: [...mockQuestions.slice(0, 3)],
+  questions: [mockQuestions['1'], mockQuestions['3'], mockQuestions['4']],
 }
 
 export const mockSegment2: Segment = {

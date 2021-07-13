@@ -4,14 +4,16 @@ import { useAppState } from '../overmind'
 import { Question } from '../overmind/state'
 
 export function Library() {
-  const { questions } = useAppState()
+  const { questionsList } = useAppState()
 
   return (
     <Wrapper>
       <Title>Library</Title>
+      <Link to="/library/question">New</Link>
       <Questions>
-        {questions.map((q) => (
+        {questionsList.map((q) => (
           <LibraryQuestion
+            key={q.id}
             to={`/library/question/${q.id}`}
             question={q}
           ></LibraryQuestion>
