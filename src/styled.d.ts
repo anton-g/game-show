@@ -10,6 +10,7 @@ import {
   yellow,
   mint,
   cyan,
+  blackA,
 } from '@radix-ui/colors'
 
 type CustomColors = {
@@ -32,6 +33,7 @@ declare module 'styled-components' {
       typeof cyan &
       typeof yellow &
       typeof mint &
+      typeof blackA &
       CustomColors
   }
 }
