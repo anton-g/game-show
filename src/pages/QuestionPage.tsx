@@ -307,6 +307,7 @@ const Button = styled.button<{ grouped: boolean }>`
   color: ${({ theme }) => theme.colors.gray1};
   cursor: pointer;
   transition: background-color 0.15s;
+  font-weight: bold;
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.gray10};

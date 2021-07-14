@@ -32,6 +32,7 @@ const Title = styled.h1``
 const Questions = styled.div`
   --gap: 18px;
   display: flex;
+  flex-wrap: wrap;
   margin: calc(-1 * var(--gap)) 0 0 calc(-1 * var(--gap));
   width: calc(100% + var(--gap));
 
@@ -62,6 +63,7 @@ const QuestionWrapper = styled(Link)<{ type: Question['type'] }>`
   border-radius: 4px;
   border-top: 4px solid ${({ type, theme }) => theme.colors.types[type]};
   transition: box-shadow 0.2s ease-in-out;
+  max-width: 300px;
 
   &:hover {
     box-shadow: 0px 4px 6px hsl(0 0% 0% / 0.2);
