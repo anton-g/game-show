@@ -49,6 +49,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
         c: 'Söderköping',
         d: 'Södertörn',
       },
+      correctOption: 'a',
     },
     scoring: {
       value: 1,
@@ -78,6 +79,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
         c: 'Majtin Ejiksson',
         d: 'ABBA',
       },
+      correctOption: 'a',
     },
     scoring: {
       value: 1,
@@ -105,6 +107,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
         a: 'Martin Eriksson',
         b: 'Erik Martinsson',
       },
+      correctOption: 'a',
     },
     scoring: {
       value: 1,
@@ -133,6 +136,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
         b: '46',
         c: '239',
       },
+      correctOption: 'a',
     },
     scoring: {
       value: 1,
@@ -184,6 +188,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
         a: 'E-Type',
         b: 'Martin Eriksson',
       },
+      correctOption: 'a',
     },
     scoring: {
       value: 1,
@@ -213,6 +218,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
         c: 'Helt underbar',
         d: 'Bästa sen skivat bröd',
       },
+      correctOption: 'a',
     },
     scoring: {
       value: 1,
@@ -240,6 +246,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
         a: 'Martin Eriksson',
         b: 'Leif Pagrotsky',
       },
+      correctOption: 'a',
     },
     scoring: {
       value: 1,

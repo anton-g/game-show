@@ -21,14 +21,16 @@ type SingleBuzzAnswer = {
   value: string
 }
 
+type OptionsAnswerOptions = {
+  a: string
+  b: string
+  c?: string
+  d?: string
+}
 type OptionsAnswer = {
   type: 'OPTIONS_SINGLE'
-  options: {
-    a: string
-    b: string
-    c?: string
-    d?: string
-  }
+  options: OptionsAnswerOptions
+  correctOption: keyof OptionsAnswerOptions
 }
 
 type Answer = BaseAnswer & (SingleBuzzAnswer | OptionsAnswer)
