@@ -1,4 +1,3 @@
-import * as RadioGroup from '@radix-ui/react-radio-group'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
@@ -290,31 +289,4 @@ const RadioButton = styled.input`
   height: 20px;
   width: 20px;
   margin: 0 14px 0 28px;
-`
-
-const StyledRadio = styled(RadioGroup.Item)`
-  appearance: none;
-  background-color: transparent;
-  border: none;
-  padding: 0;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1px gainsboro;
-  width: 15px;
-  height: 15px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  vertical-align: middle;
-
-  &:focus {
-    outline: none;
-    box-shadow: inset 0 0 0 1px dodgerblue, 0 0 0 1px dodgerblue;
-  }
-`
-
-const StyledIndicator = styled(RadioGroup.Indicator)`
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background-color: dodgerblue;
 `
