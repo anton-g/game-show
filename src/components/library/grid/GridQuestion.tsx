@@ -1,11 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { Question } from '../../overmind/state'
-import { AnswerTypeIcon } from './AnswerTypeIcon'
-import { QuestionTypeIcon } from './QuestionTypeIcon'
+import { Question } from '../../../overmind/state'
+import { AnswerTypeIcon } from '../AnswerTypeIcon'
+import { QuestionTypeIcon } from '../QuestionTypeIcon'
 
-export function LibraryQuestion({
+export function GridQuestion({
   question,
   to,
 }: {
@@ -14,16 +14,16 @@ export function LibraryQuestion({
 }) {
   return (
     <QuestionWrapper to={to} type={question.type}>
-      <LibraryQuestionContent>
+      <GridQuestionContent>
         <QuestionTitle>{question.question}</QuestionTitle>
-        <LibraryQuestionAnswer question={question}></LibraryQuestionAnswer>
-      </LibraryQuestionContent>
-      <LibraryQuestionFooter question={question}></LibraryQuestionFooter>
+        <GridQuestionAnswer question={question}></GridQuestionAnswer>
+      </GridQuestionContent>
+      <GridQuestionFooter question={question}></GridQuestionFooter>
     </QuestionWrapper>
   )
 }
 
-function LibraryQuestionAnswer({ question }: { question: Question }) {
+function GridQuestionAnswer({ question }: { question: Question }) {
   switch (question.answer.type) {
     case 'BUZZ_SINGLE':
       return <p>{question.answer.value}</p>
@@ -32,13 +32,13 @@ function LibraryQuestionAnswer({ question }: { question: Question }) {
   }
 }
 
-const LibraryQuestionContent = styled.div`
+const GridQuestionContent = styled.div`
   padding: 8px 16px 16px;
   display: flex;
   flex-direction: column;
 `
 
-function LibraryQuestionFooter({ question }: { question: Question }) {
+function GridQuestionFooter({ question }: { question: Question }) {
   return (
     <FooterWrapper>
       <QuestionTypeIcon type={question.type}></QuestionTypeIcon>
