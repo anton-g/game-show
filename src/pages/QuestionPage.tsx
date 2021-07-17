@@ -30,7 +30,6 @@ export function QuestionPage() {
   })
 
   const onSubmit: SubmitHandler<Question> = (data) => {
-    console.log(data)
     if (!data.id) {
       createQuestion(data)
       return
