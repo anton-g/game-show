@@ -21,6 +21,11 @@ type SingleBuzzAnswer = {
   value: string
 }
 
+type PhysicalAnswer = {
+  type: 'PHYSICAL'
+  value: string
+}
+
 type OptionsAnswerOptions = {
   a: string
   b: string
@@ -33,7 +38,7 @@ type OptionsAnswer = {
   correctOption: keyof OptionsAnswerOptions
 }
 
-type Answer = BaseAnswer & (SingleBuzzAnswer | OptionsAnswer)
+type Answer = BaseAnswer & (SingleBuzzAnswer | OptionsAnswer | PhysicalAnswer)
 
 type Scoring = {
   value: number

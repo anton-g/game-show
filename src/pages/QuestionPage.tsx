@@ -94,12 +94,25 @@ export function QuestionPage() {
             >
               <option value="BUZZ_SINGLE">Buzzer - Single</option>
               <option value="OPTIONS_SINGLE">Option - Single</option>
+              <option value="PHYSICAL">Physical</option>
               {/* <option value="OPTIONS_MULTI">Option - Multiple</option>
               <option value="PHYSICAL">Physical</option> */}
             </Select>
           </Field>
           <Spacer size={16} />
-          {answerType === 'BUZZ_SINGLE' && (
+          {answerType === 'BUZZ_SINGLE' && ( // TODO refactor to switch in component
+            <Field>
+              <Label htmlFor="answerValue">Answer</Label>
+              <Input
+                {...register('answer.value', {
+                  required: 'You need to specify an answer',
+                })}
+                id="answerValue"
+                type="text"
+              ></Input>
+            </Field>
+          )}
+          {answerType === 'PHYSICAL' && (
             <Field>
               <Label htmlFor="answerValue">Answer</Label>
               <Input

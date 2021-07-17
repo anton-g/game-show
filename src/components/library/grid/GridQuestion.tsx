@@ -26,6 +26,7 @@ export function GridQuestion({
 function GridQuestionAnswer({ question }: { question: Question }) {
   switch (question.answer.type) {
     case 'BUZZ_SINGLE':
+    case 'PHYSICAL':
       return <p>{question.answer.value}</p>
     case 'OPTIONS_SINGLE':
       return <p>{question.answer.options[question.answer.correctOption]}</p>
