@@ -8,45 +8,102 @@ import {
   VideoIcon,
 } from '@radix-ui/react-icons'
 import { Link } from 'react-router-dom'
+import styled from 'styled-components'
 import { useAppState } from '../../../overmind'
 import { Question } from '../../../overmind/state'
 
-export function LibraryTable() {
+type Props = {
+  filter: string
+}
+
+export function LibraryTable({ filter }: Props) {
   const { questionsList } = useAppState()
 
+  const filteredQuestions = questionsList.filter((x) =>
+    x.question.toLowerCase().includes(filter.toLowerCase())
+  )
+
   return (
-    <table>
-      <thead style={{ textAlign: 'left' }}>
-        <tr>
-          <th>Type</th>
-          <th>Question</th>
-          <th>Answer</th>
-          <th>Answer Type</th>
-          <th>Score</th>
-        </tr>
-      </thead>
+    <Table>
+      <TableHead>
+        <HeadRow>
+          <HeadCell>Type</HeadCell>
+          <HeadCell>Question</HeadCell>
+          <HeadCell>Answer</HeadCell>
+          <HeadCell>Answer Type</HeadCell>
+          <HeadCell>Score</HeadCell>
+        </HeadRow>
+      </TableHead>
       <tbody>
-        {questionsList.map((q) => (
-          <tr key={q.id} style={{ margin: 8, verticalAlign: 'top' }}>
-            <td>
+        {filteredQuestions.map((q) => (
+          <TableRow key={q.id}>
+            <IconCell type={q.type}>
               <TableQuestionType question={q}></TableQuestionType>
-            </td>
-            <td>
-              <Link to={`/library/question/${q.id}`}>{q.question}</Link>
-            </td>
-            <td>
+            </IconCell>
+            <TextCell>
+              <QuestionLink to={`/library/question/${q.id}`}>
+                {q.question}
+              </QuestionLink>
+            </TextCell>
+            <TextCell>
               <TableQuestionAnswer question={q}></TableQuestionAnswer>
-            </td>
-            <td>
+            </TextCell>
+            <TextCell>
               <TableAnswerType question={q}></TableAnswerType>
-            </td>
-            <td style={{ textAlign: 'right' }}>{q.scoring.value}</td>
-          </tr>
+            </TextCell>
+            <NumericCell style={{ textAlign: 'right' }}>
+              {q.scoring.value}
+            </NumericCell>
+          </TableRow>
         ))}
       </tbody>
-    </table>
+    </Table>
   )
 }
+
+const Table = styled.table`
+  table-layout: auto;
+  border-collapse: collapse;
+`
+
+const TableHead = styled.thead`
+  text-align: left;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray6};
+`
+
+const HeadRow = styled.tr``
+
+const TableRow = styled.tr`
+  vertical-align: top;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray6};
+
+  &:nth-child(odd) {
+    background-color: ${({ theme }) => theme.colors.gray3};
+  }
+`
+
+const TextCell = styled.td`
+  padding: 4px 8px;
+`
+
+const NumericCell = styled(TextCell)`
+  text-align: right;
+  padding-right: 12px;
+`
+
+const IconCell = styled.td<{ type: Question['type'] }>`
+  border-left: 4px solid ${({ theme, type }) => theme.colors.types[type]};
+  padding: 4px;
+  text-align: center;
+`
+
+const HeadCell = styled.th`
+  padding: 4px;
+`
+
+const QuestionLink = styled(Link)`
+  color: ${({ theme }) => theme.colors.gray12};
+`
 
 function TableQuestionAnswer({ question }: { question: Question }) {
   switch (question.answer.type) {
@@ -81,10 +138,22 @@ function TableQuestionType({ question }: { question: Question }) {
 function TableAnswerType({ question }: { question: Question }) {
   switch (question.answer.type) {
     case 'BUZZ_SINGLE':
-      return <DownloadIcon></DownloadIcon>
+      return (
+        <>
+          <DownloadIcon></DownloadIcon> Buzzer
+        </>
+      )
     case 'OPTIONS_SINGLE':
-      return <HamburgerMenuIcon></HamburgerMenuIcon>
+      return (
+        <>
+          <HamburgerMenuIcon></HamburgerMenuIcon> Single choice
+        </>
+      )
     case 'PHYSICAL':
-      return <HandIcon></HandIcon>
+      return (
+        <>
+          <HandIcon></HandIcon> Physical
+        </>
+      )
   }
 }
