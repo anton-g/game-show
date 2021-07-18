@@ -271,14 +271,14 @@ const Preview = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 48px;
-  background-color: #ffffff;
+  background-color: ${({ theme }) => theme.colors.gray1};
   background-size: 20px 20px;
   background-image: repeating-linear-gradient(
     45deg,
-    #eeeeee 0,
-    #eeeeee 2px,
-    #ffffff 0,
-    #ffffff 50%
+    ${({ theme }) => theme.colors.gray3} 0,
+    ${({ theme }) => theme.colors.gray3} 2px,
+    ${({ theme }) => theme.colors.gray1} 0,
+    ${({ theme }) => theme.colors.gray1} 50%
   );
 `
 
