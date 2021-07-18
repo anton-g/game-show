@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Field, Input, Label } from '../components/common/forms'
+import { NavBar } from '../components/common/NavBar'
 import { Spacer } from '../components/common/Spacer'
 import { LibraryTable } from '../components/library/table/LibraryTable'
 
@@ -9,23 +10,26 @@ export function Library() {
   const [filter, setFilter] = useState('')
 
   return (
-    <Wrapper>
-      <Title>Library</Title>
-      <Spacer size={16}></Spacer>
-      <Controls>
-        <Field>
-          <Label htmlFor="filter">Filter</Label>
-          <Input
-            id="filter"
-            onChange={(e) => setFilter(e.target.value)}
-          ></Input>
-        </Field>
-        <Spacer axis="horizontal" size={16}></Spacer>
-        <Button to="/library/question">New question</Button>
-      </Controls>
-      <Spacer size={16}></Spacer>
-      <LibraryTable filter={filter}></LibraryTable>
-    </Wrapper>
+    <>
+      <NavBar></NavBar>
+      <Wrapper>
+        <Title>Library</Title>
+        <Spacer size={16}></Spacer>
+        <Controls>
+          <Field>
+            <Label htmlFor="filter">Filter</Label>
+            <Input
+              id="filter"
+              onChange={(e) => setFilter(e.target.value)}
+            ></Input>
+          </Field>
+          <Spacer axis="horizontal" size={16}></Spacer>
+          <Button to="/library/question">New question</Button>
+        </Controls>
+        <Spacer size={16}></Spacer>
+        <LibraryTable filter={filter}></LibraryTable>
+      </Wrapper>
+    </>
   )
 }
 

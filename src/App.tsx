@@ -1,12 +1,12 @@
-import { Link } from 'react-router-dom'
+import styled from 'styled-components'
+import { NavBar } from './components/common/NavBar'
 
 function App() {
   return (
     <div className="App">
+      <NavBar></NavBar>
       <header style={{ display: 'flex', flexDirection: 'column' }}>
         <h1>Ditt å Datt</h1>
-        <Link to="/creator">Build show</Link>
-        <Link to="/library">Library</Link>
       </header>
     </div>
   )
