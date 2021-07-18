@@ -1,3 +1,4 @@
+import { DotsVerticalIcon } from '@radix-ui/react-icons'
 import styled from 'styled-components'
 import { useAppState } from '../../../overmind'
 import { DropdownMenu } from '../../common/DropdownMenu'
@@ -14,13 +15,7 @@ export function QuestionOptions({ activeSegmentId, onMove, onRemove }: Props) {
   return (
     <DropdownMenu>
       <Trigger>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-        </svg>
+        <DotsVerticalIcon></DotsVerticalIcon>
       </Trigger>
       <DropdownMenu.Content>
         <DropdownMenu>

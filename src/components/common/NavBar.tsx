@@ -6,9 +6,9 @@ export function NavBar() {
   return (
     <Wrapper>
       <Logo to="/">GSE</Logo>
-      <Spacer axis="horizontal" size={48}></Spacer>
+      <Spacer size={48} axis="horizontal"></Spacer>
       <NavLink to="/library">Library</NavLink>
-      <Spacer axis="horizontal" size={16}></Spacer>
+      <Spacer size={16} axis="horizontal"></Spacer>
       <NavLink to="/creator">Shows</NavLink>
     </Wrapper>
   )

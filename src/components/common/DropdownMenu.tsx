@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components'
 import * as RadixDropdownMenu from '@radix-ui/react-dropdown-menu'
 import { ReactNode } from 'react'
+import { CaretRightIcon } from '@radix-ui/react-icons'
 
 type Props = {
   children: ReactNode
@@ -49,26 +50,4 @@ DropdownMenu.TriggerItem = styled(RadixDropdownMenu.TriggerItem)`
   ${itemStyle}
 `
 
-const Svg = styled.svg`
-  height: 16px;
-  width: 16px;
-  margin-left: 8px;
-`
-function Icon() {
-  return (
-    <Svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-5 w-5"
-      viewBox="0 0 20 20"
-      fill="currentColor"
-    >
-      <path
-        fillRule="evenodd"
-        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-        clipRule="evenodd"
-      />
-    </Svg>
-  )
-}
-
-DropdownMenu.TriggerItemIcon = Icon
+DropdownMenu.TriggerItemIcon = CaretRightIcon
