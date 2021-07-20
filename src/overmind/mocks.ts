@@ -268,7 +268,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
 
 export const mockSegment1: Segment = {
   id: '1',
-  name: 'FIRST SEGMENT',
+  name: 'First segment',
   intro: {
     type: 'VIDEO',
     src: '',
@@ -278,7 +278,7 @@ export const mockSegment1: Segment = {
 
 export const mockSegment2: Segment = {
   id: '2',
-  name: 'SECOND SEGMENT',
+  name: 'Second',
   intro: {
     type: 'VIDEO',
     src: '',
@@ -288,7 +288,7 @@ export const mockSegment2: Segment = {
 
 export const mockSegment3: Segment = {
   id: '3',
-  name: 'THIRD SEGMENT',
+  name: '3rd',
   intro: {
     type: 'VIDEO',
     src: '',

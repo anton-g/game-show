@@ -1,4 +1,5 @@
-import { DotsVerticalIcon } from '@radix-ui/react-icons'
+import { DotsHorizontalIcon } from '@radix-ui/react-icons'
+import { useState } from 'react'
 import styled from 'styled-components'
 import { useAppState } from '../../../overmind'
 import { DropdownMenu } from '../../common/DropdownMenu'
@@ -7,15 +8,25 @@ type Props = {
   activeSegmentId: string | null
   onMove: (segmentId: string) => void
   onRemove: () => void
+  className?: string
 }
 
-export function QuestionOptions({ activeSegmentId, onMove, onRemove }: Props) {
+export function QuestionOptions({
+  activeSegmentId,
+  onMove,
+  onRemove,
+  className,
+}: Props) {
+  const [open, setOpen] = useState(false)
   const { segments } = useAppState()
 
   return (
-    <DropdownMenu>
-      <Trigger>
-        <DotsVerticalIcon></DotsVerticalIcon>
+    <DropdownMenu onOpenChange={setOpen}>
+      <Trigger
+        className={className}
+        style={{ visibility: open ? 'visible' : undefined }}
+      >
+        <DotsHorizontalIcon></DotsHorizontalIcon>
       </Trigger>
       <DropdownMenu.Content>
         <DropdownMenu>
@@ -53,4 +64,9 @@ const Trigger = styled(DropdownMenu.Trigger)`
   height: 20px;
   padding: 0;
   cursor: pointer;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.gray4};
+  }
 `

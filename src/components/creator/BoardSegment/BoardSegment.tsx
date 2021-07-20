@@ -1,8 +1,10 @@
-import { useCallback, useState } from 'react'
+import { PlusCircledIcon } from '@radix-ui/react-icons'
+import React, { useCallback, useState } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import styled from 'styled-components'
 import { useActions, useAppState } from '../../../overmind'
 import type { Segment } from '../../../overmind/state'
+import { Spacer } from '../../common/Spacer'
 import { BoardQuestion } from '../BoardQuestion/BoardQuestion'
 import { useQuestionDrop } from '../useQuestionDrop'
 import { SegmentOptions } from './SegmentOptions'
@@ -161,7 +163,6 @@ const Wrapper = styled.div<{ dragging: boolean }>`
   flex-direction: column;
   min-width: 300px;
   max-width: 300px;
-  background-color: hsl(0, 0%, 90%);
   padding: 0 8px 8px;
   opacity: ${(p) => (p.dragging ? 0 : 1)};
 `
@@ -191,13 +192,14 @@ const Title = styled.h2`
 
 const QuestionsList = styled.div`
   height: 100%;
-  border: 2px dashed hsl(0, 0%, 80%);
   border-radius: 8px;
   min-width: 150px;
   overflow-y: scroll;
+  background-color: ${({ theme }) => theme.colors.gray3};
+  padding: 16px;
 
   > *:not(:last-child) {
-    margin-bottom: 8px;
+    margin-bottom: 16px;
   }
 `
 
@@ -247,18 +249,31 @@ const Input = styled.input`
 `
 
 function BoardNewQuestion() {
-  return <NewWrapper>Add question</NewWrapper>
+  return (
+    <NewWrapper>
+      <PlusCircledIcon></PlusCircledIcon>
+      <Spacer axis="horizontal" size={4}></Spacer>
+      Add question
+    </NewWrapper>
+  )
 }
 
 const NewWrapper = styled.button`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   background-color: transparent;
   width: 100%;
-  padding: 16px 0;
-  color: ${({ theme }) => theme.colors.gray12};
+  padding: 8px 0;
+  color: ${({ theme }) => theme.colors.gray11};
   border-radius: 8px;
+  border: 1px solid ${({ theme }) => theme.colors.gray5};
+  background-color: ${({ theme }) => theme.colors.gray4};
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.gray2};
+    background-color: ${({ theme }) => theme.colors.gray5};
+    color: ${({ theme }) => theme.colors.gray12};
   }
 `

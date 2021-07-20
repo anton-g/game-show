@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { useActions } from '../../../overmind'
 import type { Question } from '../../../overmind/state'
+import { getQuestionAnswer } from '../../../utils/question-utils'
 import { useQuestionDrag } from '../useQuestionDrag'
 import { useQuestionDrop } from '../useQuestionDrop'
 import { QuestionOptions } from './QuestionOptions'
@@ -68,11 +69,11 @@ export function BoardQuestion({
   )
 
   return (
-    <Wrapper ref={(node) => drag(drop(node))}>
+    <Wrapper ref={(node) => drag(drop(node))} hideShadow={isDragging}>
       {isDragging && <TargetDropArea />}
       <Header>
-        <span>{question.question}</span>
-        <QuestionOptions
+        <QuestionTitle>{question.question}</QuestionTitle>
+        <StyledOptions
           activeSegmentId={segmentId}
           onRemove={() =>
             removeSegmentQuestion({
@@ -87,11 +88,9 @@ export function BoardQuestion({
               questionId: question.id,
             })
           }
-        ></QuestionOptions>
+        ></StyledOptions>
       </Header>
-      <p>
-        {segmentId} - {index}
-      </p>
+      <p>{getQuestionAnswer(question)}</p>
     </Wrapper>
   )
 }
@@ -101,13 +100,34 @@ const Header = styled.div`
   justify-content: space-between;
 `
 
-const Wrapper = styled.div`
+const StyledOptions = styled(QuestionOptions)``
+
+const Wrapper = styled.div<{ hideShadow: boolean }>`
   position: relative;
   padding: 8px;
-  cursor: move;
+  cursor: pointer;
   background-color: ${({ theme }) => theme.colors.gray1};
   border-radius: 8px;
   overflow: hidden;
+  ${({ hideShadow }) =>
+    !hideShadow &&
+    css`
+      box-shadow: 0 1px 3px hsl(0 0% 0% / 0.2);
+    `}
+
+  ${StyledOptions} {
+    visibility: hidden;
+  }
+
+  &:hover {
+    ${StyledOptions} {
+      visibility: visible;
+    }
+  }
+`
+
+const QuestionTitle = styled.span`
+  font-weight: bold;
 `
 
 const TargetDropArea = styled.div`
@@ -116,5 +136,13 @@ const TargetDropArea = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: hsl(0 0% 75%);
+  background-color: ${({ theme }) => theme.colors.gray1};
+  background-size: 10px 10px;
+  background-image: repeating-linear-gradient(
+    45deg,
+    ${({ theme }) => theme.colors.gray3} 0,
+    ${({ theme }) => theme.colors.gray3} 2px,
+    ${({ theme }) => theme.colors.gray1} 0,
+    ${({ theme }) => theme.colors.gray1} 50%
+  );
 `

@@ -1,4 +1,3 @@
-import styled from 'styled-components'
 import { NavBar } from './components/common/NavBar'
 
 function App() {
