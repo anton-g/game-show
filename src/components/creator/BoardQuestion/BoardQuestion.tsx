@@ -71,29 +71,38 @@ export function BoardQuestion({
   return (
     <Wrapper ref={(node) => drag(drop(node))} hideShadow={isDragging}>
       {isDragging && <TargetDropArea />}
-      <Header>
-        <QuestionTitle>{question.question}</QuestionTitle>
-        <StyledOptions
-          activeSegmentId={segmentId}
-          onRemove={() =>
-            removeSegmentQuestion({
-              segmentId: segmentId!,
-              questionId: question.id,
-            })
-          }
-          onMove={(targetSegmentId) =>
-            moveSegmentQuestion({
-              fromSegmentId: segmentId,
-              toSegmentId: targetSegmentId,
-              questionId: question.id,
-            })
-          }
-        ></StyledOptions>
-      </Header>
-      <p>{getQuestionAnswer(question)}</p>
+      <Content type={question.type}>
+        <Header>
+          <QuestionTitle>{question.question}</QuestionTitle>
+          <StyledOptions
+            activeSegmentId={segmentId}
+            onRemove={() =>
+              removeSegmentQuestion({
+                segmentId: segmentId!,
+                questionId: question.id,
+              })
+            }
+            onMove={(targetSegmentId) =>
+              moveSegmentQuestion({
+                fromSegmentId: segmentId,
+                toSegmentId: targetSegmentId,
+                questionId: question.id,
+              })
+            }
+          ></StyledOptions>
+        </Header>
+        <p>{getQuestionAnswer(question)}</p>
+      </Content>
     </Wrapper>
   )
 }
+
+const Content = styled.div<{ type: Question['type'] }>`
+  border-radius: 8px;
+  border-top: 4px solid ${({ theme, type }) => theme.colors.types[type]};
+  background-color: ${({ theme }) => theme.colors.gray1};
+  padding: 8px;
+`
 
 const Header = styled.div`
   display: flex;
@@ -104,10 +113,8 @@ const StyledOptions = styled(QuestionOptions)``
 
 const Wrapper = styled.div<{ hideShadow: boolean }>`
   position: relative;
-  padding: 8px;
-  cursor: pointer;
-  background-color: ${({ theme }) => theme.colors.gray1};
   border-radius: 8px;
+  cursor: pointer;
   overflow: hidden;
   ${({ hideShadow }) =>
     !hideShadow &&

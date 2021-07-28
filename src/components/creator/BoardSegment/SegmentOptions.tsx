@@ -1,15 +1,22 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
+import { useState } from 'react'
 import styled from 'styled-components'
 import { DropdownMenu } from '../../common/DropdownMenu'
 
 type Props = {
   onRemove: () => void
+  className?: string
 }
 
-export function SegmentOptions({ onRemove }: Props) {
+export function SegmentOptions({ onRemove, className }: Props) {
+  const [open, setOpen] = useState(false)
+
   return (
-    <DropdownMenu>
-      <Trigger>
+    <DropdownMenu onOpenChange={setOpen}>
+      <Trigger
+        className={className}
+        style={{ visibility: open ? 'visible' : undefined }}
+      >
         <DotsHorizontalIcon></DotsHorizontalIcon>
       </Trigger>
       <DropdownMenu.Content>
@@ -30,4 +37,9 @@ const Trigger = styled(DropdownMenu.Trigger)`
   height: 20px;
   padding: 0;
   cursor: pointer;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.gray4};
+  }
 `

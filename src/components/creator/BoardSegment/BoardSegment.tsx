@@ -129,7 +129,7 @@ export const BoardSegment = ({ segment, index, move }: Props) => {
           ) : (
             <Title onClick={() => setEditing(true)}>{segment.name}</Title>
           )}
-          <SegmentOptions
+          <StyledOptions
             onRemove={() => {
               if (
                 segment.questions.length === 0 ||
@@ -138,7 +138,7 @@ export const BoardSegment = ({ segment, index, move }: Props) => {
                 removeSegment(segment.id)
               }
             }}
-          ></SegmentOptions>
+          ></StyledOptions>
         </TitleRow>
       </Header>
       <QuestionsList ref={questionDropArea}>
@@ -158,6 +158,8 @@ export const BoardSegment = ({ segment, index, move }: Props) => {
   )
 }
 
+const StyledOptions = styled(SegmentOptions)``
+
 const Wrapper = styled.div<{ dragging: boolean }>`
   display: flex;
   flex-direction: column;
@@ -165,6 +167,16 @@ const Wrapper = styled.div<{ dragging: boolean }>`
   max-width: 300px;
   padding: 0 8px 8px;
   opacity: ${(p) => (p.dragging ? 0 : 1)};
+
+  ${StyledOptions} {
+    visibility: hidden;
+  }
+
+  &:hover {
+    ${StyledOptions} {
+      visibility: visible;
+    }
+  }
 `
 
 const Header = styled.div`
@@ -267,13 +279,14 @@ const NewWrapper = styled.button`
   background-color: transparent;
   width: 100%;
   padding: 8px 0;
-  color: ${({ theme }) => theme.colors.gray11};
+  color: ${({ theme }) => theme.colors.primary10};
   border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.colors.gray5};
-  background-color: ${({ theme }) => theme.colors.gray4};
+  border: 1px solid ${({ theme }) => theme.colors.primary6};
+  background-color: ${({ theme }) => theme.colors.primary2};
+  font-weight: bold;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.gray5};
-    color: ${({ theme }) => theme.colors.gray12};
+    background-color: ${({ theme }) => theme.colors.primary3};
+    color: ${({ theme }) => theme.colors.primary11};
   }
 `

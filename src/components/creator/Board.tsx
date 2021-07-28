@@ -11,7 +11,7 @@ export const Board = () => {
       <Segments>
         <SegmentPlaceholder></SegmentPlaceholder>
       </Segments>
-      <Drawer></Drawer>
+      {/* <Drawer></Drawer> */}
     </DndProvider>
   )
 }
@@ -20,17 +20,17 @@ function SegmentPlaceholder() {
   const { addSegment } = useActions()
 
   return (
-    <div
-      style={{
-        minWidth: 300,
-        paddingRight: 60,
-        paddingTop: 20,
-      }}
-    >
+    <Wrapper>
       <MockSegmentButton onClick={addSegment}>New segment</MockSegmentButton>
-    </div>
+    </Wrapper>
   )
 }
+
+const Wrapper = styled.div`
+  min-width: 300px;
+  padding-right: 60px;
+  padding-top: 20px;
+`
 
 const MockSegmentButton = styled.button`
   background: none;

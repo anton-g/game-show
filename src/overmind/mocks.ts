@@ -273,7 +273,7 @@ export const mockSegment1: Segment = {
     type: 'VIDEO',
     src: '',
   },
-  questions: Object.values(mockQuestions).slice(0, 3),
+  questions: Object.values(mockQuestions).slice(0, 5),
 }
 
 export const mockSegment2: Segment = {
@@ -283,7 +283,7 @@ export const mockSegment2: Segment = {
     type: 'VIDEO',
     src: '',
   },
-  questions: [],
+  questions: Object.values(mockQuestions).slice(5, 12),
 }
 
 export const mockSegment3: Segment = {
@@ -293,5 +293,5 @@ export const mockSegment3: Segment = {
     type: 'VIDEO',
     src: '',
   },
-  questions: [],
+  questions: Object.values(mockQuestions).slice(12, 15),
 }
