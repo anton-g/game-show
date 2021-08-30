@@ -234,7 +234,9 @@ export function QuestionPage() {
           <Spacer size={48} />
         </Form>
         <Preview>
-          <h2>Preview</h2>
+          <h2 style={{ textAlign: 'center' }}>
+            {question?.question || 'Preview'}
+          </h2>
         </Preview>
       </Columns>
     </Wrapper>

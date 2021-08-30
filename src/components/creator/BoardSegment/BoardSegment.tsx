@@ -279,14 +279,15 @@ const NewWrapper = styled.button`
   background-color: transparent;
   width: 100%;
   padding: 8px 0;
-  color: ${({ theme }) => theme.colors.primary10};
+  color: ${({ theme }) => theme.colors.gray11};
   border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.colors.primary6};
-  background-color: ${({ theme }) => theme.colors.primary2};
+  background-color: ${({ theme }) => theme.colors.gray2};
+  border: 1px solid ${({ theme }) => theme.colors.gray7};
   font-weight: bold;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.primary3};
+    background-color: ${({ theme }) => theme.colors.primary2};
+    border-color: ${({ theme }) => theme.colors.primary7};
     color: ${({ theme }) => theme.colors.primary11};
   }
 `

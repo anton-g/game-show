@@ -72,7 +72,7 @@ const ButtonWrapper = styled.div`
 `
 
 const Button = styled.button<{ grouped: boolean }>`
-  background-color: ${({ theme }) => theme.colors.gray9};
+  background-color: ${({ theme }) => theme.colors.primary9};
   border: 0;
   border-radius: 4px;
   padding: 6px 12px;
@@ -82,7 +82,7 @@ const Button = styled.button<{ grouped: boolean }>`
   font-weight: bold;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.gray10};
+    background-color: ${({ theme }) => theme.colors.primary10};
   }
 
   ${({ grouped }) =>
@@ -94,9 +94,9 @@ const Button = styled.button<{ grouped: boolean }>`
 `
 
 const DropdownButton = styled(DropdownMenu.Trigger)`
-  background-color: ${({ theme }) => theme.colors.gray9};
+  background-color: ${({ theme }) => theme.colors.primary9};
   border: 0;
-  border-left: 1px solid ${({ theme }) => theme.colors.gray10};
+  border-left: 1px solid ${({ theme }) => theme.colors.primary10};
   border-radius: 4px;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
@@ -108,6 +108,6 @@ const DropdownButton = styled(DropdownMenu.Trigger)`
   align-items: center;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.gray10};
+    background-color: ${({ theme }) => theme.colors.primary10};
   }
 `
