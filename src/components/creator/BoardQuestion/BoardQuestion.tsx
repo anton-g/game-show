@@ -75,6 +75,7 @@ export function BoardQuestion({
         <Header>
           <QuestionTitle>{question.question}</QuestionTitle>
           <StyledOptions
+            questionId={question.id}
             activeSegmentId={segmentId}
             onRemove={() =>
               removeSegmentQuestion({

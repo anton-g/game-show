@@ -1,4 +1,4 @@
-import { Question, Segment } from './state'
+import { Question, Segment, Show } from './state'
 
 export const mockQuestions: Record<Question['id'], Question> = {
   '1': {
@@ -294,4 +294,16 @@ export const mockSegment3: Segment = {
     src: '',
   },
   questions: Object.values(mockQuestions).slice(12, 15),
+}
+
+export const mockShow1: Show = {
+  id: '1',
+  name: 'Ditt å Datt',
+  segments: [mockSegment1, mockSegment2, mockSegment3],
+}
+
+export const mockShow2: Show = {
+  id: '2',
+  name: 'Alla mot Alla',
+  segments: [],
 }

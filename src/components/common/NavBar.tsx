@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { useAppState } from '../../overmind'
 import { Spacer } from './Spacer'
 
 export function NavBar() {
+  const { selectedShow: currentShow } = useAppState()
+
   return (
     <Wrapper>
       <Logo to="/">GSE</Logo>
@@ -10,6 +13,7 @@ export function NavBar() {
       <NavLink to="/library">Library</NavLink>
       <Spacer size={16} axis="horizontal"></Spacer>
       <NavLink to="/creator">Shows</NavLink>
+      <ShowName>{currentShow ? `Editing ${currentShow.name}` : ''}</ShowName>
     </Wrapper>
   )
 }
@@ -32,4 +36,8 @@ const Logo = styled(Link)`
 const NavLink = styled(Link)`
   text-decoration: none;
   color: ${({ theme }) => theme.colors.gray12};
+`
+
+const ShowName = styled.div`
+  margin-left: auto;
 `

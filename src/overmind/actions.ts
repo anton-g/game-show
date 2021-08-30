@@ -2,6 +2,12 @@ import { nanoid } from 'nanoid'
 import { Action } from 'overmind'
 import { Question, Segment } from './state'
 
+export const selectShow: Action<Question['id']> = ({ state }, showId) => {
+  state.selectedShowId = showId
+}
+
+// library
+
 export const createQuestion: Action<Question> = (
   { state, effects },
   question
@@ -32,11 +38,13 @@ export const deleteQuestion: Action<string> = (
   effects.router.goTo('/library')
 }
 
+// creator
+
 export const getQuestionSegment: Action<string, Segment | undefined> = (
   { state },
   questionId
 ) => {
-  return state.segments.find(
+  return state.selectedShow?.segments.find(
     (s) => s.questions.findIndex((q) => q.id === questionId) !== -1
   )
 }
@@ -45,7 +53,7 @@ export const addSegmentQuestion: Action<{
   segmentId: string
   questionId: string
 }> = ({ state }, { segmentId, questionId }) => {
-  const segment = state.segments.find((x) => x.id === segmentId)
+  const segment = state.selectedShow?.segments.find((x) => x.id === segmentId)
   if (!segment) return
 
   const question = state.questionsList.find((x) => x.id === questionId)
@@ -59,7 +67,7 @@ export const removeSegmentQuestion: Action<{
   segmentId: string
   questionId: string
 }> = ({ state }, { segmentId, questionId }) => {
-  const segment = state.segments.find((x) => x.id === segmentId)
+  const segment = state.selectedShow?.segments.find((x) => x.id === segmentId)
   if (!segment) return
 
   const questionIdx = segment.questions.findIndex((q) => q.id === questionId)
@@ -80,7 +88,7 @@ export const reorderSegmentQuestion: Action<{
     `Reordering question ${questionId} in seg ${segmentId} to idx ${targetPosition}`
   )
 
-  const segment = state.segments.find((x) => x.id === segmentId)
+  const segment = state.selectedShow?.segments.find((x) => x.id === segmentId)
   if (!segment) return
 
   const sourcePosition = segment.questions.findIndex((x) => x.id === questionId)
@@ -104,8 +112,12 @@ export const moveSegmentQuestion: Action<{
     `Moving question ${questionId} from segment ${fromSegmentId} to segment ${toSegmentId} ${toIndex}`
   )
 
-  const fromSegment = state.segments.find((x) => x.id === fromSegmentId)
-  const toSegment = state.segments.find((x) => x.id === toSegmentId)
+  const fromSegment = state.selectedShow?.segments.find(
+    (x) => x.id === fromSegmentId
+  )
+  const toSegment = state.selectedShow?.segments.find(
+    (x) => x.id === toSegmentId
+  )
 
   if (!toSegment) return
 
@@ -145,9 +157,11 @@ export const addSegment: Action = ({ state }) => {
     return i + 'th'
   }
 
-  state.segments.push({
+  state.selectedShow?.segments.push({
     id: nanoid(),
-    name: `${ordinal_suffix_of(state.segments.length + 1)} segment`,
+    name: `${ordinal_suffix_of(
+      state.selectedShow.segments.length + 1
+    )} segment`,
     questions: [],
     intro: {
       src: '',
@@ -160,23 +174,35 @@ export const reorderSegment: Action<{
   segmentId: string
   targetPosition: number
 }> = ({ state }, { segmentId, targetPosition }) => {
-  const sourcePosition = state.segments.findIndex((x) => x.id === segmentId)
-  const result = Array.from(state.segments)
+  if (!state.selectedShow) return
+
+  const sourcePosition = state.selectedShow.segments.findIndex(
+    (x) => x.id === segmentId
+  )
+  const result = Array.from(state.selectedShow.segments)
   const [removed] = result.splice(sourcePosition, 1)
   result.splice(targetPosition, 0, removed)
 
-  state.segments = result
+  state.selectedShow.segments = result
 }
 
 export const removeSegment: Action<string> = ({ state }, segmentId) => {
-  state.segments = state.segments.filter((x) => x.id !== segmentId)
+  if (!state.selectedShow) return
+
+  state.selectedShow.segments = state.selectedShow.segments.filter(
+    (x) => x.id !== segmentId
+  )
 }
 
 export const updateSegment: Action<{ id: string } & Partial<Segment>> = (
   { state },
   update
 ) => {
-  const segmentIdx = state.segments.findIndex((x) => x.id === update.id)
-  const segment = state.segments[segmentIdx]
-  state.segments[segmentIdx] = { ...segment, ...update }
+  if (!state.selectedShow) return
+
+  const segmentIdx = state.selectedShow.segments.findIndex(
+    (x) => x.id === update.id
+  )
+  const segment = state.selectedShow.segments[segmentIdx]
+  state.selectedShow.segments[segmentIdx] = { ...segment, ...update }
 }

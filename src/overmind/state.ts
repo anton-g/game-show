@@ -1,10 +1,5 @@
 import { derived } from 'overmind'
-import {
-  mockQuestions,
-  mockSegment1,
-  mockSegment2,
-  mockSegment3,
-} from './mocks'
+import { mockQuestions, mockShow1, mockShow2 } from './mocks'
 
 export type AnswerType =
   | 'BUZZ_SINGLE'
@@ -88,19 +83,39 @@ export type Segment = {
   questions: Question[]
 }
 
-type State = {
+export type Show = {
+  id: string
+  name: string
   segments: Segment[]
+}
+
+type State = {
+  shows: Record<Show['id'], Show>
+  selectedShowId: string | null
+  selectedShow: Show | null
+  unusedQuestions: Question[]
+
   questions: Record<Question['id'], Question>
   questionsList: Question[]
-  unusedQuestions: Question[]
 }
 
 export const state: State = {
-  segments: [mockSegment1, mockSegment2, mockSegment3],
+  shows: {
+    [mockShow1.id]: mockShow1,
+    [mockShow2.id]: mockShow2,
+  },
+  selectedShowId: mockShow1.id,
+  selectedShow: derived(
+    (state: State) => state.shows[state.selectedShowId ?? '']
+  ),
   questions: mockQuestions,
   questionsList: derived((state: State) => Object.values(state.questions)),
   unusedQuestions: derived((state: State) => {
-    const usedQuestions = state.segments.flatMap((x) => x.questions)
+    const usedQuestions = state.selectedShow?.segments.flatMap(
+      (x) => x.questions
+    )
+    if (!usedQuestions) return []
+
     return state.questionsList.filter(
       (x) => usedQuestions.findIndex((q) => q.id === x.id) === -1
     )

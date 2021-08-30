@@ -1,10 +1,12 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { useState } from 'react'
+import { useHistory } from 'react-router'
 import styled from 'styled-components'
 import { useAppState } from '../../../overmind'
 import { DropdownMenu } from '../../common/DropdownMenu'
 
 type Props = {
+  questionId: string
   activeSegmentId: string | null
   onMove: (segmentId: string) => void
   onRemove: () => void
@@ -12,13 +14,15 @@ type Props = {
 }
 
 export function QuestionOptions({
+  questionId,
   activeSegmentId,
   onMove,
   onRemove,
   className,
 }: Props) {
   const [open, setOpen] = useState(false)
-  const { segments } = useAppState()
+  const { selectedShow: currentShow } = useAppState()
+  const history = useHistory()
 
   return (
     <DropdownMenu onOpenChange={setOpen}>
@@ -30,13 +34,17 @@ export function QuestionOptions({
       </Trigger>
       <DropdownMenu.Content>
         <DropdownMenu>
-          <DropdownMenu.Item disabled>Edit</DropdownMenu.Item>
+          <DropdownMenu.Item
+            onSelect={() => history.push(`/library/question/${questionId}`)}
+          >
+            Edit
+          </DropdownMenu.Item>
           <DropdownMenu.TriggerItem>
             {!activeSegmentId ? 'Add to segment' : 'Move to segment'}
             <DropdownMenu.TriggerItemIcon></DropdownMenu.TriggerItemIcon>
           </DropdownMenu.TriggerItem>
           <DropdownMenu.Content sideOffset={10}>
-            {segments
+            {currentShow?.segments
               .filter((x) => x.id !== activeSegmentId)
               .map((s) => (
                 <DropdownMenu.Item key={s.id} onSelect={() => onMove(s.id)}>

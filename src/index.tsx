@@ -28,6 +28,7 @@ const GlobalStyle = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     background-color: ${({ theme }) => theme.colors.gray1};
     color: ${({ theme }) => theme.colors.gray12};
+    accent-color: ${({ theme }) => theme.colors.primary9};
   }
 
   code {

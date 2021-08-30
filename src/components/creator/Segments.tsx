@@ -5,7 +5,7 @@ import { useAppState, useActions } from '../../overmind'
 import { BoardSegment } from './BoardSegment/BoardSegment'
 
 export function Segments({ children }: { children: ReactNode }) {
-  const { segments } = useAppState()
+  const { selectedShow: currentShow } = useAppState()
   const [, drop] = useDrop(() => ({
     accept: 'SEGMENT',
   }))
@@ -25,7 +25,7 @@ export function Segments({ children }: { children: ReactNode }) {
 
   return (
     <Wrapper ref={drop}>
-      {segments.map((segment, index) => (
+      {currentShow?.segments.map((segment, index) => (
         <BoardSegment
           key={segment.id}
           index={index}
