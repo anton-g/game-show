@@ -1,29 +1,52 @@
+import styled from 'styled-components'
 import { useActions, useAppState } from '../overmind'
 import { Show } from '../overmind/state'
 
 export function ShowSelector() {
-  const { shows } = useAppState()
+  const { shows, selectedShow } = useAppState()
   const { selectShow } = useActions()
 
   return (
-    <div>
+    <>
       {Object.values(shows).map((show) => (
-        <ShowCard show={show} onClick={() => selectShow(show.id)}></ShowCard>
+        <ShowCard
+          key={show.id}
+          selected={show === selectedShow}
+          show={show}
+          onClick={() => selectShow(show.id)}
+        ></ShowCard>
       ))}
-    </div>
+    </>
   )
 }
 
 type Props = {
   show: Show
   onClick: () => void
+  selected: boolean
 }
 
-function ShowCard({ show, onClick }: Props) {
+function ShowCard({ show, onClick, selected }: Props) {
   return (
-    <button onClick={onClick}>
+    <Card selected={selected} onClick={onClick}>
       <h1>{show.name}</h1>
       <p>{show.segments.length} segments</p>
-    </button>
+    </Card>
   )
 }
+
+const Card = styled.button<{ selected: boolean }>`
+  cursor: pointer;
+  background: none;
+  border-radius: 8px;
+  border: none;
+  border-width: 2px;
+  border-style: solid;
+  border-color: ${({ theme, selected }) =>
+    selected ? theme.colors.primary5 : 'transparent'};
+  box-shadow: 0 1px 3px hsl(0 0% 0% / 0.2);
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.gray4};
+  }
+`

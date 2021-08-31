@@ -1,13 +1,22 @@
+import styled from 'styled-components'
 import { NavBar } from './components/common/NavBar'
 import { ShowSelector } from './components/ShowSelector'
 
-function App() {
+export function App() {
   return (
-    <div className="App">
+    <div>
       <NavBar></NavBar>
-      <ShowSelector></ShowSelector>
+      <Wrapper>
+        <ShowSelector></ShowSelector>
+      </Wrapper>
     </div>
   )
 }
 
-export default App
+const Wrapper = styled.div`
+  padding: 32px 24px;
+
+  > *:not(:first-child) {
+    margin-left: 24px;
+  }
+`
