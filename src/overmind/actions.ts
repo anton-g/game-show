@@ -213,6 +213,8 @@ export const moveSegmentQuestion = (
 }
 
 export const addSegment = ({ state }: Context) => {
+  if (!state.selectedShow) return
+
   const ordinal_suffix_of = (i: number) => {
     const j = i % 10,
       k = i % 100
@@ -228,17 +230,19 @@ export const addSegment = ({ state }: Context) => {
     return i + 'th'
   }
 
-  // state.selectedShow?.segments.push({
-  //   id: nanoid(),
-  //   name: `${ordinal_suffix_of(
-  //     state.selectedShow.segments.length + 1
-  //   )} segment`,
-  //   questions: [],
-  //   intro: {
-  //     src: '',
-  //     type: 'COMPONENT',
-  //   },
-  // })
+  const newSegment: Segment = {
+    id: nanoid(),
+    name: `${ordinal_suffix_of(
+      Object.values(state.selectedShow.segments).length + 1
+    )} segment`,
+    questions: {},
+    intro: {
+      src: '',
+      type: 'COMPONENT',
+    },
+  }
+
+  state.selectedShow.segments[newSegment.id] = newSegment
 }
 
 export const reorderSegment = (
