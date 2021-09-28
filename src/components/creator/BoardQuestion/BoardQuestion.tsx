@@ -1,37 +1,24 @@
 import { useDrag, useDrop } from 'react-dnd'
 import styled, { css } from 'styled-components'
 import { useActions } from '../../../overmind'
-import type {
-  Question,
-  Segment,
-  SegmentQuestion,
-} from '../../../overmind/state'
+import type { Question } from '../../../overmind/state'
 import { getQuestionAnswer } from '../../../utils/question-utils'
 import { DraggedQuestion } from '../Board'
 import { QuestionOptions } from './QuestionOptions'
 
 type Props = {
   questionId: Question['id']
-  findQuestion: (id: string) => {
-    question: SegmentQuestion
-    segmentId: Segment['id']
-  } // TODO get from actions?
-  moveQuestion: (
-    id: string,
-    toPosition: number,
-    toSegmentId: Segment['id']
-  ) => void // TODO get from actions?
 }
 
-export function BoardQuestion({
-  questionId,
-  findQuestion,
-  moveQuestion,
-}: Props) {
+export function BoardQuestion({ questionId }: Props) {
   const {
-    question: { question },
-    segmentId,
-  } = findQuestion(questionId)
+    findQuestion,
+    moveOrReorderQuestion,
+    removeSegmentQuestion,
+    moveSegmentQuestion,
+  } = useActions()
+  const { question: segmentQuestion, segmentId } = findQuestion(questionId)
+  const question = segmentQuestion.question
 
   const [{ isDragging }, drag] = useDrag(
     () => ({
@@ -47,14 +34,18 @@ export function BoardQuestion({
         if (!didDrop) {
           // "Cancel", dropped outside, move back to original position
           // TEST Does this work?
-          moveQuestion(droppedId, originalIndex, segmentId)
+          moveOrReorderQuestion({
+            id: droppedId,
+            toPosition: originalIndex,
+            toSegmentId: segmentId,
+          })
         }
       },
       isDragging: (monitor) => {
         return question.id === monitor.getItem().id
       },
     }),
-    [question, segmentId, moveQuestion]
+    [question, segmentId, moveOrReorderQuestion]
   )
 
   const [, drop] = useDrop(
@@ -64,11 +55,15 @@ export function BoardQuestion({
       hover({ id: draggedId }: DraggedQuestion) {
         if (draggedId !== question.id) {
           const { question: hoveredQuestion } = findQuestion(question.id)
-          moveQuestion(draggedId, hoveredQuestion.position, segmentId)
+          moveOrReorderQuestion({
+            id: draggedId,
+            toPosition: hoveredQuestion.position,
+            toSegmentId: segmentId,
+          })
         }
       },
     }),
-    [findQuestion, moveQuestion, segmentId, question.id]
+    [findQuestion, moveOrReorderQuestion, segmentId, question.id]
   )
 
   return (
@@ -81,17 +76,19 @@ export function BoardQuestion({
             questionId={question.id}
             activeSegmentId={segmentId}
             onRemove={() => {
-              // return removeSegmentQuestion({
-              //   segmentId: segmentId!,
-              //   questionId: question.id,
-              // })
+              removeSegmentQuestion({
+                segmentId: segmentId,
+                questionId: question.id,
+              })
             }}
             onMove={(targetSegmentId) => {
-              // return moveSegmentQuestion({
-              //   fromSegmentId: segmentId,
-              //   toSegmentId: targetSegmentId,
-              //   questionId: question.id,
-              // })
+              moveSegmentQuestion({
+                question: segmentQuestion,
+                fromSegmentId: segmentId,
+                toSegmentId: targetSegmentId,
+                fromPosition: segmentQuestion.position,
+                toPosition: 0, // TODO should probably move to last position
+              })
             }}
           ></StyledOptions>
         </Header>

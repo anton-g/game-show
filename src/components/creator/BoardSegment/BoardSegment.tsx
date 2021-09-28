@@ -11,25 +11,26 @@ import { SegmentOptions } from './SegmentOptions'
 
 type Props = {
   segment: Segment
-  findQuestion: (id: string) => {
-    question: SegmentQuestion
-    segmentId: Segment['id']
-  } // TODO get from actions?
-  moveQuestion: (
-    id: string,
-    toPosition: number,
-    toSegmentId: Segment['id']
-  ) => void // TODO get from actions?
+  // findQuestion: (id: string) => {
+  //   question: SegmentQuestion
+  //   segmentId: Segment['id']
+  // } // TODO get from actions?
+  // moveQuestion: (
+  //   id: string,
+  //   toPosition: number,
+  //   toSegmentId: Segment['id']
+  // ) => void // TODO get from actions?
 }
 
 export const BoardSegment = ({
   segment,
-  findQuestion,
-  moveQuestion,
-}: Props) => {
+}: // findQuestion,
+// moveQuestion,
+Props) => {
   useAppState()
   const [editing, setEditing] = useState(false)
-  const { removeSegment, updateSegment } = useActions()
+  const { removeSegment, updateSegment, findQuestion, moveOrReorderQuestion } =
+    useActions()
 
   const [, drop] = useDrop(
     () => ({
@@ -38,14 +39,14 @@ export const BoardSegment = ({
         const { segmentId } = findQuestion(draggedId)
         if (segmentId === segment.id) return
 
-        moveQuestion(
-          draggedId,
-          Object.values(segment.questions).length + 1,
-          segment.id
-        )
+        moveOrReorderQuestion({
+          id: draggedId,
+          toPosition: Object.values(segment.questions).length + 1,
+          toSegmentId: segment.id,
+        })
       },
     }),
-    [segment.questions, segment.id, moveQuestion]
+    [segment.questions, segment.id, moveOrReorderQuestion]
   )
 
   const questionsList = Object.values(segment.questions).sort(
@@ -89,8 +90,8 @@ export const BoardSegment = ({
           <BoardQuestion
             key={question.question.id}
             questionId={question.question.id}
-            moveQuestion={moveQuestion}
-            findQuestion={findQuestion}
+            // moveQuestion={moveQuestion}
+            // findQuestion={findQuestion}
             // reorder={reorderQuestion}
             // index={index}
           />

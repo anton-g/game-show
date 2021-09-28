@@ -11,12 +11,7 @@ export function Segments({ children }: { children: ReactNode }) {
     accept: 'SEGMENT',
   }))
 
-  const {
-    reorderSegment,
-    moveSegmentQuestion,
-    reorderSegmentQuestion,
-    findQuestion,
-  } = useActions()
+  const { moveOrReorderQuestion, findQuestion } = useActions()
 
   // const move = useCallback(
   //   (id: string, toIndex: number) => {
@@ -29,34 +24,6 @@ export function Segments({ children }: { children: ReactNode }) {
   //   [reorderSegment]
   // )
 
-  const moveQuestion = useCallback(
-    // TODO move to action
-    (id: string, toPosition: number, toSegmentId: Segment['id']) => {
-      const { question, segmentId } = findQuestion(id)
-
-      if (segmentId === toSegmentId) {
-        // console.log(
-        //   `Reordering ${card.id} from ${card.position} to ${toPosition}`
-        // );
-        reorderSegmentQuestion({
-          question,
-          segmentId,
-          fromPosition: question.position,
-          toPosition,
-        })
-      } else {
-        moveSegmentQuestion({
-          question,
-          fromSegmentId: segmentId,
-          toSegmentId: toSegmentId,
-          fromPosition: question.position,
-          toPosition,
-        })
-      }
-    },
-    [findQuestion, reorderSegmentQuestion, moveSegmentQuestion]
-  )
-
   if (!currentShow) return null // TODO render something?
 
   const segmentsList = Object.values(currentShow.segments)
@@ -67,8 +34,8 @@ export function Segments({ children }: { children: ReactNode }) {
         <BoardSegment
           key={segment.id}
           segment={segment}
-          moveQuestion={moveQuestion}
-          findQuestion={findQuestion}
+          // moveQuestion={moveOrReorderQuestion}
+          // findQuestion={findQuestion}
         ></BoardSegment>
       ))}
       {children}

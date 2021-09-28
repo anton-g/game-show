@@ -89,13 +89,41 @@ export const removeSegmentQuestion = (
     questionId: string
   }
 ) => {
-  // const segment = state.selectedShow?.segments.find((x) => x.id === segmentId)
-  // if (!segment) return
-  // const questionIdx = segment.questions.findIndex((q) => q.id === questionId)
-  // if (questionIdx === -1) return
-  // const result = Array.from(segment.questions)
-  // result.splice(questionIdx, 1)
-  // segment.questions = result
+  if (!state.selectedShow) throw Error('No show :(')
+
+  delete state.selectedShow.segments[segmentId].questions[questionId]
+}
+
+export const moveOrReorderQuestion = (
+  { actions }: Context,
+  {
+    id,
+    toPosition,
+    toSegmentId,
+  }: {
+    id: string
+    toPosition: number
+    toSegmentId: Segment['id']
+  }
+) => {
+  const { question, segmentId } = actions.findQuestion(id)
+
+  if (segmentId === toSegmentId) {
+    actions.reorderSegmentQuestion({
+      question,
+      segmentId,
+      fromPosition: question.position,
+      toPosition,
+    })
+  } else {
+    actions.moveSegmentQuestion({
+      question,
+      fromSegmentId: segmentId,
+      toSegmentId: toSegmentId,
+      fromPosition: question.position,
+      toPosition,
+    })
+  }
 }
 
 export const reorderSegmentQuestion = (
