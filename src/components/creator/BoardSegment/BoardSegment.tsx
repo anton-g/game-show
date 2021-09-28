@@ -5,23 +5,76 @@ import styled from 'styled-components'
 import { useActions, useAppState } from '../../../overmind'
 import type { Segment } from '../../../overmind/state'
 import { Spacer } from '../../common/Spacer'
-import { DraggedQuestion } from '../Board'
+import { DraggedQuestion, DraggedSegment, DRAG_TYPES } from '../Board'
 import { BoardQuestion } from '../BoardQuestion/BoardQuestion'
 import { SegmentOptions } from './SegmentOptions'
 
 type Props = {
-  segment: Segment
+  segmentId: Segment['id']
 }
 
-export const BoardSegment = ({ segment }: Props) => {
-  useAppState()
+export const BoardSegment = ({ segmentId }: Props) => {
   const [editing, setEditing] = useState(false)
-  const { removeSegment, updateSegment, findQuestion, moveOrReorderQuestion } =
-    useActions()
+  const {
+    removeSegment,
+    updateSegment,
+    findQuestion,
+    moveOrReorderQuestion,
+    reorderSegment,
+  } = useActions()
+  const segment = useAppState(
+    (state) => state.selectedShow!.segments[segmentId]
+  )
+
+  const [{ isDragging }, segmentDragSource, preview] = useDrag(
+    () => ({
+      type: DRAG_TYPES.SEGMENT,
+      item: {
+        id: segmentId,
+        originalPosition: segment.position,
+      } as DraggedSegment,
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
+      end: (item, monitor) => {
+        const { id: droppedId, originalPosition } = item
+        const didDrop = monitor.didDrop()
+
+        if (!didDrop) {
+          // "Cancel", dropped outside, move back to original position
+          // TEST Does this work?
+          reorderSegment({
+            segmentId: droppedId,
+            toPosition: originalPosition,
+          })
+        }
+      },
+      isDragging: (monitor) => {
+        return segmentId === monitor.getItem().id
+      },
+    }),
+    [segmentId, reorderSegment]
+  )
+
+  const [, segmentDropTarget] = useDrop(
+    () => ({
+      accept: DRAG_TYPES.SEGMENT,
+      canDrop: () => false,
+      hover({ id: draggedId }: DraggedSegment) {
+        if (draggedId !== segment.id) {
+          reorderSegment({
+            segmentId: draggedId,
+            toPosition: segment.position,
+          })
+        }
+      },
+    }),
+    [segment.position, reorderSegment]
+  )
 
   const [, questionDropArea] = useDrop(
     () => ({
-      accept: 'QUESTION',
+      accept: DRAG_TYPES.QUESTION,
       hover({ id: draggedId }: DraggedQuestion) {
         const { segmentId } = findQuestion(draggedId)
         if (segmentId === segment.id) return
@@ -41,11 +94,10 @@ export const BoardSegment = ({ segment }: Props) => {
   )
   return (
     <Wrapper
-      dragging={false}
-      // ref={(node) => preview(segmentDropTarget(node))}
+      dragging={isDragging}
+      ref={(node) => preview(segmentDropTarget(node))}
     >
-      {/* <Header ref={segmentDragSource}> */}
-      <Header>
+      <Header ref={segmentDragSource}>
         <TitleRow>
           {editing ? (
             <TitleInput

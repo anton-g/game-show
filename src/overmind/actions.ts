@@ -169,7 +169,6 @@ export const reorderSegmentQuestion = (
   question.position = toPosition
 
   state.shows[state.selectedShow.id].segments[segmentId] = { ...segment }
-  // todo check if can use derived?
 }
 
 export const moveSegmentQuestion = (
@@ -230,11 +229,14 @@ export const addSegment = ({ state }: Context) => {
     return i + 'th'
   }
 
+  const existingSegmentsCount = Object.values(
+    state.selectedShow.segments
+  ).length
+
   const newSegment: Segment = {
     id: nanoid(),
-    name: `${ordinal_suffix_of(
-      Object.values(state.selectedShow.segments).length + 1
-    )} segment`,
+    name: `${ordinal_suffix_of(existingSegmentsCount + 1)} segment`,
+    position: existingSegmentsCount + 1,
     questions: {},
     intro: {
       src: '',
@@ -249,22 +251,37 @@ export const reorderSegment = (
   { state }: Context,
   {
     segmentId,
-    targetPosition,
+    toPosition,
   }: {
-    segmentId: string
-    targetPosition: number
+    segmentId: Segment['id']
+    toPosition: number
   }
 ) => {
-  if (!state.selectedShow) return
+  if (!state.selectedShow) throw Error('no show :(')
 
-  // const sourcePosition = state.selectedShow.segments.findIndex(
-  //   (x) => x.id === segmentId
-  // )
-  // const result = Array.from(state.selectedShow.segments)
-  // const [removed] = result.splice(sourcePosition, 1)
-  // result.splice(targetPosition, 0, removed)
+  const segment = state.selectedShow.segments[segmentId]
+  const fromPosition = segment.position
 
-  // state.selectedShow.segments = result
+  if (fromPosition === toPosition) return
+  if (toPosition === undefined) return
+
+  if (fromPosition < toPosition) {
+    // Moving down list (2 -> 5), update all questions above
+    Object.values(state.selectedShow.segments).forEach((x) => {
+      if (x.position > fromPosition && x.position <= toPosition) {
+        x.position--
+      }
+    })
+  } else {
+    // Moving up list (5 -> 2), update all questions below
+    Object.values(state.selectedShow.segments).forEach((x) => {
+      if (x.position < fromPosition && x.position >= toPosition) {
+        x.position++
+      }
+    })
+  }
+
+  segment.position = toPosition
 }
 
 export const removeSegment = ({ state }: Context, segmentId: string) => {

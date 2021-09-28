@@ -6,7 +6,17 @@ import { Segments } from './Segments'
 
 export type DraggedQuestion = {
   id: string
-  originalIndex: number
+  originalPosition: number
+}
+
+export type DraggedSegment = {
+  id: string
+  originalPosition: number
+}
+
+export enum DRAG_TYPES {
+  QUESTION = 'QUESTION',
+  SEGMENT = 'SEGMENT',
 }
 
 export const Board = () => {

@@ -86,6 +86,7 @@ export type Segment = {
   name: string
   intro: Intro
   questions: Record<Question['id'], SegmentQuestion>
+  position: number
 }
 
 export type Show = {

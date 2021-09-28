@@ -12,12 +12,14 @@ export function Segments({ children }: { children: ReactNode }) {
 
   if (!currentShow) return null // TODO render something?
 
-  const segmentsList = Object.values(currentShow.segments)
+  const segmentsList = Object.values(currentShow.segments).sort(
+    (a, b) => a.position - b.position
+  )
 
   return (
     <Wrapper ref={drop}>
       {segmentsList.map((segment) => (
-        <BoardSegment key={segment.id} segment={segment}></BoardSegment>
+        <BoardSegment key={segment.id} segmentId={segment.id}></BoardSegment>
       ))}
       {children}
     </Wrapper>

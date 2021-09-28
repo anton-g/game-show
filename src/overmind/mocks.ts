@@ -142,133 +142,134 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 1,
     },
   },
-  // '11': {
-  //   id: '11',
-  //   type: 'TEXT',
-  //   question: 'Vad heter artisten?',
-  //   answer: {
-  //     type: 'BUZZ_SINGLE',
-  //     value: 'E-Type',
-  //   },
-  //   scoring: {
-  //     value: 1,
-  //   },
-  // },
-  // '12': {
-  //   id: '12',
-  //   type: 'TEXT',
-  //   question: 'Vad heter E-Type?',
-  //   answer: {
-  //     type: 'BUZZ_SINGLE',
-  //     value: 'Martin Eriksson',
-  //   },
-  //   scoring: {
-  //     value: 1,
-  //   },
-  // },
-  // '13': {
-  //   id: '13',
-  //   type: 'IMAGE',
-  //   question: 'Hur många lingon finns det i världen?',
-  //   answer: {
-  //     type: 'BUZZ_SINGLE',
-  //     value: '42',
-  //   },
-  //   scoring: {
-  //     value: 1,
-  //   },
-  // },
-  // '14': {
-  //   id: '14',
-  //   type: 'VIDEO',
-  //   question: 'Vem kom först, E-Type eller Martin Eriksson?',
-  //   answer: {
-  //     type: 'OPTIONS_SINGLE',
-  //     options: {
-  //       a: 'E-Type',
-  //       b: 'Martin Eriksson',
-  //     },
-  //     correctOption: 'a',
-  //   },
-  //   scoring: {
-  //     value: 1,
-  //   },
-  // },
-  // '15': {
-  //   id: '15',
-  //   type: 'TEXT',
-  //   question: 'Vad heter du?',
-  //   answer: {
-  //     type: 'BUZZ_SINGLE',
-  //     value: 'Martin Eriksson',
-  //   },
-  //   scoring: {
-  //     value: 1,
-  //   },
-  // },
-  // '16': {
-  //   id: '16',
-  //   type: 'TEXT',
-  //   question: 'Vad tycker du om E-Type?',
-  //   answer: {
-  //     type: 'OPTIONS_SINGLE',
-  //     options: {
-  //       a: 'Fantastisk',
-  //       b: 'Magisk',
-  //       c: 'Helt underbar',
-  //       d: 'Bästa sen skivat bröd',
-  //     },
-  //     correctOption: 'a',
-  //   },
-  //   scoring: {
-  //     value: 1,
-  //   },
-  // },
-  // '17': {
-  //   id: '17',
-  //   type: 'IMAGE',
-  //   question: 'Vem är inte det här?',
-  //   answer: {
-  //     type: 'BUZZ_SINGLE',
-  //     value: 'E-Type',
-  //   },
-  //   scoring: {
-  //     value: 1,
-  //   },
-  // },
-  // '18': {
-  //   id: '18',
-  //   type: 'IMAGE',
-  //   question: 'Vems hår är det här?',
-  //   answer: {
-  //     type: 'OPTIONS_SINGLE',
-  //     options: {
-  //       a: 'Martin Eriksson',
-  //       b: 'Leif Pagrotsky',
-  //     },
-  //     correctOption: 'a',
-  //   },
-  //   scoring: {
-  //     value: 1,
-  //   },
-  // },
-  // '19': {
-  //   id: '19',
-  //   type: 'VIDEO',
-  //   question: 'Vad hände innan?',
-  //   answer: {
-  //     type: 'BUZZ_SINGLE',
-  //     value: 'De såg Martin Eriksson.',
-  //   },
-  //   scoring: {
-  //     value: 5,
-  //   },
-  // },
+  '11': {
+    id: '11',
+    type: 'TEXT',
+    question: 'Vad heter artisten?',
+    answer: {
+      type: 'BUZZ_SINGLE',
+      value: 'E-Type',
+    },
+    scoring: {
+      value: 1,
+    },
+  },
+  '12': {
+    id: '12',
+    type: 'TEXT',
+    question: 'Vad heter E-Type?',
+    answer: {
+      type: 'BUZZ_SINGLE',
+      value: 'Martin Eriksson',
+    },
+    scoring: {
+      value: 1,
+    },
+  },
+  '13': {
+    id: '13',
+    type: 'IMAGE',
+    question: 'Hur många lingon finns det i världen?',
+    answer: {
+      type: 'BUZZ_SINGLE',
+      value: '42',
+    },
+    scoring: {
+      value: 1,
+    },
+  },
+  '14': {
+    id: '14',
+    type: 'VIDEO',
+    question: 'Vem kom först, E-Type eller Martin Eriksson?',
+    answer: {
+      type: 'OPTIONS_SINGLE',
+      options: {
+        a: 'E-Type',
+        b: 'Martin Eriksson',
+      },
+      correctOption: 'a',
+    },
+    scoring: {
+      value: 1,
+    },
+  },
+  '15': {
+    id: '15',
+    type: 'TEXT',
+    question: 'Vad heter du?',
+    answer: {
+      type: 'BUZZ_SINGLE',
+      value: 'Martin Eriksson',
+    },
+    scoring: {
+      value: 1,
+    },
+  },
+  '16': {
+    id: '16',
+    type: 'TEXT',
+    question: 'Vad tycker du om E-Type?',
+    answer: {
+      type: 'OPTIONS_SINGLE',
+      options: {
+        a: 'Fantastisk',
+        b: 'Magisk',
+        c: 'Helt underbar',
+        d: 'Bästa sen skivat bröd',
+      },
+      correctOption: 'a',
+    },
+    scoring: {
+      value: 1,
+    },
+  },
+  '17': {
+    id: '17',
+    type: 'IMAGE',
+    question: 'Vem är inte det här?',
+    answer: {
+      type: 'BUZZ_SINGLE',
+      value: 'E-Type',
+    },
+    scoring: {
+      value: 1,
+    },
+  },
+  '18': {
+    id: '18',
+    type: 'IMAGE',
+    question: 'Vems hår är det här?',
+    answer: {
+      type: 'OPTIONS_SINGLE',
+      options: {
+        a: 'Martin Eriksson',
+        b: 'Leif Pagrotsky',
+      },
+      correctOption: 'a',
+    },
+    scoring: {
+      value: 1,
+    },
+  },
+  '19': {
+    id: '19',
+    type: 'VIDEO',
+    question: 'Vad hände innan?',
+    answer: {
+      type: 'BUZZ_SINGLE',
+      value: 'De såg Martin Eriksson.',
+    },
+    scoring: {
+      value: 5,
+    },
+  },
 }
 
 export const mockSegment1: Segment = {
   id: '1',
   name: 'First segment',
+  position: 1,
   intro: {
     type: 'VIDEO',
     src: '',
@@ -288,12 +289,13 @@ export const mockSegment1: Segment = {
 export const mockSegment2: Segment = {
   id: '2',
   name: 'Second',
+  position: 2,
   intro: {
     type: 'VIDEO',
     src: '',
   },
   questions: Object.values(mockQuestions)
-    .slice(5, 10)
+    .slice(6, 10)
     .reduce((prev, curr, index) => {
       prev[curr.id] = {
         position: index + 1,
@@ -304,22 +306,33 @@ export const mockSegment2: Segment = {
     }, {} as Record<string, SegmentQuestion>),
 }
 
-// export const mockSegment3: Segment = {
-//   id: '3',
-//   name: '3rd',
-//   intro: {
-//     type: 'VIDEO',
-//     src: '',
-//   },
-//   questions: Object.values(mockQuestions).slice(12, 15),
-// }
+export const mockSegment3: Segment = {
+  id: '3',
+  name: '3rd',
+  position: 3,
+  intro: {
+    type: 'VIDEO',
+    src: '',
+  },
+  questions: Object.values(mockQuestions)
+    .slice(11, 20)
+    .reduce((prev, curr, index) => {
+      prev[curr.id] = {
+        position: index + 1,
+        question: curr,
+      }
+
+      return prev
+    }, {} as Record<string, SegmentQuestion>),
+}
 
 export const mockShow1: Show = {
   id: '1',
   name: 'Ditt å Datt',
   segments: {
-    [mockSegment1.id]: mockSegment1,
     [mockSegment2.id]: mockSegment2,
+    [mockSegment1.id]: mockSegment1,
+    [mockSegment3.id]: mockSegment3,
   },
 }
 

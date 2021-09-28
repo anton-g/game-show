@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 import { useActions } from '../../../overmind'
 import type { Question } from '../../../overmind/state'
 import { getQuestionAnswer } from '../../../utils/question-utils'
-import { DraggedQuestion } from '../Board'
+import { DraggedQuestion, DRAG_TYPES } from '../Board'
 import { QuestionOptions } from './QuestionOptions'
 
 type Props = {
@@ -22,13 +22,16 @@ export function BoardQuestion({ questionId }: Props) {
 
   const [{ isDragging }, drag] = useDrag(
     () => ({
-      type: 'QUESTION',
-      item: { id: question.id } as DraggedQuestion,
+      type: DRAG_TYPES.QUESTION,
+      item: {
+        id: question.id,
+        originalPosition: segmentQuestion.position,
+      } as DraggedQuestion,
       collect: (monitor) => ({
         isDragging: monitor.isDragging(),
       }),
       end: (item, monitor) => {
-        const { id: droppedId, originalIndex } = item
+        const { id: droppedId, originalPosition } = item
         const didDrop = monitor.didDrop()
 
         if (!didDrop) {
@@ -36,7 +39,7 @@ export function BoardQuestion({ questionId }: Props) {
           // TEST Does this work?
           moveOrReorderQuestion({
             id: droppedId,
-            toPosition: originalIndex,
+            toPosition: originalPosition,
             toSegmentId: segmentId,
           })
         }
@@ -50,7 +53,7 @@ export function BoardQuestion({ questionId }: Props) {
 
   const [, drop] = useDrop(
     () => ({
-      accept: 'QUESTION',
+      accept: DRAG_TYPES.QUESTION,
       canDrop: () => false,
       hover({ id: draggedId }: DraggedQuestion) {
         if (draggedId !== question.id) {
