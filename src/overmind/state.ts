@@ -76,17 +76,22 @@ type Intro = {
   src: string
 }
 
+export type SegmentQuestion = {
+  question: Question
+  position: number
+}
+
 export type Segment = {
   id: string
   name: string
   intro: Intro
-  questions: Question[]
+  questions: Record<Question['id'], SegmentQuestion>
 }
 
 export type Show = {
   id: string
   name: string
-  segments: Segment[]
+  segments: Record<Segment['id'], Segment>
 }
 
 type State = {
@@ -110,14 +115,15 @@ export const state: State = {
   ),
   questions: mockQuestions,
   questionsList: derived((state: State) => Object.values(state.questions)),
-  unusedQuestions: derived((state: State) => {
-    const usedQuestions = state.selectedShow?.segments.flatMap(
-      (x) => x.questions
-    )
-    if (!usedQuestions) return []
+  // unusedQuestions: derived((state: State) => {
+  //   const usedQuestions = state.selectedShow?.segments.flatMap(
+  //     (x) => x.questions
+  //   )
+  //   if (!usedQuestions) return []
 
-    return state.questionsList.filter(
-      (x) => usedQuestions.findIndex((q) => q.id === x.id) === -1
-    )
-  }),
+  //   return state.questionsList.filter(
+  //     (x) => usedQuestions.findIndex((q) => q.id === x.id) === -1
+  //   )
+  // }),
+  unusedQuestions: [],
 }

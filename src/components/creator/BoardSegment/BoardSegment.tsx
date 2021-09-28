@@ -3,120 +3,62 @@ import React, { useCallback, useState } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import styled from 'styled-components'
 import { useActions, useAppState } from '../../../overmind'
-import type { Segment } from '../../../overmind/state'
+import type { Segment, SegmentQuestion } from '../../../overmind/state'
 import { Spacer } from '../../common/Spacer'
+import { DraggedQuestion } from '../Board'
 import { BoardQuestion } from '../BoardQuestion/BoardQuestion'
-import { useQuestionDrop } from '../useQuestionDrop'
 import { SegmentOptions } from './SegmentOptions'
 
 type Props = {
   segment: Segment
-  index: number
-  move: (segmentId: string, toIndex: number) => void
+  findQuestion: (id: string) => {
+    question: SegmentQuestion
+    segmentId: Segment['id']
+  } // TODO get from actions?
+  moveQuestion: (
+    id: string,
+    toPosition: number,
+    toSegmentId: Segment['id']
+  ) => void // TODO get from actions?
 }
 
-export const BoardSegment = ({ segment, index, move }: Props) => {
-  const [editing, setEditing] = useState(false)
+export const BoardSegment = ({
+  segment,
+  findQuestion,
+  moveQuestion,
+}: Props) => {
   useAppState()
-  const {
-    reorderSegmentQuestion,
-    moveSegmentQuestion,
-    getQuestionSegment,
-    addSegmentQuestion,
-    removeSegment,
-    updateSegment,
-  } = useActions()
-  const questionDropArea = useQuestionDrop(
-    segment.id,
-    {
-      hover({ id: draggedId }) {
-        const draggedFromSegment = getQuestionSegment(draggedId)
-        if (!draggedFromSegment) {
-          addSegmentQuestion({
-            segmentId: segment.id,
-            questionId: draggedId,
-          })
-          return
-        }
+  const [editing, setEditing] = useState(false)
+  const { removeSegment, updateSegment } = useActions()
 
-        if (segment.id === draggedFromSegment.id) {
-          return
-        }
+  const [, drop] = useDrop(
+    () => ({
+      accept: 'QUESTION',
+      hover({ id: draggedId }: DraggedQuestion) {
+        const { segmentId } = findQuestion(draggedId)
+        if (segmentId === segment.id) return
 
         moveQuestion(
           draggedId,
-          draggedFromSegment.id,
-          segment.id,
-          segment.questions.length
+          Object.values(segment.questions).length + 1,
+          segment.id
         )
       },
-    },
-    [segment]
-  )
-
-  const [{ isDragging }, segmentDragSource, preview] = useDrag(
-    () => ({
-      type: 'SEGMENT',
-      item: { id: segment.id, index },
-      collect: (monitor) => ({
-        isDragging: monitor.isDragging(),
-      }),
-      end: (item, monitor) => {
-        const { id, index } = item
-        const didDrop = monitor.didDrop()
-        if (!didDrop) {
-          move(id, index)
-        }
-      },
     }),
-    [segment, index, move]
+    [segment.questions, segment.id, moveQuestion]
   )
 
-  const [, segmentDropTarget] = useDrop(
-    () => ({
-      accept: 'SEGMENT',
-      canDrop: () => false,
-      hover({ id: draggedId }: any) {
-        if (draggedId !== segment.id) {
-          move(draggedId, index)
-        }
-      },
-    }),
-    [segment, move]
+  const questionsList = Object.values(segment.questions).sort(
+    (a, b) => a.position - b.position
   )
-
-  const moveQuestion = useCallback(
-    (
-      id: string,
-      fromSegmentId: string | null,
-      toSegmentId: string | null,
-      toIndex?: number
-    ) =>
-      moveSegmentQuestion({
-        fromSegmentId: fromSegmentId,
-        toSegmentId: toSegmentId,
-        questionId: id,
-        toIndex,
-      }),
-    [moveSegmentQuestion]
-  )
-
-  const reorderQuestion = useCallback(
-    (id: string, segmentId: string, toIndex: number) =>
-      reorderSegmentQuestion({
-        segmentId: segmentId,
-        questionId: id,
-        targetPosition: toIndex,
-      }),
-    [reorderSegmentQuestion]
-  )
-
   return (
     <Wrapper
-      dragging={isDragging}
-      ref={(node) => preview(segmentDropTarget(node))}
+      dragging={false}
+      ref={drop}
+      // ref={(node) => preview(segmentDropTarget(node))}
     >
-      <Header ref={segmentDragSource}>
+      {/* <Header ref={segmentDragSource}> */}
+      <Header>
         <TitleRow>
           {editing ? (
             <TitleInput
@@ -132,7 +74,7 @@ export const BoardSegment = ({ segment, index, move }: Props) => {
           <StyledOptions
             onRemove={() => {
               if (
-                segment.questions.length === 0 ||
+                Object.values(segment.questions).length === 0 ||
                 window.confirm('Are you sure?')
               ) {
                 removeSegment(segment.id)
@@ -141,15 +83,16 @@ export const BoardSegment = ({ segment, index, move }: Props) => {
           ></StyledOptions>
         </TitleRow>
       </Header>
-      <QuestionsList ref={questionDropArea}>
-        {segment.questions.map((question, index) => (
+      {/* <QuestionsList ref={questionDropArea}> */}
+      <QuestionsList>
+        {questionsList.map((question) => (
           <BoardQuestion
-            key={question.id}
-            question={question}
-            segmentId={segment.id}
-            move={moveQuestion}
-            reorder={reorderQuestion}
-            index={index}
+            key={question.question.id}
+            questionId={question.question.id}
+            moveQuestion={moveQuestion}
+            findQuestion={findQuestion}
+            // reorder={reorderQuestion}
+            // index={index}
           />
         ))}
         <BoardNewQuestion></BoardNewQuestion>

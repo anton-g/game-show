@@ -1,25 +1,25 @@
 import { nanoid } from 'nanoid'
-import { Action } from 'overmind'
-import { Question, Segment } from './state'
+import { Context } from '.'
+import { Question, Segment, SegmentQuestion } from './state'
 
-export const selectShow: Action<Question['id']> = ({ state }, showId) => {
+export const selectShow = ({ state }: Context, showId: Question['id']) => {
   state.selectedShowId = showId
 }
 
 // library
 
-export const createQuestion: Action<Question> = (
-  { state, effects },
-  question
+export const createQuestion = (
+  { state, effects }: Context,
+  question: Question
 ) => {
   question.id = nanoid()
   state.questions[question.id] = question
   effects.router.goTo('/library')
 }
 
-export const updateQuestion: Action<Question> = (
-  { state, effects },
-  question
+export const updateQuestion = (
+  { state, effects }: Context,
+  question: Question
 ) => {
   if (!state.questions[question.id]) {
     console.log('error')
@@ -30,9 +30,9 @@ export const updateQuestion: Action<Question> = (
   effects.router.goTo('/library')
 }
 
-export const deleteQuestion: Action<string> = (
-  { state, effects },
-  questionId
+export const deleteQuestion = (
+  { state, effects }: Context,
+  questionId: string
 ) => {
   delete state.questions[questionId]
   effects.router.goTo('/library')
@@ -40,108 +40,151 @@ export const deleteQuestion: Action<string> = (
 
 // creator
 
-export const getQuestionSegment: Action<string, Segment | undefined> = (
-  { state },
-  questionId
-) => {
-  return state.selectedShow?.segments.find(
-    (s) => s.questions.findIndex((q) => q.id === questionId) !== -1
-  )
-}
+export const findQuestion = (
+  { state }: Context,
+  id: string
+): { question: SegmentQuestion; segmentId: string } => {
+  if (!state.selectedShow) throw Error('no show :(')
 
-export const addSegmentQuestion: Action<{
-  segmentId: string
-  questionId: string
-}> = ({ state }, { segmentId, questionId }) => {
-  const segment = state.selectedShow?.segments.find((x) => x.id === segmentId)
-  if (!segment) return
+  const segments = Object.values(state.selectedShow.segments)
+  for (let i = 0; i < segments.length; i++) {
+    const segment = segments[i]
 
-  const question = state.questionsList.find((x) => x.id === questionId)
-  if (!question) return
-
-  // TODO why doesn't push work here?
-  segment.questions = [...segment.questions, question]
-}
-
-export const removeSegmentQuestion: Action<{
-  segmentId: string
-  questionId: string
-}> = ({ state }, { segmentId, questionId }) => {
-  const segment = state.selectedShow?.segments.find((x) => x.id === segmentId)
-  if (!segment) return
-
-  const questionIdx = segment.questions.findIndex((q) => q.id === questionId)
-  if (questionIdx === -1) return
-
-  const result = Array.from(segment.questions)
-  result.splice(questionIdx, 1)
-
-  segment.questions = result
-}
-
-export const reorderSegmentQuestion: Action<{
-  segmentId: string
-  questionId: string
-  targetPosition: number
-}> = ({ state }, { segmentId, questionId, targetPosition }) => {
-  console.log(
-    `Reordering question ${questionId} in seg ${segmentId} to idx ${targetPosition}`
-  )
-
-  const segment = state.selectedShow?.segments.find((x) => x.id === segmentId)
-  if (!segment) return
-
-  const sourcePosition = segment.questions.findIndex((x) => x.id === questionId)
-
-  const result = Array.from(segment.questions)
-  const [removed] = result.splice(sourcePosition, 1)
-  result.splice(targetPosition, 0, removed)
-
-  segment.questions = result
-}
-
-export const moveSegmentQuestion: Action<{
-  fromSegmentId: string | null
-  toSegmentId: string | null
-  questionId: string
-  toIndex?: number
-}> = ({ state }, { fromSegmentId, toSegmentId, questionId, toIndex }) => {
-  if (fromSegmentId === toSegmentId) return
-
-  console.log(
-    `Moving question ${questionId} from segment ${fromSegmentId} to segment ${toSegmentId} ${toIndex}`
-  )
-
-  const fromSegment = state.selectedShow?.segments.find(
-    (x) => x.id === fromSegmentId
-  )
-  const toSegment = state.selectedShow?.segments.find(
-    (x) => x.id === toSegmentId
-  )
-
-  if (!toSegment) return
-
-  if (fromSegment) {
-    const fromClone = Array.from(fromSegment.questions)
-    const questionIndex = fromClone.findIndex((x) => x.id === questionId)
-    if (questionIndex === -1) return
-    const [removedQuestion] = fromClone.splice(questionIndex, 1)
-    fromSegment.questions = fromClone
-
-    const toClone = Array.from(toSegment.questions)
-    toClone.splice(toIndex ?? toClone.length, 0, removedQuestion)
-    toSegment.questions = toClone
-  } else {
-    const question = state.unusedQuestions.find((x) => x.id === questionId)
-    if (!question) return
-
-    const toClone = Array.from(toSegment.questions)
-    toClone.splice(toIndex ?? toClone.length, 0, question)
-    toSegment.questions = toClone
+    if (segment.questions.hasOwnProperty(id)) {
+      return {
+        question: segment.questions[id],
+        segmentId: segment.id,
+      }
+    }
   }
+
+  throw Error(`wtf ${id}`)
 }
 
-export const addSegment: Action = ({ state }) => {
+export const addSegmentQuestion = (
+  { state }: Context,
+  {
+    segmentId,
+    questionId,
+  }: {
+    segmentId: string
+    questionId: string
+  }
+) => {
+  // const segment = state.selectedShow?.segments.find((x) => x.id === segmentId)
+  // if (!segment) return
+  // const question = state.questionsList.find((x) => x.id === questionId)
+  // if (!question) return
+  // // TODO why doesn't push work here?
+  // segment.questions = [...segment.questions, question]
+}
+
+export const removeSegmentQuestion = (
+  { state }: Context,
+  {
+    segmentId,
+    questionId,
+  }: {
+    segmentId: string
+    questionId: string
+  }
+) => {
+  // const segment = state.selectedShow?.segments.find((x) => x.id === segmentId)
+  // if (!segment) return
+  // const questionIdx = segment.questions.findIndex((q) => q.id === questionId)
+  // if (questionIdx === -1) return
+  // const result = Array.from(segment.questions)
+  // result.splice(questionIdx, 1)
+  // segment.questions = result
+}
+
+export const reorderSegmentQuestion = (
+  { state }: Context,
+  {
+    question,
+    segmentId,
+    fromPosition,
+    toPosition,
+  }: {
+    question: SegmentQuestion
+    segmentId: Segment['id']
+    fromPosition: number
+    toPosition: number
+  }
+) => {
+  console.log(
+    `Reordering question ${question.question.id} in seg ${segmentId} to ${toPosition}`
+  )
+
+  if (!state.selectedShow) throw Error('no show :(')
+  if (fromPosition === toPosition) return
+  if (fromPosition === undefined || toPosition === undefined) return
+
+  const segment = state.selectedShow.segments[segmentId]
+
+  if (fromPosition < toPosition) {
+    // Moving down list (2 -> 5), update all questions above
+    Object.values(segment.questions).forEach((x) => {
+      if (x.position > fromPosition && x.position <= toPosition) {
+        x.position--
+      }
+    })
+  } else {
+    // Moving up list (5 -> 2), update all questions below
+    Object.values(segment.questions).forEach((x) => {
+      if (x.position < fromPosition && x.position >= toPosition) {
+        x.position++
+      }
+    })
+  }
+
+  question.position = toPosition
+
+  state.shows[state.selectedShow.id].segments[segmentId] = { ...segment }
+  // todo check if can use derived?
+}
+
+export const moveSegmentQuestion = (
+  { state }: Context,
+  {
+    question,
+    fromSegmentId,
+    toSegmentId,
+    fromPosition,
+    toPosition,
+  }: {
+    question: SegmentQuestion
+    fromSegmentId: string
+    toSegmentId: string
+    fromPosition: number
+    toPosition: number
+  }
+) => {
+  if (!state.selectedShow) throw Error('no show :(')
+  if (fromSegmentId === toSegmentId) return
+  if (fromPosition === undefined || toPosition === undefined) return
+
+  const fromSegment = state.selectedShow.segments[fromSegmentId]
+
+  delete fromSegment.questions[question.question.id]
+  Object.values(fromSegment.questions).forEach((x) => {
+    if (x.position > fromPosition) x.position--
+  })
+
+  const toSegment = state.selectedShow.segments[toSegmentId]
+  Object.values(toSegment.questions).forEach((x) => {
+    if (x.position >= toPosition) x.position++
+  })
+  question.position = toPosition
+  toSegment.questions[question.question.id] = { ...question } // but why :(
+
+  state.shows[state.selectedShow.id].segments[fromSegmentId] = {
+    ...fromSegment,
+  }
+  state.shows[state.selectedShow.id].segments[toSegmentId] = { ...toSegment }
+}
+
+export const addSegment = ({ state }: Context) => {
   const ordinal_suffix_of = (i: number) => {
     const j = i % 10,
       k = i % 100
@@ -157,52 +200,53 @@ export const addSegment: Action = ({ state }) => {
     return i + 'th'
   }
 
-  state.selectedShow?.segments.push({
-    id: nanoid(),
-    name: `${ordinal_suffix_of(
-      state.selectedShow.segments.length + 1
-    )} segment`,
-    questions: [],
-    intro: {
-      src: '',
-      type: 'COMPONENT',
-    },
-  })
+  // state.selectedShow?.segments.push({
+  //   id: nanoid(),
+  //   name: `${ordinal_suffix_of(
+  //     state.selectedShow.segments.length + 1
+  //   )} segment`,
+  //   questions: [],
+  //   intro: {
+  //     src: '',
+  //     type: 'COMPONENT',
+  //   },
+  // })
 }
 
-export const reorderSegment: Action<{
-  segmentId: string
-  targetPosition: number
-}> = ({ state }, { segmentId, targetPosition }) => {
-  if (!state.selectedShow) return
-
-  const sourcePosition = state.selectedShow.segments.findIndex(
-    (x) => x.id === segmentId
-  )
-  const result = Array.from(state.selectedShow.segments)
-  const [removed] = result.splice(sourcePosition, 1)
-  result.splice(targetPosition, 0, removed)
-
-  state.selectedShow.segments = result
-}
-
-export const removeSegment: Action<string> = ({ state }, segmentId) => {
-  if (!state.selectedShow) return
-
-  state.selectedShow.segments = state.selectedShow.segments.filter(
-    (x) => x.id !== segmentId
-  )
-}
-
-export const updateSegment: Action<{ id: string } & Partial<Segment>> = (
-  { state },
-  update
+export const reorderSegment = (
+  { state }: Context,
+  {
+    segmentId,
+    targetPosition,
+  }: {
+    segmentId: string
+    targetPosition: number
+  }
 ) => {
   if (!state.selectedShow) return
 
-  const segmentIdx = state.selectedShow.segments.findIndex(
-    (x) => x.id === update.id
-  )
-  const segment = state.selectedShow.segments[segmentIdx]
-  state.selectedShow.segments[segmentIdx] = { ...segment, ...update }
+  // const sourcePosition = state.selectedShow.segments.findIndex(
+  //   (x) => x.id === segmentId
+  // )
+  // const result = Array.from(state.selectedShow.segments)
+  // const [removed] = result.splice(sourcePosition, 1)
+  // result.splice(targetPosition, 0, removed)
+
+  // state.selectedShow.segments = result
+}
+
+export const removeSegment = ({ state }: Context, segmentId: string) => {
+  if (!state.selectedShow) return
+
+  delete state.selectedShow.segments[segmentId]
+}
+
+export const updateSegment = (
+  { state }: Context,
+  update: { id: string } & Partial<Segment>
+) => {
+  if (!state.selectedShow) return
+
+  const segment = state.selectedShow.segments[update.id]
+  state.selectedShow.segments[update.id] = { ...segment, ...update }
 }
