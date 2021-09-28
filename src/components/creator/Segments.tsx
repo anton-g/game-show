@@ -1,8 +1,7 @@
-import { ReactNode, useCallback } from 'react'
+import { ReactNode } from 'react'
 import { useDrop } from 'react-dnd'
 import styled from 'styled-components'
-import { useAppState, useActions } from '../../overmind'
-import { Segment } from '../../overmind/state'
+import { useAppState } from '../../overmind'
 import { BoardSegment } from './BoardSegment/BoardSegment'
 
 export function Segments({ children }: { children: ReactNode }) {
@@ -11,19 +10,6 @@ export function Segments({ children }: { children: ReactNode }) {
     accept: 'SEGMENT',
   }))
 
-  const { moveOrReorderQuestion, findQuestion } = useActions()
-
-  // const move = useCallback(
-  //   (id: string, toIndex: number) => {
-  //     console.log(`Moving segment ${id} to idx ${toIndex}`)
-  //     reorderSegment({
-  //       segmentId: id,
-  //       targetPosition: toIndex,
-  //     })
-  //   },
-  //   [reorderSegment]
-  // )
-
   if (!currentShow) return null // TODO render something?
 
   const segmentsList = Object.values(currentShow.segments)
@@ -31,12 +17,7 @@ export function Segments({ children }: { children: ReactNode }) {
   return (
     <Wrapper ref={drop}>
       {segmentsList.map((segment) => (
-        <BoardSegment
-          key={segment.id}
-          segment={segment}
-          // moveQuestion={moveOrReorderQuestion}
-          // findQuestion={findQuestion}
-        ></BoardSegment>
+        <BoardSegment key={segment.id} segment={segment}></BoardSegment>
       ))}
       {children}
     </Wrapper>

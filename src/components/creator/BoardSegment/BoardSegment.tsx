@@ -1,9 +1,9 @@
 import { PlusCircledIcon } from '@radix-ui/react-icons'
-import React, { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import styled from 'styled-components'
 import { useActions, useAppState } from '../../../overmind'
-import type { Segment, SegmentQuestion } from '../../../overmind/state'
+import type { Segment } from '../../../overmind/state'
 import { Spacer } from '../../common/Spacer'
 import { DraggedQuestion } from '../Board'
 import { BoardQuestion } from '../BoardQuestion/BoardQuestion'
@@ -11,28 +11,15 @@ import { SegmentOptions } from './SegmentOptions'
 
 type Props = {
   segment: Segment
-  // findQuestion: (id: string) => {
-  //   question: SegmentQuestion
-  //   segmentId: Segment['id']
-  // } // TODO get from actions?
-  // moveQuestion: (
-  //   id: string,
-  //   toPosition: number,
-  //   toSegmentId: Segment['id']
-  // ) => void // TODO get from actions?
 }
 
-export const BoardSegment = ({
-  segment,
-}: // findQuestion,
-// moveQuestion,
-Props) => {
+export const BoardSegment = ({ segment }: Props) => {
   useAppState()
   const [editing, setEditing] = useState(false)
   const { removeSegment, updateSegment, findQuestion, moveOrReorderQuestion } =
     useActions()
 
-  const [, drop] = useDrop(
+  const [, questionDropArea] = useDrop(
     () => ({
       accept: 'QUESTION',
       hover({ id: draggedId }: DraggedQuestion) {
@@ -55,7 +42,6 @@ Props) => {
   return (
     <Wrapper
       dragging={false}
-      ref={drop}
       // ref={(node) => preview(segmentDropTarget(node))}
     >
       {/* <Header ref={segmentDragSource}> */}
@@ -84,16 +70,11 @@ Props) => {
           ></StyledOptions>
         </TitleRow>
       </Header>
-      {/* <QuestionsList ref={questionDropArea}> */}
-      <QuestionsList>
+      <QuestionsList ref={questionDropArea}>
         {questionsList.map((question) => (
           <BoardQuestion
             key={question.question.id}
             questionId={question.question.id}
-            // moveQuestion={moveQuestion}
-            // findQuestion={findQuestion}
-            // reorder={reorderQuestion}
-            // index={index}
           />
         ))}
         <BoardNewQuestion></BoardNewQuestion>
