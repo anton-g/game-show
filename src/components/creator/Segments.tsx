@@ -5,20 +5,14 @@ import { useAppState } from '../../overmind'
 import { BoardSegment } from './BoardSegment/BoardSegment'
 
 export function Segments({ children }: { children: ReactNode }) {
-  const { selectedShow: currentShow } = useAppState()
+  const { selectedShowSegmentsList } = useAppState()
   const [, drop] = useDrop(() => ({
     accept: 'SEGMENT',
   }))
 
-  if (!currentShow) return null // TODO render something?
-
-  const segmentsList = Object.values(currentShow.segments).sort(
-    (a, b) => a.position - b.position
-  )
-
   return (
     <Wrapper ref={drop}>
-      {segmentsList.map((segment) => (
+      {selectedShowSegmentsList.map((segment) => (
         <BoardSegment key={segment.id} segmentId={segment.id}></BoardSegment>
       ))}
       {children}

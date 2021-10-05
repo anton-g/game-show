@@ -40,15 +40,25 @@ export const deleteQuestion = (
 
 // creator
 
+// done
+export const findSegment = ({ state }: Context, id: string) => {
+  if (!state.selectedShow) throw Error('no show :(')
+
+  const c = state.selectedShow.segments[id]
+  return {
+    segment: c,
+  }
+}
+
+// done
 export const findQuestion = (
   { state }: Context,
   id: string
 ): { question: SegmentQuestion; segmentId: string } => {
   if (!state.selectedShow) throw Error('no show :(')
 
-  const segments = Object.values(state.selectedShow.segments)
-  for (let i = 0; i < segments.length; i++) {
-    const segment = segments[i]
+  for (let i = 0; i < state.selectedShowSegmentsList.length; i++) {
+    const segment = state.selectedShowSegmentsList[i]
 
     if (segment.questions.hasOwnProperty(id)) {
       return {
@@ -94,6 +104,7 @@ export const removeSegmentQuestion = (
   delete state.selectedShow.segments[segmentId].questions[questionId]
 }
 
+// done
 export const moveOrReorderQuestion = (
   { actions }: Context,
   {
@@ -110,22 +121,23 @@ export const moveOrReorderQuestion = (
 
   if (segmentId === toSegmentId) {
     actions.reorderSegmentQuestion({
-      question,
-      segmentId,
+      question: question,
+      segmentId: segmentId,
       fromPosition: question.position,
-      toPosition,
+      toPosition: toPosition,
     })
   } else {
     actions.moveSegmentQuestion({
-      question,
+      question: question,
       fromSegmentId: segmentId,
       toSegmentId: toSegmentId,
       fromPosition: question.position,
-      toPosition,
+      toPosition: toPosition,
     })
   }
 }
 
+// done
 export const reorderSegmentQuestion = (
   { state }: Context,
   {
@@ -140,37 +152,33 @@ export const reorderSegmentQuestion = (
     toPosition: number
   }
 ) => {
-  console.log(
-    `Reordering question ${question.question.id} in seg ${segmentId} to ${toPosition}`
-  )
-
   if (!state.selectedShow) throw Error('no show :(')
+
   if (fromPosition === toPosition) return
   if (fromPosition === undefined || toPosition === undefined) return
 
   const segment = state.selectedShow.segments[segmentId]
 
+  const newQuestions = { ...segment.questions }
+
   if (fromPosition < toPosition) {
-    // Moving down list (2 -> 5), update all questions above
-    Object.values(segment.questions).forEach((x) => {
-      if (x.position > fromPosition && x.position <= toPosition) {
-        x.position--
-      }
+    // Moving down list (2 -> 5)
+    Object.values(newQuestions).forEach((x) => {
+      if (x.position > fromPosition && x.position <= toPosition) x.position--
     })
   } else {
-    // Moving up list (5 -> 2), update all questions below
-    Object.values(segment.questions).forEach((x) => {
-      if (x.position < fromPosition && x.position >= toPosition) {
-        x.position++
-      }
+    // Moving up list (5 -> 2)
+    Object.values(newQuestions).forEach((x) => {
+      if (x.position < fromPosition && x.position >= toPosition) x.position++
     })
   }
 
   question.position = toPosition
 
-  state.shows[state.selectedShow.id].segments[segmentId] = { ...segment }
+  segment.questions = newQuestions
 }
 
+// done
 export const moveSegmentQuestion = (
   { state }: Context,
   {
@@ -188,27 +196,29 @@ export const moveSegmentQuestion = (
   }
 ) => {
   if (!state.selectedShow) throw Error('no show :(')
+
   if (fromSegmentId === toSegmentId) return
   if (fromPosition === undefined || toPosition === undefined) return
 
-  const fromSegment = state.selectedShow.segments[fromSegmentId]
+  const newSegments = { ...state.selectedShow.segments }
+
+  const fromSegment = newSegments[fromSegmentId]
 
   delete fromSegment.questions[question.question.id]
-  Object.values(fromSegment.questions).forEach((x) => {
-    if (x.position > fromPosition) x.position--
-  })
+  const cardsToUpdateInOldSegment = Object.values(fromSegment.questions).filter(
+    (x) => x.position > fromPosition
+  )
+  cardsToUpdateInOldSegment.forEach((x) => x.position--)
 
-  const toSegment = state.selectedShow.segments[toSegmentId]
-  Object.values(toSegment.questions).forEach((x) => {
-    if (x.position >= toPosition) x.position++
-  })
+  const toSegment = newSegments[toSegmentId]
+  const cardsToUpdateInNewSegment = Object.values(toSegment.questions).filter(
+    (x) => x.position >= toPosition
+  )
+  cardsToUpdateInNewSegment.forEach((x) => x.position++)
   question.position = toPosition
-  toSegment.questions[question.question.id] = { ...question } // but why :(
+  toSegment.questions[question.question.id] = { ...question }
 
-  state.shows[state.selectedShow.id].segments[fromSegmentId] = {
-    ...fromSegment,
-  }
-  state.shows[state.selectedShow.id].segments[toSegmentId] = { ...toSegment }
+  state.selectedShow.segments = newSegments
 }
 
 export const addSegment = ({ state }: Context) => {
@@ -247,6 +257,7 @@ export const addSegment = ({ state }: Context) => {
   state.selectedShow.segments[newSegment.id] = newSegment
 }
 
+// done
 export const reorderSegment = (
   { state }: Context,
   {
@@ -259,29 +270,30 @@ export const reorderSegment = (
 ) => {
   if (!state.selectedShow) throw Error('no show :(')
 
-  const segment = state.selectedShow.segments[segmentId]
-  const fromPosition = segment.position
+  // ----
+  const seg = state.selectedShow.segments[segmentId]
+  const fromPosition = seg.position
 
   if (fromPosition === toPosition) return
-  if (toPosition === undefined) return
+  if (fromPosition === undefined || toPosition === undefined) return
+
+  const newSegments = { ...state.selectedShow.segments }
 
   if (fromPosition < toPosition) {
-    // Moving down list (2 -> 5), update all questions above
-    Object.values(state.selectedShow.segments).forEach((x) => {
-      if (x.position > fromPosition && x.position <= toPosition) {
-        x.position--
-      }
+    // Moving down list (2 -> 5)
+    Object.values(newSegments).forEach((x) => {
+      if (x.position > fromPosition && x.position <= toPosition) x.position--
     })
   } else {
-    // Moving up list (5 -> 2), update all questions below
-    Object.values(state.selectedShow.segments).forEach((x) => {
-      if (x.position < fromPosition && x.position >= toPosition) {
-        x.position++
-      }
+    // Moving up list (5 -> 2)
+    Object.values(newSegments).forEach((x) => {
+      if (x.position < fromPosition && x.position >= toPosition) x.position++
     })
   }
 
-  segment.position = toPosition
+  seg.position = toPosition
+
+  state.selectedShow.segments = newSegments
 }
 
 export const removeSegment = ({ state }: Context, segmentId: string) => {

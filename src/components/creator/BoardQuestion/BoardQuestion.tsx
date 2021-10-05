@@ -1,23 +1,22 @@
 import { useDrag, useDrop } from 'react-dnd'
 import styled, { css } from 'styled-components'
-import { useActions } from '../../../overmind'
-import type { Question } from '../../../overmind/state'
+import { useActions, useAppState } from '../../../overmind'
+import type { Question, Segment } from '../../../overmind/state'
 import { getQuestionAnswer } from '../../../utils/question-utils'
 import { DraggedQuestion, DRAG_TYPES } from '../Board'
 import { QuestionOptions } from './QuestionOptions'
 
 type Props = {
   questionId: Question['id']
+  segmentId: Segment['id']
 }
 
-export function BoardQuestion({ questionId }: Props) {
-  const {
-    findQuestion,
-    moveOrReorderQuestion,
-    removeSegmentQuestion,
-    moveSegmentQuestion,
-  } = useActions()
-  const { question: segmentQuestion, segmentId } = findQuestion(questionId)
+export function BoardQuestion({ questionId, segmentId }: Props) {
+  const { findQuestion, moveOrReorderQuestion, removeSegmentQuestion } =
+    useActions()
+  const segmentQuestion = useAppState(
+    (state) => state.selectedShow!.segments[segmentId].questions[questionId]
+  )
   const question = segmentQuestion.question
 
   const [{ isDragging }, drag] = useDrag(
@@ -85,13 +84,13 @@ export function BoardQuestion({ questionId }: Props) {
               })
             }}
             onMove={(targetSegmentId) => {
-              moveSegmentQuestion({
-                question: segmentQuestion,
-                fromSegmentId: segmentId,
-                toSegmentId: targetSegmentId,
-                fromPosition: segmentQuestion.position,
-                toPosition: 0, // TODO should probably move to last position
-              })
+              // moveSegmentQuestion({
+              //   question: segmentQuestion,
+              //   fromSegmentId: segmentId,
+              //   toSegmentId: targetSegmentId,
+              //   fromPosition: segmentQuestion.position,
+              //   toPosition: 0, // TODO should probably move to last position
+              // })
             }}
           ></StyledOptions>
         </Header>

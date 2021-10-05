@@ -21,9 +21,13 @@ export const BoardSegment = ({ segmentId }: Props) => {
     findQuestion,
     moveOrReorderQuestion,
     reorderSegment,
+    findSegment,
   } = useActions()
   const segment = useAppState(
     (state) => state.selectedShow!.segments[segmentId]
+  )
+  const questionsList = Object.values(segment.questions).sort(
+    (a, b) => a.position - b.position
   )
 
   const [{ isDragging }, segmentDragSource, preview] = useDrag(
@@ -62,14 +66,15 @@ export const BoardSegment = ({ segmentId }: Props) => {
       canDrop: () => false,
       hover({ id: draggedId }: DraggedSegment) {
         if (draggedId !== segment.id) {
+          const { segment: hoveredSegment } = findSegment(segmentId) // TODO check if this can be removed?
           reorderSegment({
             segmentId: draggedId,
-            toPosition: segment.position,
+            toPosition: hoveredSegment.position,
           })
         }
       },
     }),
-    [segment.position, reorderSegment]
+    [reorderSegment, segmentId]
   )
 
   const [, questionDropArea] = useDrop(
@@ -89,9 +94,6 @@ export const BoardSegment = ({ segmentId }: Props) => {
     [segment.questions, segment.id, moveOrReorderQuestion]
   )
 
-  const questionsList = Object.values(segment.questions).sort(
-    (a, b) => a.position - b.position
-  )
   return (
     <Wrapper
       dragging={isDragging}
@@ -127,6 +129,7 @@ export const BoardSegment = ({ segmentId }: Props) => {
           <BoardQuestion
             key={question.question.id}
             questionId={question.question.id}
+            segmentId={segmentId}
           />
         ))}
         <BoardNewQuestion></BoardNewQuestion>

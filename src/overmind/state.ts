@@ -1,6 +1,8 @@
 import { derived } from 'overmind'
 import { mockQuestions, mockShow1, mockShow2 } from './mocks'
 
+// TODO use null instead of undefined/?
+
 export type AnswerType =
   | 'BUZZ_SINGLE'
   | 'OPTIONS_SINGLE'
@@ -99,6 +101,7 @@ type State = {
   shows: Record<Show['id'], Show>
   selectedShowId: string | null
   selectedShow: Show | null
+  selectedShowSegmentsList: Segment[]
   unusedQuestions: Question[]
 
   questions: Record<Question['id'], Question>
@@ -113,6 +116,9 @@ export const state: State = {
   selectedShowId: mockShow1.id,
   selectedShow: derived(
     (state: State) => state.shows[state.selectedShowId ?? '']
+  ),
+  selectedShowSegmentsList: derived((state: State) =>
+    state.selectedShow ? Object.values(state.selectedShow.segments) : []
   ),
   questions: mockQuestions,
   questionsList: derived((state: State) => Object.values(state.questions)),
