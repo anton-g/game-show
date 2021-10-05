@@ -118,7 +118,11 @@ export const state: State = {
     (state: State) => state.shows[state.selectedShowId ?? '']
   ),
   selectedShowSegmentsList: derived((state: State) =>
-    state.selectedShow ? Object.values(state.selectedShow.segments) : []
+    state.selectedShow
+      ? Object.values(state.selectedShow.segments).sort(
+          (a, b) => a.position - b.position
+        )
+      : []
   ),
   questions: mockQuestions,
   questionsList: derived((state: State) => Object.values(state.questions)),

@@ -35,7 +35,7 @@ export const BoardSegment = ({ segmentId }: Props) => {
       type: DRAG_TYPES.SEGMENT,
       item: {
         id: segmentId,
-        originalPosition: segment.position,
+        // originalPosition: segment.position,
       } as DraggedSegment,
       collect: (monitor) => ({
         isDragging: monitor.isDragging(),
@@ -63,9 +63,9 @@ export const BoardSegment = ({ segmentId }: Props) => {
   const [, segmentDropTarget] = useDrop(
     () => ({
       accept: DRAG_TYPES.SEGMENT,
-      canDrop: () => false,
+      // canDrop: () => false,
       hover({ id: draggedId }: DraggedSegment) {
-        if (draggedId !== segment.id) {
+        if (draggedId !== segmentId) {
           const { segment: hoveredSegment } = findSegment(segmentId) // TODO check if this can be removed?
           reorderSegment({
             segmentId: draggedId,
@@ -74,7 +74,7 @@ export const BoardSegment = ({ segmentId }: Props) => {
         }
       },
     }),
-    [reorderSegment, segmentId]
+    [reorderSegment, findSegment, segmentId]
   )
 
   const [, questionDropArea] = useDrop(

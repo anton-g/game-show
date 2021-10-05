@@ -6,12 +6,14 @@ import { BoardSegment } from './BoardSegment/BoardSegment'
 
 export function Segments({ children }: { children: ReactNode }) {
   const { selectedShowSegmentsList } = useAppState()
-  const [, drop] = useDrop(() => ({
-    accept: 'SEGMENT',
-  }))
+  // const [, drop] = useDrop(() => ({
+  //   accept: 'SEGMENT',
+  // }))
 
   return (
-    <Wrapper ref={drop}>
+    <Wrapper
+    // ref={drop}
+    >
       {selectedShowSegmentsList.map((segment) => (
         <BoardSegment key={segment.id} segmentId={segment.id}></BoardSegment>
       ))}

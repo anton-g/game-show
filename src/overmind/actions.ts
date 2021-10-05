@@ -7,7 +7,6 @@ export const selectShow = ({ state }: Context, showId: Question['id']) => {
 }
 
 // library
-
 export const createQuestion = (
   { state, effects }: Context,
   question: Question
@@ -39,8 +38,6 @@ export const deleteQuestion = (
 }
 
 // creator
-
-// done
 export const findSegment = ({ state }: Context, id: string) => {
   if (!state.selectedShow) throw Error('no show :(')
 
@@ -50,7 +47,6 @@ export const findSegment = ({ state }: Context, id: string) => {
   }
 }
 
-// done
 export const findQuestion = (
   { state }: Context,
   id: string
@@ -104,7 +100,6 @@ export const removeSegmentQuestion = (
   delete state.selectedShow.segments[segmentId].questions[questionId]
 }
 
-// done
 export const moveOrReorderQuestion = (
   { actions }: Context,
   {
@@ -137,7 +132,6 @@ export const moveOrReorderQuestion = (
   }
 }
 
-// done
 export const reorderSegmentQuestion = (
   { state }: Context,
   {
@@ -178,7 +172,6 @@ export const reorderSegmentQuestion = (
   segment.questions = newQuestions
 }
 
-// done
 export const moveSegmentQuestion = (
   { state }: Context,
   {
@@ -187,15 +180,24 @@ export const moveSegmentQuestion = (
     toSegmentId,
     fromPosition,
     toPosition,
+    forceLast,
   }: {
     question: SegmentQuestion
     fromSegmentId: string
     toSegmentId: string
     fromPosition: number
     toPosition: number
+    forceLast?: boolean
   }
 ) => {
   if (!state.selectedShow) throw Error('no show :(')
+
+  // Move to last position
+  if (forceLast) {
+    toPosition = Object.values(
+      state.selectedShow.segments[toSegmentId].questions
+    ).length
+  }
 
   if (fromSegmentId === toSegmentId) return
   if (fromPosition === undefined || toPosition === undefined) return
@@ -257,7 +259,6 @@ export const addSegment = ({ state }: Context) => {
   state.selectedShow.segments[newSegment.id] = newSegment
 }
 
-// done
 export const reorderSegment = (
   { state }: Context,
   {
@@ -270,7 +271,6 @@ export const reorderSegment = (
 ) => {
   if (!state.selectedShow) throw Error('no show :(')
 
-  // ----
   const seg = state.selectedShow.segments[segmentId]
   const fromPosition = seg.position
 

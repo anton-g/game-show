@@ -12,8 +12,12 @@ type Props = {
 }
 
 export function BoardQuestion({ questionId, segmentId }: Props) {
-  const { findQuestion, moveOrReorderQuestion, removeSegmentQuestion } =
-    useActions()
+  const {
+    findQuestion,
+    moveOrReorderQuestion,
+    moveSegmentQuestion,
+    removeSegmentQuestion,
+  } = useActions()
   const segmentQuestion = useAppState(
     (state) => state.selectedShow!.segments[segmentId].questions[questionId]
   )
@@ -84,13 +88,14 @@ export function BoardQuestion({ questionId, segmentId }: Props) {
               })
             }}
             onMove={(targetSegmentId) => {
-              // moveSegmentQuestion({
-              //   question: segmentQuestion,
-              //   fromSegmentId: segmentId,
-              //   toSegmentId: targetSegmentId,
-              //   fromPosition: segmentQuestion.position,
-              //   toPosition: 0, // TODO should probably move to last position
-              // })
+              moveSegmentQuestion({
+                question: segmentQuestion,
+                fromSegmentId: segmentId,
+                toSegmentId: targetSegmentId,
+                fromPosition: segmentQuestion.position,
+                toPosition: 0,
+                forceLast: true,
+              })
             }}
           ></StyledOptions>
         </Header>
