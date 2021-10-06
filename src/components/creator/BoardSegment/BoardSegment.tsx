@@ -5,9 +5,9 @@ import styled from 'styled-components'
 import { useActions, useAppState } from '../../../overmind'
 import type { Segment } from '../../../overmind/state'
 import { Spacer } from '../../common/Spacer'
-import { DraggedQuestion, DraggedSegment, DRAG_TYPES } from '../Board'
-import { BoardQuestion } from '../BoardQuestion/BoardQuestion'
 import { SegmentOptions } from './SegmentOptions'
+import { DraggedQuestion, DraggedSegment, DRAG_TYPES } from '../Board'
+import { BoardQuestion } from '../boardQuestion/BoardQuestion'
 
 type Props = {
   segmentId: Segment['id']

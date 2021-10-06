@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import { useDrop } from 'react-dnd'
 import styled from 'styled-components'
 import { useAppState } from '../../overmind'
-import { BoardSegment } from './BoardSegment/BoardSegment'
+import { BoardSegment } from './boardSegment/BoardSegment'
 
 export function Segments({ children }: { children: ReactNode }) {
   const { selectedShowSegmentsList } = useAppState()
