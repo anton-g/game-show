@@ -1,6 +1,8 @@
 import { derived } from 'overmind'
 import { mockQuestions, mockShow1, mockShow2 } from './mocks'
 
+// TODO use null instead of undefined/?
+
 export type AnswerType =
   | 'BUZZ_SINGLE'
   | 'OPTIONS_SINGLE'
@@ -76,23 +78,30 @@ type Intro = {
   src: string
 }
 
+export type SegmentQuestion = {
+  question: Question
+  position: number
+}
+
 export type Segment = {
   id: string
   name: string
   intro: Intro
-  questions: Question[]
+  questions: Record<Question['id'], SegmentQuestion>
+  position: number
 }
 
 export type Show = {
   id: string
   name: string
-  segments: Segment[]
+  segments: Record<Segment['id'], Segment>
 }
 
 type State = {
   shows: Record<Show['id'], Show>
   selectedShowId: string | null
   selectedShow: Show | null
+  selectedShowSegmentsList: Segment[]
   unusedQuestions: Question[]
 
   questions: Record<Question['id'], Question>
@@ -108,16 +117,26 @@ export const state: State = {
   selectedShow: derived(
     (state: State) => state.shows[state.selectedShowId ?? '']
   ),
+  selectedShowSegmentsList: derived((state: State) =>
+    state.selectedShow
+      ? Object.values(state.selectedShow.segments).sort(
+          (a, b) => a.position - b.position
+        )
+      : []
+  ),
   questions: mockQuestions,
   questionsList: derived((state: State) => Object.values(state.questions)),
-  unusedQuestions: derived((state: State) => {
-    const usedQuestions = state.selectedShow?.segments.flatMap(
-      (x) => x.questions
-    )
-    if (!usedQuestions) return []
+  // unusedQuestions: derived((state: State) => {
+  //   if (!state.selectedShow) return []
 
-    return state.questionsList.filter(
-      (x) => usedQuestions.findIndex((q) => q.id === x.id) === -1
-    )
-  }),
+  //   const usedQuestions = Object.values(state.selectedShow.segments).flatMap(
+  //     (x) => Object.values(x.questions)
+  //   )
+  //   if (!usedQuestions) return []
+
+  //   return state.questionsList.filter(
+  //     (x) => usedQuestions.findIndex((q) => q.question.id === x.id) === -1
+  //   )
+  // }),
+  unusedQuestions: [],
 }

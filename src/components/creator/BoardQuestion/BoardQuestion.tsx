@@ -1,75 +1,79 @@
-import { useCallback } from 'react'
+import { useDrag, useDrop } from 'react-dnd'
 import styled, { css } from 'styled-components'
-import { useActions } from '../../../overmind'
-import type { Question } from '../../../overmind/state'
+import { useActions, useAppState } from '../../../overmind'
+import type { Question, Segment } from '../../../overmind/state'
 import { getQuestionAnswer } from '../../../utils/question-utils'
-import { useQuestionDrag } from '../useQuestionDrag'
-import { useQuestionDrop } from '../useQuestionDrop'
+import { DraggedQuestion, DRAG_TYPES } from '../Board'
 import { QuestionOptions } from './QuestionOptions'
 
 type Props = {
-  question: Question
-  segmentId: string | null
-  index: number
-  move: (
-    id: string,
-    fromSegmentId: string | null,
-    toSegmentId: string | null,
-    toIndex?: number
-  ) => void
-  reorder?: (id: string, segmentId: string, toIndex: number) => void
+  questionId: Question['id']
+  segmentId: Segment['id']
 }
 
-export function BoardQuestion({
-  question,
-  index,
-  segmentId,
-  move,
-  reorder,
-}: Props) {
-  const { getQuestionSegment, removeSegmentQuestion, moveSegmentQuestion } =
-    useActions()
+export function BoardQuestion({ questionId, segmentId }: Props) {
+  const {
+    findQuestion,
+    moveOrReorderQuestion,
+    moveSegmentQuestion,
+    removeSegmentQuestion,
+  } = useActions()
+  const segmentQuestion = useAppState(
+    (state) => state.selectedShow!.segments[segmentId].questions[questionId]
+  )
+  const question = segmentQuestion.question
 
-  const [isDragging, drag] = useQuestionDrag(question.id, {
-    onMove: useCallback(
-      (id, targetSegmentId) => {
-        move(id, segmentId, targetSegmentId)
-      },
-      [move, segmentId]
-    ),
-    onReorder: useCallback(
-      (id, fromSegmentId) => {
-        reorder && reorder(id, fromSegmentId, index)
-      },
-      [index, reorder]
-    ),
-  })
+  const [{ isDragging }, drag] = useDrag(
+    () => ({
+      type: DRAG_TYPES.QUESTION,
+      item: {
+        id: question.id,
+        originalPosition: segmentQuestion.position,
+      } as DraggedQuestion,
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
+      end: (item, monitor) => {
+        const { id: droppedId, originalPosition } = item
+        const didDrop = monitor.didDrop()
 
-  const drop = useQuestionDrop(
-    segmentId,
-    {
+        if (!didDrop) {
+          // "Cancel", dropped outside, move back to original position
+          // TEST Does this work?
+          moveOrReorderQuestion({
+            id: droppedId,
+            toPosition: originalPosition,
+            toSegmentId: segmentId,
+          })
+        }
+      },
+      isDragging: (monitor) => {
+        return question.id === monitor.getItem().id
+      },
+    }),
+    [question, segmentId, moveOrReorderQuestion]
+  )
+
+  const [, drop] = useDrop(
+    () => ({
+      accept: DRAG_TYPES.QUESTION,
       canDrop: () => false,
-      hover({ id: draggedId }) {
-        if (draggedId === question.id) return // Hovering itself
-
-        const draggedFromSegment = getQuestionSegment(draggedId)
-        if (!draggedFromSegment) {
-          move(draggedId, null, segmentId, index)
-          return
-        }
-
-        if (segmentId === draggedFromSegment.id) {
-          reorder && reorder(draggedId, draggedFromSegment.id, index)
-        } else {
-          move(draggedId, draggedFromSegment.id, segmentId, index)
+      hover({ id: draggedId }: DraggedQuestion) {
+        if (draggedId !== question.id) {
+          const { question: hoveredQuestion } = findQuestion(question.id)
+          moveOrReorderQuestion({
+            id: draggedId,
+            toPosition: hoveredQuestion.position,
+            toSegmentId: segmentId,
+          })
         }
       },
-    },
-    [question, index, move]
+    }),
+    [findQuestion, moveOrReorderQuestion, segmentId, question.id]
   )
 
   return (
-    <Wrapper ref={(node) => drag(drop(node))} hideShadow={isDragging}>
+    <Wrapper ref={(node) => drag(drop(node))} hideShadow={false}>
       {isDragging && <TargetDropArea />}
       <Content type={question.type}>
         <Header>
@@ -77,19 +81,22 @@ export function BoardQuestion({
           <StyledOptions
             questionId={question.id}
             activeSegmentId={segmentId}
-            onRemove={() =>
+            onRemove={() => {
               removeSegmentQuestion({
-                segmentId: segmentId!,
+                segmentId: segmentId,
                 questionId: question.id,
               })
-            }
-            onMove={(targetSegmentId) =>
+            }}
+            onMove={(targetSegmentId) => {
               moveSegmentQuestion({
+                question: segmentQuestion,
                 fromSegmentId: segmentId,
                 toSegmentId: targetSegmentId,
-                questionId: question.id,
+                fromPosition: segmentQuestion.position,
+                toPosition: 0,
+                forceLast: true,
               })
-            }
+            }}
           ></StyledOptions>
         </Header>
         <p>{getQuestionAnswer(question)}</p>

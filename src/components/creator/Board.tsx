@@ -4,6 +4,21 @@ import styled from 'styled-components'
 import { useActions } from '../../overmind'
 import { Segments } from './Segments'
 
+export type DraggedQuestion = {
+  id: string
+  originalPosition: number
+}
+
+export type DraggedSegment = {
+  id: string
+  originalPosition: number
+}
+
+export enum DRAG_TYPES {
+  QUESTION = 'QUESTION',
+  SEGMENT = 'SEGMENT',
+}
+
 export const Board = () => {
   return (
     <DndProvider backend={HTML5Backend}>

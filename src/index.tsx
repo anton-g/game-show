@@ -15,7 +15,7 @@ import 'modern-css-reset'
 import { lightTheme } from './themes'
 
 const overmind = createOvermind(config, {
-  devtools: true,
+  devtools: false,
 })
 
 const GlobalStyle = createGlobalStyle`

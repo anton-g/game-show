@@ -1,4 +1,4 @@
-import { IConfig } from 'overmind'
+import { IContext } from 'overmind'
 import {
   createActionsHook,
   createEffectsHook,
@@ -15,15 +15,17 @@ export const config = {
   actions,
 }
 
-export const useAppState = createStateHook<typeof config>()
-export const useActions = createActionsHook<typeof config>()
-export const useEffects = createEffectsHook<typeof config>()
-export const useReaction = createReactionHook<typeof config>()
+export type Context = IContext<{
+  state: typeof config.state
+  actions: typeof config.actions
+  effects: typeof config.effects
+}>
+
+export const useAppState = createStateHook<Context>()
+export const useActions = createActionsHook<Context>()
+export const useEffects = createEffectsHook<Context>()
+export const useReaction = createReactionHook<Context>()
 
 if (module.hot) {
   module.hot.accept()
-}
-
-declare module 'overmind' {
-  interface Config extends IConfig<typeof config> {}
 }

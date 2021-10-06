@@ -44,13 +44,14 @@ export function QuestionOptions({
             <DropdownMenu.TriggerItemIcon></DropdownMenu.TriggerItemIcon>
           </DropdownMenu.TriggerItem>
           <DropdownMenu.Content sideOffset={10}>
-            {currentShow?.segments
-              .filter((x) => x.id !== activeSegmentId)
-              .map((s) => (
-                <DropdownMenu.Item key={s.id} onSelect={() => onMove(s.id)}>
-                  {s.name}
-                </DropdownMenu.Item>
-              ))}
+            {currentShow &&
+              Object.values(currentShow?.segments)
+                .filter((x) => x.id !== activeSegmentId)
+                .map((s) => (
+                  <DropdownMenu.Item key={s.id} onSelect={() => onMove(s.id)}>
+                    {s.name}
+                  </DropdownMenu.Item>
+                ))}
           </DropdownMenu.Content>
         </DropdownMenu>
         {activeSegmentId && (

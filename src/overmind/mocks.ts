@@ -1,10 +1,10 @@
-import { Question, Segment, Show } from './state'
+import { Question, Segment, SegmentQuestion, Show } from './state'
 
 export const mockQuestions: Record<Question['id'], Question> = {
   '1': {
     id: '1',
     type: 'TEXT',
-    question: 'Vad heter låten?',
+    question: `What's the song name?`,
     answer: {
       type: 'BUZZ_SINGLE',
       value: 'Campione 2000',
@@ -16,7 +16,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
   '2': {
     id: '2',
     type: 'TEXT',
-    question: 'Vad heter låten?',
+    question: `What's the song name?`,
     answer: {
       type: 'BUZZ_SINGLE',
       value: 'This is the way',
@@ -28,7 +28,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
   '3': {
     id: '3',
     type: 'IMAGE',
-    question: 'Vem är det här?',
+    question: `Who's this?`,
     answer: {
       type: 'BUZZ_SINGLE',
       value: 'Nils Karlsson Pyssling',
@@ -40,7 +40,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
   '4': {
     id: '4',
     type: 'VIDEO',
-    question: 'Vart är vi på väg?',
+    question: 'Where are we going?',
     answer: {
       type: 'OPTIONS_SINGLE',
       options: {
@@ -58,7 +58,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
   '5': {
     id: '5',
     type: 'TEXT',
-    question: 'Vad heter låten?',
+    question: `What's the song name?`,
     answer: {
       type: 'BUZZ_SINGLE',
       value: 'Angels Crying',
@@ -70,7 +70,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
   '6': {
     id: '6',
     type: 'TEXT',
-    question: 'Vad heter artisten??',
+    question: `What's the artist name?`,
     answer: {
       type: 'OPTIONS_SINGLE',
       options: {
@@ -88,7 +88,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
   '7': {
     id: '7',
     type: 'IMAGE',
-    question: 'Vem är det här?',
+    question: `Who's this?`,
     answer: {
       type: 'BUZZ_SINGLE',
       value: 'E-Type',
@@ -100,7 +100,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
   '8': {
     id: '8',
     type: 'IMAGE',
-    question: 'Vem är det här?',
+    question: `Who's this?`,
     answer: {
       type: 'OPTIONS_SINGLE',
       options: {
@@ -116,10 +116,10 @@ export const mockQuestions: Record<Question['id'], Question> = {
   '9': {
     id: '9',
     type: 'VIDEO',
-    question: 'Vad händer sen?',
+    question: 'What happens next?',
     answer: {
       type: 'BUZZ_SINGLE',
-      value: 'Martin Eriksson dyker upp från ingenstans.',
+      value: 'Martin Eriksson shows up from nowhere.',
     },
     scoring: {
       value: 5,
@@ -128,7 +128,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
   '10': {
     id: '10',
     type: 'VIDEO',
-    question: 'Hur många gånger sjunger E-Type "life"?',
+    question: 'How many times does E-Type sing the word "life"?',
     answer: {
       type: 'OPTIONS_SINGLE',
       options: {
@@ -145,7 +145,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
   '11': {
     id: '11',
     type: 'TEXT',
-    question: 'Vad heter artisten?',
+    question: `What's the artist name?`,
     answer: {
       type: 'BUZZ_SINGLE',
       value: 'E-Type',
@@ -157,7 +157,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
   '12': {
     id: '12',
     type: 'TEXT',
-    question: 'Vad heter E-Type?',
+    question: `What's E-Type real name?`,
     answer: {
       type: 'BUZZ_SINGLE',
       value: 'Martin Eriksson',
@@ -169,7 +169,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
   '13': {
     id: '13',
     type: 'IMAGE',
-    question: 'Hur många lingon finns det i världen?',
+    question: 'How many lingonberries are there in the world?',
     answer: {
       type: 'BUZZ_SINGLE',
       value: '42',
@@ -181,7 +181,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
   '14': {
     id: '14',
     type: 'VIDEO',
-    question: 'Vem kom först, E-Type eller Martin Eriksson?',
+    question: 'Who came first, E-Type or Martin Eriksson?',
     answer: {
       type: 'OPTIONS_SINGLE',
       options: {
@@ -197,7 +197,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
   '15': {
     id: '15',
     type: 'TEXT',
-    question: 'Vad heter du?',
+    question: `What's your name?`,
     answer: {
       type: 'BUZZ_SINGLE',
       value: 'Martin Eriksson',
@@ -209,14 +209,14 @@ export const mockQuestions: Record<Question['id'], Question> = {
   '16': {
     id: '16',
     type: 'TEXT',
-    question: 'Vad tycker du om E-Type?',
+    question: 'What do you think about E-Type?',
     answer: {
       type: 'OPTIONS_SINGLE',
       options: {
-        a: 'Fantastisk',
-        b: 'Magisk',
-        c: 'Helt underbar',
-        d: 'Bästa sen skivat bröd',
+        a: 'Amazing',
+        b: 'Magical',
+        c: 'Wonderful',
+        d: 'Best thing since sliced bread',
       },
       correctOption: 'a',
     },
@@ -227,7 +227,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
   '17': {
     id: '17',
     type: 'IMAGE',
-    question: 'Vem är inte det här?',
+    question: `Who isn't this?`,
     answer: {
       type: 'BUZZ_SINGLE',
       value: 'E-Type',
@@ -239,7 +239,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
   '18': {
     id: '18',
     type: 'IMAGE',
-    question: 'Vems hår är det här?',
+    question: `Whos hair is this?`,
     answer: {
       type: 'OPTIONS_SINGLE',
       options: {
@@ -255,7 +255,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
   '19': {
     id: '19',
     type: 'VIDEO',
-    question: 'Vad hände innan?',
+    question: 'What happened before?',
     answer: {
       type: 'BUZZ_SINGLE',
       value: 'De såg Martin Eriksson.',
@@ -268,42 +268,76 @@ export const mockQuestions: Record<Question['id'], Question> = {
 
 export const mockSegment1: Segment = {
   id: '1',
-  name: 'First segment',
+  name: 'First segment (fast?)',
+  position: 3,
   intro: {
     type: 'VIDEO',
     src: '',
   },
-  questions: Object.values(mockQuestions).slice(0, 5),
+  questions: Object.values(mockQuestions)
+    .slice(0, 5)
+    .reduce((prev, curr, index) => {
+      prev[curr.id] = {
+        position: index + 1,
+        question: curr,
+      }
+
+      return prev
+    }, {} as Record<string, SegmentQuestion>),
 }
 
 export const mockSegment2: Segment = {
   id: '2',
   name: 'Second',
+  position: 2,
   intro: {
     type: 'VIDEO',
     src: '',
   },
-  questions: Object.values(mockQuestions).slice(5, 12),
+  questions: Object.values(mockQuestions)
+    .slice(6, 10)
+    .reduce((prev, curr, index) => {
+      prev[curr.id] = {
+        position: index + 1,
+        question: curr,
+      }
+
+      return prev
+    }, {} as Record<string, SegmentQuestion>),
 }
 
 export const mockSegment3: Segment = {
   id: '3',
   name: '3rd',
+  position: 1,
   intro: {
     type: 'VIDEO',
     src: '',
   },
-  questions: Object.values(mockQuestions).slice(12, 15),
+  questions: Object.values(mockQuestions)
+    .slice(11, 20)
+    .reduce((prev, curr, index) => {
+      prev[curr.id] = {
+        position: index + 1,
+        question: curr,
+      }
+
+      return prev
+    }, {} as Record<string, SegmentQuestion>),
 }
 
 export const mockShow1: Show = {
   id: '1',
   name: 'Ditt å Datt',
-  segments: [mockSegment1, mockSegment2, mockSegment3],
+  segments: {
+    [mockSegment2.id]: mockSegment2,
+    [mockSegment1.id]: mockSegment1,
+    [mockSegment3.id]: mockSegment3,
+  },
 }
 
 export const mockShow2: Show = {
   id: '2',
   name: 'Alla mot Alla',
-  segments: [],
+  segments: {},
 }
