@@ -194,9 +194,9 @@ export const moveSegmentQuestion = (
 
   // Move to last position
   if (forceLast) {
-    toPosition = Object.values(
-      state.selectedShow.segments[toSegmentId].questions
-    ).length
+    toPosition =
+      Object.values(state.selectedShow.segments[toSegmentId].questions).length +
+      1
   }
 
   if (fromSegmentId === toSegmentId) return

@@ -127,13 +127,15 @@ export const state: State = {
   questions: mockQuestions,
   questionsList: derived((state: State) => Object.values(state.questions)),
   // unusedQuestions: derived((state: State) => {
-  //   const usedQuestions = state.selectedShow?.segments.flatMap(
-  //     (x) => x.questions
+  //   if (!state.selectedShow) return []
+
+  //   const usedQuestions = Object.values(state.selectedShow.segments).flatMap(
+  //     (x) => Object.values(x.questions)
   //   )
   //   if (!usedQuestions) return []
 
   //   return state.questionsList.filter(
-  //     (x) => usedQuestions.findIndex((q) => q.id === x.id) === -1
+  //     (x) => usedQuestions.findIndex((q) => q.question.id === x.id) === -1
   //   )
   // }),
   unusedQuestions: [],
