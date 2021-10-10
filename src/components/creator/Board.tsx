@@ -25,7 +25,6 @@ export const Board = () => {
       <Segments>
         <SegmentPlaceholder></SegmentPlaceholder>
       </Segments>
-      {/* <Drawer></Drawer> */}
     </DndProvider>
   )
 }

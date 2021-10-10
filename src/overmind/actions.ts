@@ -77,12 +77,27 @@ export const addSegmentQuestion = (
     questionId: string
   }
 ) => {
-  // const segment = state.selectedShow?.segments.find((x) => x.id === segmentId)
-  // if (!segment) return
-  // const question = state.questionsList.find((x) => x.id === questionId)
-  // if (!question) return
-  // // TODO why doesn't push work here?
-  // segment.questions = [...segment.questions, question]
+  const segment = state.selectedShow?.segments[segmentId]
+  if (!segment) return
+  const question = state.questions[questionId]
+  if (!question) return
+
+  const lastPosition = Object.values(segment.questions).reduce(
+    (pos, question) => {
+      if (question.position > pos) return question.position
+
+      return pos
+    },
+    0
+  )
+
+  segment.questions = {
+    ...segment.questions,
+    [question.id]: {
+      question,
+      position: lastPosition + 1,
+    },
+  }
 }
 
 export const removeSegmentQuestion = (
