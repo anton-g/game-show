@@ -1,19 +1,72 @@
-import * as Dialog from '@radix-ui/react-dialog'
 import styled from 'styled-components'
+import * as Dialog from '@radix-ui/react-dialog'
+import { Cross1Icon, PlusCircledIcon } from '@radix-ui/react-icons'
 import { Spacer } from '../../common/Spacer'
+import { QuestionList } from '../../common/QuestionList'
+import { useAppState } from '../../../overmind'
+import { Question } from '../../../overmind/state'
+import { useState } from 'react'
+import { Field, Input, Label } from '../../common/forms'
 
-export function QuestionPicker() {
+type Props = {
+  segmentName: string
+  onSelect: (questionId: Question['id']) => void
+}
+
+export function QuestionPicker({ segmentName, onSelect }: Props) {
+  const [open, setOpen] = useState(false)
+  const [filter, setFilter] = useState('')
+  const unusedQuestions = useAppState((state) => state.unusedQuestions)
+
+  const filteredQuestions = unusedQuestions.filter((x) => {
+    const questionMatch = x.question
+      .toLowerCase()
+      .includes(filter.toLowerCase())
+    const singleAnswerMatch =
+      x.answer.type === 'BUZZ_SINGLE' &&
+      x.answer.value.toLowerCase().includes(filter.toLowerCase())
+    const multiAnswerMatch =
+      x.answer.type === 'OPTIONS_SINGLE' &&
+      Object.values(x.answer.options).some((a) =>
+        a?.toLowerCase().includes(filter.toLowerCase())
+      )
+
+    return questionMatch || singleAnswerMatch || multiAnswerMatch
+  })
+
   return (
-    <Dialog.Root open={true}>
-      <Dialog.Trigger />
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      <BoardNewQuestion />
       <Overlay />
       <Content>
         <Dialog.Title>Select question</Dialog.Title>
         <Dialog.Description>
-          Select question to add to segment X
+          Select question to add to segment <strong>{segmentName}</strong>
         </Dialog.Description>
-
-        <Close>X</Close>
+        <Spacer size={16}></Spacer>
+        <Field>
+          <Label htmlFor="filter">Filter</Label>
+          <Input
+            id="filter"
+            onChange={(e) => setFilter(e.target.value)}
+          ></Input>
+        </Field>
+        <Spacer size={32}></Spacer>
+        {filteredQuestions.length > 0 ? ( // TODO move into component?
+          <QuestionList
+            mode="SELECT"
+            questions={filteredQuestions}
+            onSelect={(questionId) => {
+              onSelect(questionId)
+              setOpen(false)
+            }}
+          ></QuestionList>
+        ) : (
+          'No unused questions'
+        )}
+        <Close>
+          <Cross1Icon></Cross1Icon>
+        </Close>
       </Content>
     </Dialog.Root>
   )
@@ -51,5 +104,37 @@ const Close = styled(Dialog.Close)`
 
   &:hover {
     background-color: rgb(237, 233, 254);
+  }
+`
+
+function BoardNewQuestion() {
+  return (
+    <TriggerWrapper>
+      <PlusCircledIcon></PlusCircledIcon>
+      <Spacer axis="horizontal" size={4}></Spacer>
+      Add question
+    </TriggerWrapper>
+  )
+}
+
+const TriggerWrapper = styled(Dialog.Trigger)`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: transparent;
+  width: 100%;
+  padding: 8px 0;
+  color: ${({ theme }) => theme.colors.gray11};
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.colors.gray2};
+  border: 1px solid ${({ theme }) => theme.colors.gray7};
+  font-weight: bold;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.primary2};
+    border-color: ${({ theme }) => theme.colors.primary7};
+    color: ${({ theme }) => theme.colors.primary11};
   }
 `

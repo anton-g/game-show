@@ -1,13 +1,12 @@
-import { PlusCircledIcon } from '@radix-ui/react-icons'
 import { useState } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import styled from 'styled-components'
 import { useActions, useAppState } from '../../../overmind'
 import type { Segment } from '../../../overmind/state'
-import { Spacer } from '../../common/Spacer'
 import { SegmentOptions } from './SegmentOptions'
 import { DraggedQuestion, DraggedSegment, DRAG_TYPES } from '../Board'
 import { BoardQuestion } from '../boardQuestion/BoardQuestion'
+import { QuestionPicker } from '../questionPicker/QuestionPicker'
 
 type Props = {
   segmentId: Segment['id']
@@ -15,6 +14,7 @@ type Props = {
 
 export const BoardSegment = ({ segmentId }: Props) => {
   const [editing, setEditing] = useState(false)
+
   const {
     removeSegment,
     updateSegment,
@@ -22,6 +22,7 @@ export const BoardSegment = ({ segmentId }: Props) => {
     moveOrReorderQuestion,
     reorderSegment,
     findSegment,
+    addSegmentQuestion,
   } = useActions()
   const segment = useAppState(
     (state) => state.selectedShow!.segments[segmentId]
@@ -132,7 +133,12 @@ export const BoardSegment = ({ segmentId }: Props) => {
             segmentId={segmentId}
           />
         ))}
-        <BoardNewQuestion></BoardNewQuestion>
+        <QuestionPicker
+          segmentName={segment.name}
+          onSelect={(questionId) =>
+            addSegmentQuestion({ segmentId: segment.id, questionId })
+          }
+        ></QuestionPicker>
       </QuestionsList>
     </Wrapper>
   )
@@ -238,36 +244,4 @@ const Input = styled.input`
   font-weight: bold;
 
   margin-right: 16px;
-`
-
-function BoardNewQuestion() {
-  return (
-    <NewWrapper>
-      <PlusCircledIcon></PlusCircledIcon>
-      <Spacer axis="horizontal" size={4}></Spacer>
-      Add question
-    </NewWrapper>
-  )
-}
-
-const NewWrapper = styled.button`
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background-color: transparent;
-  width: 100%;
-  padding: 8px 0;
-  color: ${({ theme }) => theme.colors.gray11};
-  border-radius: 8px;
-  background-color: ${({ theme }) => theme.colors.gray2};
-  border: 1px solid ${({ theme }) => theme.colors.gray7};
-  font-weight: bold;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.primary2};
-    border-color: ${({ theme }) => theme.colors.primary7};
-    color: ${({ theme }) => theme.colors.primary11};
-  }
 `

@@ -2,7 +2,6 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import styled from 'styled-components'
 import { useActions } from '../../overmind'
-import { QuestionPicker } from './questionPicker/QuestionPicker'
 import { Segments } from './Segments'
 
 export type DraggedQuestion = {
@@ -26,7 +25,6 @@ export const Board = () => {
       <Segments>
         <SegmentPlaceholder></SegmentPlaceholder>
       </Segments>
-      <QuestionPicker></QuestionPicker>
     </DndProvider>
   )
 }
