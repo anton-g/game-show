@@ -23,6 +23,7 @@ export function Segments({ children }: { children: ReactNode }) {
 const Wrapper = styled.div`
   display: flex;
   height: 100%;
+  overflow-x: scroll;
 
   > * {
     margin-left: 16px;
