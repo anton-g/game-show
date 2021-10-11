@@ -12,7 +12,7 @@ export function NavBar() {
       <Spacer size={48} axis="horizontal"></Spacer>
       <NavLink to="/library">Library</NavLink>
       <Spacer size={16} axis="horizontal"></Spacer>
-      <NavLink to="/creator">Shows</NavLink>
+      <NavLink to="/creator">Show builder</NavLink>
       <ShowName>{currentShow ? `Editing ${currentShow.name}` : ''}</ShowName>
     </Wrapper>
   )
