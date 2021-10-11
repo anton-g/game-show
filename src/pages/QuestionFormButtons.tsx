@@ -46,10 +46,12 @@ export function QuestionFormButtons({
             </DropdownButton>
             <DropdownMenu.Content>
               <DropdownMenu.Item
+                danger
                 onSelect={() => setShowConfirmDeleteDialog(true)}
               >
                 Delete
               </DropdownMenu.Item>
+              <DropdownMenu.Separator></DropdownMenu.Separator>
               <DropdownMenu.Item onSelect={onSaveAsNew}>
                 Save as new
               </DropdownMenu.Item>

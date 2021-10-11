@@ -20,10 +20,12 @@ export function SegmentOptions({ onRemove, className }: Props) {
         <DotsHorizontalIcon></DotsHorizontalIcon>
       </Trigger>
       <DropdownMenu.Content>
-        <DropdownMenu.Item onSelect={onRemove}>
+        <DropdownMenu.Item disabled>Edit segment</DropdownMenu.Item>
+        <DropdownMenu.Item disabled>Preview segment</DropdownMenu.Item>
+        <DropdownMenu.Separator></DropdownMenu.Separator>
+        <DropdownMenu.Item danger onSelect={onRemove}>
           Remove segment
         </DropdownMenu.Item>
-        <DropdownMenu.Item disabled>Preview segment</DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu>
   )
