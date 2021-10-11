@@ -13,7 +13,7 @@ export const createQuestion = (
 ) => {
   question.id = nanoid()
   state.questions[question.id] = question
-  effects.router.goTo('/library')
+  effects.router.goTo('/library') // TODO context based routing
 }
 
 export const updateQuestion = (
