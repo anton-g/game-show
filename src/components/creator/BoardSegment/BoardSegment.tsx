@@ -7,6 +7,7 @@ import { SegmentOptions } from './SegmentOptions'
 import { DraggedQuestion, DraggedSegment, DRAG_TYPES } from '../Board'
 import { BoardQuestion } from '../boardQuestion/BoardQuestion'
 import { QuestionPicker } from '../questionPicker/QuestionPicker'
+import { EditSegmentDialog } from './EditSegmentDialog'
 
 type Props = {
   segmentId: Segment['id']
@@ -102,17 +103,7 @@ export const BoardSegment = ({ segmentId }: Props) => {
     >
       <Header ref={segmentDragSource}>
         <TitleRow>
-          {editing ? (
-            <TitleInput
-              defaultValue={segment.name}
-              onChange={(name) => {
-                updateSegment({ name, id: segment.id })
-                setEditing(false)
-              }}
-            ></TitleInput>
-          ) : (
-            <Title onClick={() => setEditing(true)}>{segment.name}</Title>
-          )}
+          <Title>{segment.name}</Title>
           <StyledOptions
             onRemove={() => {
               if (
@@ -122,6 +113,7 @@ export const BoardSegment = ({ segmentId }: Props) => {
                 removeSegment(segment.id)
               }
             }}
+            onEdit={() => setEditing(true)}
           ></StyledOptions>
         </TitleRow>
       </Header>
@@ -140,6 +132,11 @@ export const BoardSegment = ({ segmentId }: Props) => {
           }
         ></QuestionPicker>
       </QuestionsList>
+      <EditSegmentDialog
+        open={editing}
+        onOpenChange={setEditing}
+        segment={segment}
+      />
     </Wrapper>
   )
 }
@@ -185,7 +182,6 @@ const Title = styled.h2`
   max-width: 100%;
   width: 100%;
   font-size: 24px;
-  cursor: pointer;
 `
 
 const QuestionsList = styled.div`
@@ -199,49 +195,4 @@ const QuestionsList = styled.div`
   > *:not(:last-child) {
     margin-bottom: 16px;
   }
-`
-
-type TitleProps = {
-  onChange: (value: string) => void
-  defaultValue: string
-}
-function TitleInput({ onChange, defaultValue }: TitleProps) {
-  return (
-    <Input
-      autoFocus
-      defaultValue={defaultValue}
-      onKeyDown={(e) => {
-        switch (e.code) {
-          case 'Enter':
-            onChange(e.currentTarget.value || defaultValue)
-            break
-          case 'Escape':
-            onChange(defaultValue)
-            break
-        }
-      }}
-      onFocus={(e) => e.target.select()}
-      onBlur={(e) => {
-        onChange(e.target.value || defaultValue)
-      }}
-    ></Input>
-  )
-}
-
-const Input = styled.input`
-  margin: 0;
-  padding: 0;
-  padding-left: 4px;
-  margin-left: -5px;
-  margin-top: -3px;
-  margin-bottom: -3px;
-  width: 100%;
-  max-width: 100%;
-  height: 32px;
-  font-size: 24px;
-  border-radius: 4px;
-  border: 1px solid hsl(0 0% 90%);
-  font-weight: bold;
-
-  margin-right: 16px;
 `
