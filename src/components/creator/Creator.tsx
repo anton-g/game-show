@@ -1,5 +1,5 @@
-import { NavBar } from '../components/common/NavBar'
-import { Board } from '../components/creator/Board'
+import { NavBar } from '../common/NavBar'
+import { Board } from './Board'
 
 export function Creator() {
   return (

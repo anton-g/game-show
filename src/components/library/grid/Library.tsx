@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { Field, Input, Label } from '../components/common/forms'
-import { NavBar } from '../components/common/NavBar'
-import { Spacer } from '../components/common/Spacer'
-import { QuestionList } from '../components/common/QuestionList'
-import { useAppState } from '../overmind'
+import { Field, Input, Label } from '../../common/forms'
+import { NavBar } from '../../common/NavBar'
+import { Spacer } from '../../common/Spacer'
+import { QuestionList } from '../../common/QuestionList'
+import { useAppState } from '../../../overmind'
 
 export function Library() {
   const [filter, setFilter] = useState('')

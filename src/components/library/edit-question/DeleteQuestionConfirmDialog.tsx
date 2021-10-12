@@ -1,6 +1,6 @@
 import * as Dialog from '@radix-ui/react-dialog' // TODO replace with alert-dialog
 import styled from 'styled-components'
-import { Spacer } from '../components/common/Spacer'
+import { Spacer } from '../../common/Spacer'
 
 type ConfirmDialogProps = {
   open: boolean

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import styled, { css } from 'styled-components'
-import { DropdownMenu } from '../components/common/DropdownMenu'
+import { DropdownMenu } from '../../common/DropdownMenu'
 import { DeleteQuestionConfirmDialog } from './DeleteQuestionConfirmDialog'
 
 type Props = {
