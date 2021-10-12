@@ -4,7 +4,7 @@ import {
   SpeakerLoudIcon,
   VideoIcon,
 } from '@radix-ui/react-icons'
-import { Question } from '../../overmind/state'
+import { Question } from '../../overmind/types'
 
 export function QuestionTypeIcon({ question }: { question: Question }) {
   switch (question.type) {

@@ -30,7 +30,7 @@ export const Board = () => {
 }
 
 function SegmentPlaceholder() {
-  const { addSegment } = useActions()
+  const { addSegment } = useActions().builder
 
   return (
     <Wrapper>

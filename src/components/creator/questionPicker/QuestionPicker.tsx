@@ -4,7 +4,7 @@ import { Cross1Icon, PlusCircledIcon } from '@radix-ui/react-icons'
 import { Spacer } from '../../common/Spacer'
 import { QuestionList } from '../../common/QuestionList'
 import { useAppState } from '../../../overmind'
-import { Question } from '../../../overmind/state'
+import { Question } from '../../../overmind/types'
 import { useState } from 'react'
 import { Field, Input, Label } from '../../common/forms'
 

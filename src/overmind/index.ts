@@ -1,4 +1,5 @@
 import { IContext } from 'overmind'
+import { merge, namespaced } from 'overmind/config'
 import {
   createActionsHook,
   createEffectsHook,
@@ -9,11 +10,20 @@ import { state } from './state'
 import effects from './effects'
 import * as actions from './actions'
 
-export const config = {
-  state,
-  effects,
-  actions,
-}
+import * as builder from './builder/module'
+import * as library from './library/module'
+
+export const config = merge(
+  {
+    state,
+    effects,
+    actions,
+  },
+  namespaced({
+    builder,
+    library,
+  })
+)
 
 export type Context = IContext<{
   state: typeof config.state

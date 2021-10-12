@@ -1,4 +1,4 @@
-import { Question } from '../overmind/state'
+import { Question } from '../overmind/types'
 
 export function getQuestionAnswer(question: Question): string {
   switch (question.answer.type) {

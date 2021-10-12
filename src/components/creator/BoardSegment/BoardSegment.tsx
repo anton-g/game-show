@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import styled from 'styled-components'
 import { useActions, useAppState } from '../../../overmind'
-import type { Segment } from '../../../overmind/state'
+import { Segment } from '../../../overmind/types'
 import { SegmentOptions } from './SegmentOptions'
 import { DraggedQuestion, DraggedSegment, DRAG_TYPES } from '../Board'
 import { BoardQuestion } from '../boardQuestion/BoardQuestion'
@@ -23,7 +23,7 @@ export const BoardSegment = ({ segmentId }: Props) => {
     reorderSegment,
     findSegment,
     addSegmentQuestion,
-  } = useActions()
+  } = useActions().builder
   const segment = useAppState(
     (state) => state.selectedShow!.segments[segmentId]
   )
