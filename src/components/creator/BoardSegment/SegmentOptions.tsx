@@ -5,10 +5,11 @@ import { DropdownMenu } from '../../common/DropdownMenu'
 
 type Props = {
   onRemove: () => void
+  onEdit: () => void
   className?: string
 }
 
-export function SegmentOptions({ onRemove, className }: Props) {
+export function SegmentOptions({ onRemove, onEdit, className }: Props) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -20,7 +21,7 @@ export function SegmentOptions({ onRemove, className }: Props) {
         <DotsHorizontalIcon></DotsHorizontalIcon>
       </Trigger>
       <DropdownMenu.Content>
-        <DropdownMenu.Item disabled>Edit segment</DropdownMenu.Item>
+        <DropdownMenu.Item onSelect={onEdit}>Edit segment</DropdownMenu.Item>
         <DropdownMenu.Item disabled>Preview segment</DropdownMenu.Item>
         <DropdownMenu.Separator></DropdownMenu.Separator>
         <DropdownMenu.Item danger onSelect={onRemove}>

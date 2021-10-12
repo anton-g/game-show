@@ -98,14 +98,14 @@ const Close = styled(Dialog.Close)`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: rgb(87, 70, 175);
+  color: ${({ theme }) => theme.colors.primary12};
   position: absolute;
   top: 10px;
   right: 10px;
   border-radius: 100%;
 
   &:hover {
-    background-color: rgb(237, 233, 254);
+    background-color: ${({ theme }) => theme.colors.primary4};
   }
 `
 
