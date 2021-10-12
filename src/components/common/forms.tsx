@@ -38,3 +38,25 @@ export const FieldError = styled.span`
   color: ${({ theme }) => theme.colors.tomato11};
   font-weight: 500;
 `
+
+export const Button = styled.button<{ grouped?: boolean }>`
+  background-color: ${({ theme }) => theme.colors.primary3};
+  border: 0;
+  border-radius: 4px;
+  padding: 6px 12px;
+  color: ${({ theme }) => theme.colors.primary11};
+  cursor: pointer;
+  transition: background-color 0.15s;
+  font-weight: bold;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.primary4};
+  }
+
+  ${({ grouped }) =>
+    grouped &&
+    css`
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    `}
+`

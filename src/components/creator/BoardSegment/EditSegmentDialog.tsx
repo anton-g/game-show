@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Cross1Icon } from '@radix-ui/react-icons'
-import { Field, FieldError, Input, Label } from '../../common/forms'
+import { Button, Field, FieldError, Input, Label } from '../../common/forms'
 import { Spacer } from '../../common/Spacer'
 import { Segment } from '../../../overmind/types'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -28,7 +28,7 @@ export function EditSegmentDialog({ segment, open, onOpenChange }: Props) {
       <Content>
         <Dialog.Title>Edit segment</Dialog.Title>
         <Dialog.Description>description</Dialog.Description>
-        <Spacer size={16}></Spacer>
+        <Spacer size={8}></Spacer>
         <EditSegmentForm segment={segment} onUpdate={handleUpdate} />
         <Close>
           <Cross1Icon></Cross1Icon>
@@ -115,25 +115,14 @@ function EditSegmentForm({ segment, onUpdate }: FormProps) {
         ></Input>
         {errors.name && <FieldError>{errors.name.message}</FieldError>}
       </Field>
-      <Spacer size={16} />
-      <Button type="submit" onClick={handleSubmit(onSubmit)}>
-        Save
-      </Button>
+      <Spacer size={32} />
+      <SaveButton type="submit" onClick={handleSubmit(onSubmit)}>
+        Save changes
+      </SaveButton>
     </>
   )
 }
 
-const Button = styled.button`
-  background-color: ${({ theme }) => theme.colors.primary9};
-  border: 0;
-  border-radius: 4px;
-  padding: 6px 12px;
-  color: ${({ theme }) => theme.colors.gray1};
-  cursor: pointer;
-  transition: background-color 0.15s;
-  font-weight: bold;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.primary10};
-  }
+const SaveButton = styled(Button)`
+  align-self: flex-end;
 `

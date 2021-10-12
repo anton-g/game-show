@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { DropdownMenu } from '../../common/DropdownMenu'
+import { Button } from '../../common/forms'
 import { DeleteQuestionConfirmDialog } from './DeleteQuestionConfirmDialog'
 
 type Props = {
@@ -73,43 +74,21 @@ const ButtonWrapper = styled.div`
   align-items: center;
 `
 
-const Button = styled.button<{ grouped: boolean }>`
-  background-color: ${({ theme }) => theme.colors.primary9};
-  border: 0;
-  border-radius: 4px;
-  padding: 6px 12px;
-  color: ${({ theme }) => theme.colors.gray1};
-  cursor: pointer;
-  transition: background-color 0.15s;
-  font-weight: bold;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.primary10};
-  }
-
-  ${({ grouped }) =>
-    grouped &&
-    css`
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    `}
-`
-
 const DropdownButton = styled(DropdownMenu.Trigger)`
-  background-color: ${({ theme }) => theme.colors.primary9};
+  background-color: ${({ theme }) => theme.colors.primary3};
   border: 0;
-  border-left: 1px solid ${({ theme }) => theme.colors.primary10};
+  border-left: 1px solid ${({ theme }) => theme.colors.primary4};
   border-radius: 4px;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   padding: 8px;
-  color: ${({ theme }) => theme.colors.gray1};
+  color: ${({ theme }) => theme.colors.primary11};
   cursor: pointer;
   transition: background-color 0.15s;
   display: inline-flex;
   align-items: center;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.primary10};
+    background-color: ${({ theme }) => theme.colors.primary4};
   }
 `
