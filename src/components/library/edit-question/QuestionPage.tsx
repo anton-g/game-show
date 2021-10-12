@@ -1,17 +1,11 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import {
-  Field,
-  FieldError,
-  Input,
-  Label,
-  TextArea,
-} from '../components/common/forms'
-import { Select } from '../components/common/Select'
-import { Spacer } from '../components/common/Spacer'
-import { useActions, useAppState } from '../overmind'
-import { AnswerType, Question } from '../overmind/state'
+import { Field, FieldError, Input, Label, TextArea } from '../../common/forms'
+import { Select } from '../../common/Select'
+import { Spacer } from '../../common/Spacer'
+import { useActions, useAppState } from '../../../overmind'
+import { AnswerType, Question } from '../../../overmind/state'
 import { QuestionFormButtons } from './QuestionFormButtons'
 
 export function QuestionPage() {
