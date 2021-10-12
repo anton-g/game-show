@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { Question } from '../../../overmind/types'
+import type { Question } from '../../../overmind/types'
 import { AnswerTypeIcon } from '../AnswerTypeIcon'
 import { QuestionTypeIcon } from '../QuestionTypeIcon'
 

@@ -1,4 +1,4 @@
-import { Question } from '../../overmind/types'
+import type { Question } from '../../overmind/types'
 
 export function TableQuestionAnswer({ question }: { question: Question }) {
   switch (question.answer.type) {

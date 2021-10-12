@@ -1,7 +1,7 @@
 import { useDrag, useDrop } from 'react-dnd'
 import styled, { css } from 'styled-components'
 import { useActions, useAppState } from '../../../overmind'
-import { Question, Segment } from '../../../overmind/types'
+import type { Question, Segment } from '../../../overmind/types'
 import { getQuestionAnswer } from '../../../utils/question-utils'
 import { DraggedQuestion, DRAG_TYPES } from '../Board'
 import { QuestionOptions } from './QuestionOptions'

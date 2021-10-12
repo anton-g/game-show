@@ -3,7 +3,7 @@ import {
   HamburgerMenuIcon,
   HandIcon,
 } from '@radix-ui/react-icons'
-import { Question } from '../../overmind/types'
+import type { Question } from '../../overmind/types'
 
 export function AnswerType({ question }: { question: Question }) {
   switch (question.answer.type) {

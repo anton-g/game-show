@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
-import { Question } from '../../overmind/types'
+import type { Question } from '../../overmind/types'
 import { AnswerType } from './AnswerType'
 import { QuestionTypeIcon } from './QuestionTypeIcon'
 import { TableQuestionAnswer } from './TableQuestionAnswer'
