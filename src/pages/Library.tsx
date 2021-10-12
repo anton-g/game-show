@@ -30,7 +30,7 @@ export function Library() {
             ></Input>
           </Field>
           <Spacer axis="horizontal" size={16}></Spacer>
-          <Button to="/library/question">New question</Button>
+          <Button to="/library/question">Create question</Button>
         </Controls>
         <Spacer size={16}></Spacer>
         <QuestionList mode="LINK" questions={filteredQuestions}></QuestionList>
