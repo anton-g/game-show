@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { useActions, useAppState } from '../overmind'
-import { Show } from '../overmind/state'
+import { Show } from '../overmind/types'
 
 export function ShowSelector() {
   const { shows, selectedShow } = useAppState()

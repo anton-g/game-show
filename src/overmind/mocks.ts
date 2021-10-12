@@ -1,4 +1,4 @@
-import { Question, Segment, SegmentQuestion, Show } from './state'
+import { Question, Segment, SegmentQuestion, Show } from './types'
 
 export const mockQuestions: Record<Question['id'], Question> = {
   '1': {
