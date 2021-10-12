@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { AnswerType } from '../../overmind/types'
+import type { AnswerType } from '../../overmind/types'
 import { Spacer } from '../common/Spacer'
 
 export function AnswerTypeIcon({ type }: { type: AnswerType }) {

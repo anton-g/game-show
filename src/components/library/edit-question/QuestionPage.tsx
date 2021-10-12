@@ -5,7 +5,7 @@ import { Field, FieldError, Input, Label, TextArea } from '../../common/forms'
 import { Select } from '../../common/Select'
 import { Spacer } from '../../common/Spacer'
 import { useActions, useAppState } from '../../../overmind'
-import { AnswerType, Question } from '../../../overmind/types'
+import type { AnswerType, Question } from '../../../overmind/types'
 import { QuestionFormButtons } from './QuestionFormButtons'
 
 export function QuestionPage() {
