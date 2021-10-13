@@ -69,12 +69,22 @@ export type Question =
   | ImageQuestion
   | VideoQuestion
 
-type IntroType = 'VIDEO' | 'COMPONENT'
+type IntroType = 'NONE' | 'COMPONENT'
 
-type Intro = {
+type IntroBase = {
   type: IntroType
-  src: string
 }
+
+type ComponentIntro = {
+  type: 'COMPONENT'
+  src: string
+} & IntroBase
+
+type NoIntro = {
+  type: 'NONE'
+} & IntroBase
+
+type Intro = ComponentIntro | NoIntro
 
 export type SegmentQuestion = {
   question: Question

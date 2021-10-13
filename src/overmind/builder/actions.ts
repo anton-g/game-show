@@ -230,8 +230,7 @@ export const addSegment = ({ state }: Context) => {
     position: existingSegmentsCount + 1,
     questions: {},
     intro: {
-      src: '',
-      type: 'COMPONENT',
+      type: 'NONE',
     },
   }
 

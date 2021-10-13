@@ -23,7 +23,6 @@ export function SegmentOptions({ onRemove, onEdit, className }: Props) {
       <DropdownMenu.Content>
         <DropdownMenu.Item onSelect={onEdit}>Edit segment</DropdownMenu.Item>
         <DropdownMenu.Item disabled>Preview segment</DropdownMenu.Item>
-        <DropdownMenu.Separator></DropdownMenu.Separator>
         <DropdownMenu.Item danger onSelect={onRemove}>
           Remove segment
         </DropdownMenu.Item>

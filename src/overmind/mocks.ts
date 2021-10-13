@@ -271,8 +271,7 @@ export const mockSegment1: Segment = {
   name: 'First segment (fast?)',
   position: 3,
   intro: {
-    type: 'VIDEO',
-    src: '',
+    type: 'NONE',
   },
   questions: Object.values(mockQuestions)
     .slice(0, 5)
@@ -291,8 +290,7 @@ export const mockSegment2: Segment = {
   name: 'Second',
   position: 2,
   intro: {
-    type: 'VIDEO',
-    src: '',
+    type: 'NONE',
   },
   questions: Object.values(mockQuestions)
     .slice(6, 10)
@@ -311,8 +309,7 @@ export const mockSegment3: Segment = {
   name: '3rd',
   position: 1,
   intro: {
-    type: 'VIDEO',
-    src: '',
+    type: 'NONE',
   },
   questions: Object.values(mockQuestions)
     .slice(11, 20)
