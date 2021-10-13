@@ -6,6 +6,7 @@ import { Spacer } from '../../common/Spacer'
 import { Segment } from '../../../overmind/types'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useActions } from '../../../overmind'
+import { Select } from '../../common/Select'
 
 type Props = {
   segment: Segment
@@ -23,11 +24,9 @@ export function EditSegmentDialog({ segment, open, onOpenChange }: Props) {
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Trigger />
       <Overlay />
-      <Content>
+      <Content aria-describedby={`Editing segment ${segment.name}`}>
         <Dialog.Title>Edit segment</Dialog.Title>
-        <Dialog.Description>description</Dialog.Description>
         <Spacer size={8}></Spacer>
         <EditSegmentForm segment={segment} onUpdate={handleUpdate} />
         <Close>
@@ -114,6 +113,14 @@ function EditSegmentForm({ segment, onUpdate }: FormProps) {
           error={Boolean(errors.name)}
         ></Input>
         {errors.name && <FieldError>{errors.name.message}</FieldError>}
+      </Field>
+      <Spacer size={16} />
+      <Field>
+        <Label htmlFor="introType">Intro</Label>
+        <Select {...register('intro.type')} name="intro.type" id="introType">
+          <option value="NONE">None</option>
+          <option value="COMPONENT">Component</option>
+        </Select>
       </Field>
       <Spacer size={32} />
       <SaveButton type="submit" onClick={handleSubmit(onSubmit)}>
