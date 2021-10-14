@@ -3,13 +3,13 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { Cross1Icon } from '@radix-ui/react-icons'
 import { Button, Field, FieldError, Input, Label } from '../../common/forms'
 import { Spacer } from '../../common/Spacer'
-import { Segment } from '../../../overmind/types'
+import type { QuestionSegmentType } from '../../../overmind/types'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useActions } from '../../../overmind'
 import { Select } from '../../common/Select'
 
 type Props = {
-  segment: Segment
+  segment: QuestionSegmentType
   open: boolean
   onOpenChange: (open: boolean) => void
 }
@@ -17,7 +17,7 @@ type Props = {
 export function EditSegmentDialog({ segment, open, onOpenChange }: Props) {
   const { updateSegment } = useActions().builder
 
-  const handleUpdate = (segmentUpdate: Segment) => {
+  const handleUpdate = (segmentUpdate: QuestionSegmentType) => {
     updateSegment(segmentUpdate)
     onOpenChange(false)
   }
@@ -81,8 +81,8 @@ const Close = styled(Dialog.Close)`
 `
 
 type FormProps = {
-  segment: Segment
-  onUpdate: (segment: Segment) => void
+  segment: QuestionSegmentType
+  onUpdate: (segment: QuestionSegmentType) => void
 }
 
 function EditSegmentForm({ segment, onUpdate }: FormProps) {
@@ -90,12 +90,12 @@ function EditSegmentForm({ segment, onUpdate }: FormProps) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Segment>({
+  } = useForm<QuestionSegmentType>({
     defaultValues: segment,
     shouldUnregister: true,
   })
 
-  const onSubmit: SubmitHandler<Segment> = (data) => {
+  const onSubmit: SubmitHandler<QuestionSegmentType> = (data) => {
     onUpdate(data)
   }
 

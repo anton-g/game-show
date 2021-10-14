@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid'
 import { Context } from '..'
-import { Segment, SegmentQuestion } from '../types'
+import { isQuestionSegment } from '../../utils/type-utils'
+import type { QuestionSegmentType, Segment, SegmentQuestion } from '../types'
 
 export const findSegment = ({ state }: Context, id: string) => {
   if (!state.selectedShow) throw Error('no show :(')
@@ -19,6 +20,9 @@ export const findQuestion = (
 
   for (let i = 0; i < state.selectedShowSegmentsList.length; i++) {
     const segment = state.selectedShowSegmentsList[i]
+
+    if (!isQuestionSegment(segment))
+      throw Error('Trying to find question in invalid segment')
 
     if (segment.questions.hasOwnProperty(id)) {
       return {
@@ -43,6 +47,10 @@ export const addSegmentQuestion = (
 ) => {
   const segment = state.selectedShow?.segments[segmentId]
   if (!segment) return
+
+  if (!isQuestionSegment(segment))
+    throw Error('Trying to add question to invalid segment')
+
   const question = state.questions[questionId]
   if (!question) return
 
@@ -76,7 +84,12 @@ export const removeSegmentQuestion = (
 ) => {
   if (!state.selectedShow) throw Error('No show :(')
 
-  delete state.selectedShow.segments[segmentId].questions[questionId]
+  const segment = state.selectedShow.segments[segmentId]
+
+  if (!isQuestionSegment(segment))
+    throw Error('Trying to remove question from invalid segment')
+
+  delete segment.questions[questionId]
 }
 
 export const moveOrReorderQuestion = (
@@ -88,7 +101,7 @@ export const moveOrReorderQuestion = (
   }: {
     id: string
     toPosition: number
-    toSegmentId: Segment['id']
+    toSegmentId: QuestionSegmentType['id']
   }
 ) => {
   const { question, segmentId } = actions.builder.findQuestion(id)
@@ -120,7 +133,7 @@ export const reorderSegmentQuestion = (
     toPosition,
   }: {
     question: SegmentQuestion
-    segmentId: Segment['id']
+    segmentId: QuestionSegmentType['id']
     fromPosition: number
     toPosition: number
   }
@@ -131,6 +144,9 @@ export const reorderSegmentQuestion = (
   if (fromPosition === undefined || toPosition === undefined) return
 
   const segment = state.selectedShow.segments[segmentId]
+
+  if (!isQuestionSegment(segment))
+    throw Error('Trying to reorder question in invalid segment')
 
   const newQuestions = { ...segment.questions }
 
@@ -171,19 +187,23 @@ export const moveSegmentQuestion = (
 ) => {
   if (!state.selectedShow) throw Error('no show :(')
 
+  const newSegments = { ...state.selectedShow.segments }
+  const fromSegment = newSegments[fromSegmentId]
+  const toSegment = newSegments[toSegmentId]
+
+  if (!isQuestionSegment(fromSegment) || !isQuestionSegment(toSegment))
+    throw new Error('Trying to move question between invalid segment')
+
   // Move to last position
   if (forceLast) {
-    toPosition =
-      Object.values(state.selectedShow.segments[toSegmentId].questions).length +
-      1
+    toPosition = Object.values(toSegment.questions).length + 1
   }
 
   if (fromSegmentId === toSegmentId) return
   if (fromPosition === undefined || toPosition === undefined) return
 
-  const newSegments = { ...state.selectedShow.segments }
-
-  const fromSegment = newSegments[fromSegmentId]
+  if (!isQuestionSegment(fromSegment))
+    throw Error('Trying to reorder question in invalid segment')
 
   delete fromSegment.questions[question.question.id]
   const cardsToUpdateInOldSegment = Object.values(fromSegment.questions).filter(
@@ -191,7 +211,6 @@ export const moveSegmentQuestion = (
   )
   cardsToUpdateInOldSegment.forEach((x) => x.position--)
 
-  const toSegment = newSegments[toSegmentId]
   const cardsToUpdateInNewSegment = Object.values(toSegment.questions).filter(
     (x) => x.position >= toPosition
   )
@@ -224,8 +243,9 @@ export const addSegment = ({ state }: Context) => {
     state.selectedShow.segments
   ).length
 
-  const newSegment: Segment = {
+  const newSegment: QuestionSegmentType = {
     id: nanoid(),
+    type: 'QUESTIONS',
     name: `${ordinal_suffix_of(existingSegmentsCount + 1)} segment`,
     position: existingSegmentsCount + 1,
     questions: {},
@@ -271,6 +291,10 @@ export const reorderSegment = (
 
   seg.position = toPosition
 
+  // if (toPosition === 3) {
+  //   console.trace(newSegments)
+  //   debugger
+  // }
   state.selectedShow.segments = newSegments
 }
 
@@ -282,10 +306,14 @@ export const removeSegment = ({ state }: Context, segmentId: string) => {
 
 export const updateSegment = (
   { state }: Context,
-  update: { id: string } & Partial<Segment>
+  update: { id: string } & Partial<QuestionSegmentType>
 ) => {
   if (!state.selectedShow) return
 
   const segment = state.selectedShow.segments[update.id]
+
+  if (!isQuestionSegment(segment))
+    throw new Error('Trying to update invalid segment')
+
   state.selectedShow.segments[update.id] = { ...segment, ...update }
 }

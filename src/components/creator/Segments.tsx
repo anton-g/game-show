@@ -2,7 +2,8 @@ import { ReactNode } from 'react'
 import { useDrop } from 'react-dnd'
 import styled from 'styled-components'
 import { useAppState } from '../../overmind'
-import { BoardSegment } from './boardSegment/BoardSegment'
+import { QuestionSegment } from './boardSegment/QuestionSegment'
+import { ScoreSegment } from './boardSegment/ScoreSegment'
 
 export function Segments({ children }: { children: ReactNode }) {
   const { selectedShowSegmentsList } = useAppState()
@@ -12,9 +13,27 @@ export function Segments({ children }: { children: ReactNode }) {
 
   return (
     <Wrapper ref={drop}>
-      {selectedShowSegmentsList.map((segment) => (
-        <BoardSegment key={segment.id} segmentId={segment.id}></BoardSegment>
-      ))}
+      {selectedShowSegmentsList.map((segment) => {
+        switch (segment.type) {
+          case 'QUESTIONS':
+            return (
+              <QuestionSegment
+                key={segment.id}
+                segmentId={segment.id}
+              ></QuestionSegment>
+            )
+          case 'SCORES':
+            return (
+              <ScoreSegment
+                key={segment.id}
+                segmentId={segment.id}
+              ></ScoreSegment>
+            )
+          default:
+            const _exhaustiveCheck: never = segment
+            return _exhaustiveCheck
+        }
+      })}
       {children}
     </Wrapper>
   )

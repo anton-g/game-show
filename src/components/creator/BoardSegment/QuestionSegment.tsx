@@ -1,83 +1,46 @@
 import { useState } from 'react'
-import { useDrag, useDrop } from 'react-dnd'
+import { useDrop } from 'react-dnd'
 import styled from 'styled-components'
 import { useActions, useAppState } from '../../../overmind'
-import type { Segment } from '../../../overmind/types'
+import type { QuestionSegmentType } from '../../../overmind/types'
 import { SegmentOptions } from './SegmentOptions'
-import { DraggedQuestion, DraggedSegment, DRAG_TYPES } from '../Board'
+import { DraggedQuestion, DRAG_TYPES } from '../Board'
 import { BoardQuestion } from '../boardQuestion/BoardQuestion'
 import { QuestionPicker } from '../questionPicker/QuestionPicker'
 import { EditSegmentDialog } from './EditSegmentDialog'
+import { isQuestionSegment } from '../../../utils/type-utils'
+import { useSegmentDrag } from './useSegmentDrag'
+import { useSegmentDrop } from './useSegmentDrop'
 
 type Props = {
-  segmentId: Segment['id']
+  segmentId: QuestionSegmentType['id']
 }
 
-export const BoardSegment = ({ segmentId }: Props) => {
+export const QuestionSegment = ({ segmentId }: Props) => {
   const [editing, setEditing] = useState(false)
 
   const {
     removeSegment,
-    updateSegment,
     findQuestion,
     moveOrReorderQuestion,
-    reorderSegment,
-    findSegment,
     addSegmentQuestion,
   } = useActions().builder
   const segment = useAppState(
     (state) => state.selectedShow!.segments[segmentId]
   )
+
+  if (!isQuestionSegment(segment)) throw new Error('Invalid segment')
+
   const questionsList = Object.values(segment.questions).sort(
     (a, b) => a.position - b.position
   )
 
-  const [{ isDragging }, segmentDragSource, preview] = useDrag(
-    () => ({
-      type: DRAG_TYPES.SEGMENT,
-      item: {
-        id: segmentId,
-        originalPosition: segment.position,
-      } as DraggedSegment,
-      collect: (monitor) => ({
-        isDragging: monitor.isDragging(),
-      }),
-      end: (item, monitor) => {
-        const { id: droppedId, originalPosition } = item
-        const didDrop = monitor.didDrop()
-
-        if (!didDrop) {
-          // "Cancel", dropped outside, move back to original position
-          // TEST Does this work?
-          reorderSegment({
-            segmentId: droppedId,
-            toPosition: originalPosition,
-          })
-        }
-      },
-      isDragging: (monitor) => {
-        return segmentId === monitor.getItem().id
-      },
-    }),
-    [segmentId, reorderSegment]
+  const [segmentDragSource, preview, { isDragging }] = useSegmentDrag(
+    segmentId,
+    segment.position
   )
 
-  const [, segmentDropTarget] = useDrop(
-    () => ({
-      accept: DRAG_TYPES.SEGMENT,
-      canDrop: () => false,
-      hover({ id: draggedId }: DraggedSegment) {
-        if (draggedId !== segmentId) {
-          const { segment: hoveredSegment } = findSegment(segmentId) // TODO check if this can be removed?
-          reorderSegment({
-            segmentId: draggedId,
-            toPosition: hoveredSegment.position,
-          })
-        }
-      },
-    }),
-    [reorderSegment, findSegment, segmentId]
-  )
+  const [segmentDropTarget] = useSegmentDrop(segmentId)
 
   const [, questionDropArea] = useDrop(
     () => ({

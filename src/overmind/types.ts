@@ -91,13 +91,27 @@ export type SegmentQuestion = {
   position: number
 }
 
-export type Segment = {
+type SegmentType = 'QUESTIONS' | 'SCORES'
+
+type BaseSegment = {
   id: string
+  position: number
   name: string
+  type: SegmentType
+}
+
+export type QuestionSegmentType = {
+  type: 'QUESTIONS'
   intro: Intro
   questions: Record<Question['id'], SegmentQuestion>
-  position: number
-}
+} & BaseSegment
+
+export type ScoreSegmentType = {
+  type: 'SCORES'
+  name: 'Scores'
+} & BaseSegment
+
+export type Segment = QuestionSegmentType | ScoreSegmentType
 
 export type Show = {
   id: string

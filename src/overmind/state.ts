@@ -1,5 +1,5 @@
 import { derived } from 'overmind'
-import { Show, Segment, Question } from './types'
+import { Show, Question, Segment } from './types'
 import { mockQuestions, mockShow1, mockShow2 } from './mocks'
 
 type State = {
@@ -35,7 +35,7 @@ export const state: State = {
     if (!state.selectedShow) return []
 
     const usedQuestions = Object.values(state.selectedShow.segments).flatMap(
-      (x) => Object.values(x.questions)
+      (x) => ('questions' in x ? Object.values(x.questions) : [])
     )
     if (!usedQuestions) return []
 

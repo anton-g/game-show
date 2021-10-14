@@ -1,14 +1,15 @@
 import { useDrag, useDrop } from 'react-dnd'
 import styled, { css } from 'styled-components'
 import { useActions, useAppState } from '../../../overmind'
-import type { Question, Segment } from '../../../overmind/types'
+import type { Question, QuestionSegmentType } from '../../../overmind/types'
 import { getQuestionAnswer } from '../../../utils/question-utils'
+import { isQuestionSegment } from '../../../utils/type-utils'
 import { DraggedQuestion, DRAG_TYPES } from '../Board'
 import { QuestionOptions } from './QuestionOptions'
 
 type Props = {
   questionId: Question['id']
-  segmentId: Segment['id']
+  segmentId: QuestionSegmentType['id']
 }
 
 export function BoardQuestion({ questionId, segmentId }: Props) {
@@ -18,9 +19,13 @@ export function BoardQuestion({ questionId, segmentId }: Props) {
     moveSegmentQuestion,
     removeSegmentQuestion,
   } = useActions().builder
-  const segmentQuestion = useAppState(
-    (state) => state.selectedShow!.segments[segmentId].questions[questionId]
-  )
+  const segmentQuestion = useAppState((state) => {
+    const segment = state.selectedShow!.segments[segmentId]
+
+    if (!isQuestionSegment(segment)) throw new Error('Invalid segment')
+
+    return segment.questions[questionId]
+  })
   const question = segmentQuestion.question
 
   const [{ isDragging }, drag] = useDrag(

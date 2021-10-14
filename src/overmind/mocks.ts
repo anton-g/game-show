@@ -1,4 +1,10 @@
-import { Question, Segment, SegmentQuestion, Show } from './types'
+import {
+  Question,
+  QuestionSegmentType,
+  ScoreSegmentType,
+  SegmentQuestion,
+  Show,
+} from './types'
 
 export const mockQuestions: Record<Question['id'], Question> = {
   '1': {
@@ -266,10 +272,11 @@ export const mockQuestions: Record<Question['id'], Question> = {
   },
 }
 
-export const mockSegment1: Segment = {
+export const mockSegment1: QuestionSegmentType = {
   id: '1',
+  type: 'QUESTIONS',
   name: 'First segment (fast?)',
-  position: 3,
+  position: 4,
   intro: {
     type: 'NONE',
   },
@@ -285,8 +292,9 @@ export const mockSegment1: Segment = {
     }, {} as Record<string, SegmentQuestion>),
 }
 
-export const mockSegment2: Segment = {
+export const mockSegment2: QuestionSegmentType = {
   id: '2',
+  type: 'QUESTIONS',
   name: 'Second',
   position: 2,
   intro: {
@@ -304,8 +312,9 @@ export const mockSegment2: Segment = {
     }, {} as Record<string, SegmentQuestion>),
 }
 
-export const mockSegment3: Segment = {
+export const mockSegment3: QuestionSegmentType = {
   id: '3',
+  type: 'QUESTIONS',
   name: '3rd',
   position: 1,
   intro: {
@@ -323,6 +332,20 @@ export const mockSegment3: Segment = {
     }, {} as Record<string, SegmentQuestion>),
 }
 
+const scoreSegment1: ScoreSegmentType = {
+  id: 'score1',
+  type: 'SCORES',
+  name: 'Scores',
+  position: 3,
+}
+
+const scoreSegment2: ScoreSegmentType = {
+  id: 'score2',
+  type: 'SCORES',
+  name: 'Scores',
+  position: 5,
+}
+
 export const mockShow1: Show = {
   id: '1',
   name: 'Ditt å Datt',
@@ -330,6 +353,8 @@ export const mockShow1: Show = {
     [mockSegment2.id]: mockSegment2,
     [mockSegment1.id]: mockSegment1,
     [mockSegment3.id]: mockSegment3,
+    [scoreSegment1.id]: scoreSegment1,
+    [scoreSegment2.id]: scoreSegment2,
   },
 }
 
