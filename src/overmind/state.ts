@@ -6,6 +6,7 @@ type State = {
   shows: Record<Show['id'], Show>
   selectedShowId: string | null
   selectedShow: Show | null
+  selectedShowSegments: Record<Segment['id'], Segment>
   selectedShowSegmentsList: Segment[]
   unusedQuestions: Question[]
 
@@ -21,6 +22,9 @@ export const state: State = {
   selectedShowId: mockShow1.id,
   selectedShow: derived(
     (state: State) => state.shows[state.selectedShowId ?? '']
+  ),
+  selectedShowSegments: derived((state: State) =>
+    state.selectedShow ? state.selectedShow.segments : {}
   ),
   selectedShowSegmentsList: derived((state: State) =>
     state.selectedShow

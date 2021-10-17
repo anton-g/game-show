@@ -28,58 +28,8 @@ export function BoardQuestion({ questionId, segmentId }: Props) {
   })
   const question = segmentQuestion.question
 
-  const [{ isDragging }, drag] = useDrag(
-    () => ({
-      type: DRAG_TYPES.QUESTION,
-      item: {
-        id: question.id,
-        originalPosition: segmentQuestion.position,
-      } as DraggedQuestion,
-      collect: (monitor) => ({
-        isDragging: monitor.isDragging(),
-      }),
-      end: (item, monitor) => {
-        const { id: droppedId, originalPosition } = item
-        const didDrop = monitor.didDrop()
-
-        if (!didDrop) {
-          // "Cancel", dropped outside, move back to original position
-          // TEST Does this work?
-          moveOrReorderQuestion({
-            id: droppedId,
-            toPosition: originalPosition,
-            toSegmentId: segmentId,
-          })
-        }
-      },
-      isDragging: (monitor) => {
-        return question.id === monitor.getItem().id
-      },
-    }),
-    [question, segmentId, moveOrReorderQuestion]
-  )
-
-  const [, drop] = useDrop(
-    () => ({
-      accept: DRAG_TYPES.QUESTION,
-      canDrop: () => false,
-      hover({ id: draggedId }: DraggedQuestion) {
-        if (draggedId !== question.id) {
-          const { question: hoveredQuestion } = findQuestion(question.id)
-          moveOrReorderQuestion({
-            id: draggedId,
-            toPosition: hoveredQuestion.position,
-            toSegmentId: segmentId,
-          })
-        }
-      },
-    }),
-    [findQuestion, moveOrReorderQuestion, segmentId, question.id]
-  )
-
   return (
-    <Wrapper ref={(node) => drag(drop(node))} hideShadow={false}>
-      {isDragging && <TargetDropArea />}
+    <Wrapper hideShadow={false}>
       <Content type={question.type}>
         <Header>
           <QuestionTitle>{question.question}</QuestionTitle>

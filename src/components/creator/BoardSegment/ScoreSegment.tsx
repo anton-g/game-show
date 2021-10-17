@@ -1,43 +1,60 @@
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import styled from 'styled-components'
-import { useAppState } from '../../../overmind'
 import type { ScoreSegmentType } from '../../../overmind/types'
-import { useSegmentDrag } from './useSegmentDrag'
-import { useSegmentDrop } from './useSegmentDrop'
+import { DRAG_TYPES } from '../Board'
 
 type Props = {
   segmentId: ScoreSegmentType['id']
 }
 
 export const ScoreSegment = ({ segmentId }: Props) => {
-  const segment = useAppState(
-    (state) => state.selectedShow!.segments[segmentId] as ScoreSegmentType
-  )
+  const {
+    active,
+    attributes,
+    isDragging,
+    listeners,
+    over,
+    setNodeRef,
+    transition,
+    transform,
+  } = useSortable({
+    id: segmentId,
+    data: {
+      type: DRAG_TYPES.SEGMENT,
+    },
+    // animateLayoutChanges,
+  })
 
-  const [segmentDragSource, preview, { isDragging }] = useSegmentDrag(
-    segmentId,
-    segment.position
-  )
+  const style = { transform: CSS.Transform.toString(transform), transition }
 
-  const [segmentDropTarget] = useSegmentDrop(segmentId)
+  // TODO Move to util?
+  // const isOverSegment = over
+  //   ? (segmentId === over.id && active?.data.current?.type !== DRAG_TYPES.SEGMENT) ||
+  //     items.includes(over.id)
+  //   : false
 
   return (
     <Wrapper
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
       dragging={isDragging}
-      ref={(node) => preview(segmentDropTarget(node))}
     >
-      <Inner ref={segmentDragSource}>Scores</Inner>
+      <Inner>Scores</Inner>
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div<{ dragging: boolean }>`
+const Wrapper = styled.div<{ dragging?: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-width: 300px; // 80
-  max-width: 300px; // 80
+  min-width: 80px;
+  max-width: 80px;
   padding: 64px 8px 8px;
-  opacity: ${(p) => (p.dragging ? 0 : 1)};
+  opacity: ${(p) => (p.dragging ? 0.5 : 1)};
 `
 
 const Inner = styled.div`
