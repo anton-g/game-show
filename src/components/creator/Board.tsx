@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import {
   useSensors,
@@ -13,6 +13,9 @@ import {
   rectIntersection,
   CollisionDetection,
   UniqueIdentifier,
+  DragOverlay,
+  defaultDropAnimation,
+  DropAnimation,
 } from '@dnd-kit/core'
 import {
   horizontalListSortingStrategy,
@@ -20,8 +23,10 @@ import {
 } from '@dnd-kit/sortable'
 import { useActions, useAppState } from '../../overmind'
 import { QuestionSegment } from './boardSegment/QuestionSegment'
-import { ScoreSegment } from './boardSegment/ScoreSegment'
 import { Question, Segment } from '../../overmind/types'
+import { createPortal } from 'react-dom'
+import { DroppableSegment } from './boardSegment/DroppableSegment'
+import { BoardQuestion } from './boardQuestion/BoardQuestion'
 
 export type DraggedQuestion = {
   id: string
@@ -38,19 +43,34 @@ export enum DRAG_TYPES {
   SEGMENT = 'SEGMENT',
 }
 
+const dropAnimation: DropAnimation = {
+  ...defaultDropAnimation,
+  dragSourceOpacity: 0.5,
+}
+
 type ActiveId = Segment['id'] | Question['id'] | null
 
 export const Board = () => {
   const { selectedShowSegments, selectedShowSegmentsList } = useAppState()
-  const { findSegment, reorderSegment } = useActions().builder
+  const { findSegment, reorderSegment, moveOrReorderQuestion } =
+    useActions().builder
   const [activeId, setActiveId] = useState<ActiveId>(null)
   const lastOverId = useRef<UniqueIdentifier | null>(null)
   const recentlyMovedToNewContainer = useRef(false)
+  const isSortingContainer = activeId
+    ? activeId in selectedShowSegmentsList
+    : false
 
   const sensors = useSensors(
     useSensor(PointerSensor)
     // useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   )
+
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      recentlyMovedToNewContainer.current = false
+    })
+  }, [selectedShowSegments])
 
   const collisionDetectionStrategy = useCustomCollisionDetection(
     selectedShowSegments,
@@ -73,54 +93,39 @@ export const Board = () => {
     ) {
       return
     }
-    // const overContainer = findContainer(overId)
-    const overSegment = findSegment(overId).segment
-    // const activeContainer = findContainer(active.id)
-    const activeSegment = findSegment(active.id).segment
+    const overSegment = findSegment(overId)
+    const activeSegment = findSegment(active.id)
 
-    // if (!overContainer || !activeContainer) {
-    //   return
-    // }
     if (!overSegment || !activeSegment) {
       return
     }
-    // if (activeContainer !== overContainer) {
     if (activeSegment.id !== overSegment.id) {
-      // setItems((items) => {
-      //   const activeItems = items[activeContainer]
-      //   const overItems = items[overContainer]
-      //   const overIndex = overItems.indexOf(overId)
-      //   const activeIndex = activeItems.indexOf(active.id)
-      //   let newIndex: number
-      //   if (overId in items) {
-      //     newIndex = overItems.length + 1
-      //   } else {
-      //     const isBelowOverItem =
-      //       over &&
-      //       active.rect.current.translated &&
-      //       active.rect.current.translated.offsetTop >
-      //         over.rect.offsetTop + over.rect.height
-      //     const modifier = isBelowOverItem ? 1 : 0
-      //     newIndex =
-      //       overIndex >= 0 ? overIndex + modifier : overItems.length + 1
-      //   }
-      //   recentlyMovedToNewContainer.current = true
-      //   return {
-      //     ...items,
-      //     [activeContainer]: items[activeContainer].filter(
-      //       (item) => item !== active.id
-      //     ),
-      //     [overContainer]: [
-      //       ...items[overContainer].slice(0, newIndex),
-      //       items[activeContainer][activeIndex],
-      //       ...items[overContainer].slice(
-      //         newIndex,
-      //         items[overContainer].length
-      //       ),
-      //     ],
-      //   }
-      // })
-      // }
+      let newPosition: number
+
+      if (overSegment.type !== 'QUESTIONS') return
+
+      if (overId in selectedShowSegments) {
+        //    Hovering segment, last position in new segment
+        newPosition = Object.values(overSegment.questions).length + 1
+      } else {
+        //    Hovering other question, get position
+        const isBelowOverItem =
+          over &&
+          active.rect.current.translated &&
+          active.rect.current.translated.offsetTop >
+            over.rect.offsetTop + over.rect.height
+        const modifier = isBelowOverItem ? 1 : 0
+
+        newPosition = overSegment.questions[overId].position + modifier
+      }
+
+      recentlyMovedToNewContainer.current = true
+
+      moveOrReorderQuestion({
+        id: active.id,
+        toPosition: newPosition,
+        toSegmentId: overSegment.id,
+      })
     }
   }
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
@@ -174,17 +179,14 @@ export const Board = () => {
     // }
 
     const overSegment = findSegment(overId)
-
-    // === moving question?
-    if (overSegment) {
-      // const activeIndex = items[activeSegment].indexOf(active.id)
-      // const overIndex = items[overSegment].indexOf(overId)
-      // if (activeIndex !== overIndex) {
-      //   setItems((items) => ({
-      //     ...items,
-      //     [overSegment]: arrayMove(items[overSegment], activeIndex, overIndex),
-      //   }))
-      // }
+    if (overSegment && activeSegment.type === 'QUESTIONS') {
+      if (!(active.id in selectedShowSegments)) {
+        moveOrReorderQuestion({
+          id: active.id,
+          toPosition: activeSegment.questions[overId].position,
+          toSegmentId: activeSegment.id,
+        })
+      }
     }
 
     setActiveId(null)
@@ -215,18 +217,14 @@ export const Board = () => {
             switch (segment.type) {
               case 'QUESTIONS':
                 return (
-                  <QuestionSegment
+                  <DroppableSegment
                     key={segment.id}
                     segmentId={segment.id}
-                  ></QuestionSegment>
+                    isSortingContainer={isSortingContainer}
+                  ></DroppableSegment>
                 )
               case 'SCORES':
-                return (
-                  <ScoreSegment
-                    key={segment.id}
-                    segmentId={segment.id}
-                  ></ScoreSegment>
-                )
+                return null
               default:
                 const _exhaustiveCheck: never = segment
                 return _exhaustiveCheck
@@ -235,8 +233,44 @@ export const Board = () => {
           {/* {children} */}
         </SortableContext>
       </Segments>
+      {createPortal(
+        <DragOverlay dropAnimation={dropAnimation}>
+          {activeId
+            ? activeId in selectedShowSegments
+              ? renderSegmentDragOverlay(activeId)
+              : renderQuestionDragOverlay(activeId)
+            : null}
+        </DragOverlay>,
+        document.body
+      )}
     </DndContext>
   )
+
+  function renderSegmentDragOverlay(segmentId: string) {
+    return (
+      <QuestionSegment
+        isSortingContainer={true}
+        segmentId={segmentId}
+        isDragging={false}
+        // shadow
+      ></QuestionSegment>
+    )
+  }
+
+  function renderQuestionDragOverlay(questionId: string) {
+    const segmentId = findSegment(questionId)?.id
+
+    if (!segmentId) throw new Error()
+
+    return (
+      <BoardQuestion
+        id={questionId}
+        segmentId={segmentId}
+        disabled={false}
+        isDragging={true}
+      />
+    )
+  }
 }
 
 function SegmentPlaceholder() {

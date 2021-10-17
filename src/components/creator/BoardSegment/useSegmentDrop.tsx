@@ -14,12 +14,12 @@ export function useSegmentDrop(segmentId: Segment['id']) {
         if (draggedId !== segmentId) {
           console.log(monitor.getDifferenceFromInitialOffset())
           console.log(monitor.isOver())
-          const { segment: hoveredSegment } = findSegment(segmentId) // TODO check if this can be removed?
-          console.log('hovering segment at', hoveredSegment.position)
-          reorderSegment({
-            segmentId: draggedId,
-            toPosition: hoveredSegment.position,
-          })
+          // const { segment: hoveredSegment } = findSegment(segmentId) // TODO check if this can be removed?
+          // console.log('hovering segment at', hoveredSegment.position)
+          // reorderSegment({
+          //   segmentId: draggedId,
+          //   toPosition: hoveredSegment.position,
+          // })
         }
       },
     }),

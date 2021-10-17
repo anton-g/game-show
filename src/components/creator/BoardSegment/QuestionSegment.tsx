@@ -1,34 +1,34 @@
-import { useState } from 'react'
-import { useDrop } from 'react-dnd'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import {
-  SortableContext,
-  useSortable,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useActions, useAppState } from '../../../overmind'
 import type { QuestionSegmentType } from '../../../overmind/types'
 import { SegmentOptions } from './SegmentOptions'
-import { DraggedQuestion, DRAG_TYPES } from '../Board'
-import { BoardQuestion } from '../boardQuestion/BoardQuestion'
 import { QuestionPicker } from '../questionPicker/QuestionPicker'
 import { EditSegmentDialog } from './EditSegmentDialog'
 import { isQuestionSegment } from '../../../utils/type-utils'
+import { SortableBoardQuestion } from '../boardQuestion/SortableBoardQuestion'
 
 type Props = {
   segmentId: QuestionSegmentType['id']
+  isSortingContainer: boolean
+  isDragging: boolean
+  setNodeRef?: (node: HTMLElement | null) => void // TODO replace with forwardref
+  style?: React.CSSProperties
+  handleProps?: React.HTMLAttributes<any>
 }
 
-export const QuestionSegment = ({ segmentId }: Props) => {
+export const QuestionSegment = ({
+  segmentId,
+  isSortingContainer,
+  isDragging,
+  setNodeRef,
+  style,
+  handleProps,
+}: Props) => {
   const [editing, setEditing] = useState(false)
 
-  const {
-    removeSegment,
-    findQuestion,
-    moveOrReorderQuestion,
-    addSegmentQuestion,
-  } = useActions().builder
+  const { removeSegment, addSegmentQuestion } = useActions().builder
   const segment = useAppState(
     (state) => state.selectedShow!.segments[segmentId]
   )
@@ -39,28 +39,9 @@ export const QuestionSegment = ({ segmentId }: Props) => {
     .sort((a, b) => a.position - b.position)
     .map((x) => x.question)
 
-  const {
-    active,
-    attributes,
-    isDragging,
-    listeners,
-    over,
-    setNodeRef,
-    transition,
-    transform,
-  } = useSortable({
-    id: segmentId,
-    data: {
-      type: DRAG_TYPES.SEGMENT,
-    },
-    // animateLayoutChanges,
-  })
-
-  const style = { transform: CSS.Transform.toString(transform), transition }
-
   return (
     <Wrapper dragging={isDragging} ref={setNodeRef} style={style}>
-      <Header {...attributes} {...listeners}>
+      <Header {...handleProps}>
         <TitleRow>
           <Title>{segment.name}</Title>
           <StyledOptions
@@ -76,36 +57,19 @@ export const QuestionSegment = ({ segmentId }: Props) => {
           ></StyledOptions>
         </TitleRow>
       </Header>
-      <QuestionsList
-      // ref={questionDropArea}
-      >
+      <QuestionsList>
         <SortableContext
           items={questionsList}
           strategy={verticalListSortingStrategy}
         >
           {questionsList.map((question) => (
-            <BoardQuestion
+            <SortableBoardQuestion
               key={question.id}
-              questionId={question.id}
+              id={question.id}
               segmentId={segmentId}
+              disabled={isSortingContainer}
             />
           ))}
-          {/* {items[containerId].map((value, index) => {
-            return (
-              <SortableItem
-                disabled={isSortingContainer}
-                key={value}
-                id={value}
-                index={index}
-                handle={handle}
-                style={getItemStyles}
-                wrapperStyle={wrapperStyle}
-                renderItem={renderItem}
-                containerId={containerId}
-                getIndex={getIndex}
-              />
-            )
-          })} */}
         </SortableContext>
         <QuestionPicker
           segmentName={segment.name}
