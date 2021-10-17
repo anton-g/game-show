@@ -1,6 +1,12 @@
 import { useState } from 'react'
 import { useDrop } from 'react-dnd'
 import styled from 'styled-components'
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import { useActions, useAppState } from '../../../overmind'
 import type { QuestionSegmentType } from '../../../overmind/types'
 import { SegmentOptions } from './SegmentOptions'
@@ -9,8 +15,6 @@ import { BoardQuestion } from '../boardQuestion/BoardQuestion'
 import { QuestionPicker } from '../questionPicker/QuestionPicker'
 import { EditSegmentDialog } from './EditSegmentDialog'
 import { isQuestionSegment } from '../../../utils/type-utils'
-import { useSegmentDrag } from './useSegmentDrag'
-import { useSegmentDrop } from './useSegmentDrop'
 
 type Props = {
   segmentId: QuestionSegmentType['id']
@@ -31,40 +35,32 @@ export const QuestionSegment = ({ segmentId }: Props) => {
 
   if (!isQuestionSegment(segment)) throw new Error('Invalid segment')
 
-  const questionsList = Object.values(segment.questions).sort(
-    (a, b) => a.position - b.position
-  )
+  const questionsList = Object.values(segment.questions)
+    .sort((a, b) => a.position - b.position)
+    .map((x) => x.question)
 
-  const [segmentDragSource, preview, { isDragging }] = useSegmentDrag(
-    segmentId,
-    segment.position
-  )
+  const {
+    active,
+    attributes,
+    isDragging,
+    listeners,
+    over,
+    setNodeRef,
+    transition,
+    transform,
+  } = useSortable({
+    id: segmentId,
+    data: {
+      type: DRAG_TYPES.SEGMENT,
+    },
+    // animateLayoutChanges,
+  })
 
-  const [segmentDropTarget] = useSegmentDrop(segmentId)
-
-  const [, questionDropArea] = useDrop(
-    () => ({
-      accept: DRAG_TYPES.QUESTION,
-      hover({ id: draggedId }: DraggedQuestion) {
-        const { segmentId } = findQuestion(draggedId)
-        if (segmentId === segment.id) return
-
-        moveOrReorderQuestion({
-          id: draggedId,
-          toPosition: Object.values(segment.questions).length + 1,
-          toSegmentId: segment.id,
-        })
-      },
-    }),
-    [segment.questions, segment.id, moveOrReorderQuestion]
-  )
+  const style = { transform: CSS.Transform.toString(transform), transition }
 
   return (
-    <Wrapper
-      dragging={isDragging}
-      ref={(node) => preview(segmentDropTarget(node))}
-    >
-      <Header ref={segmentDragSource}>
+    <Wrapper dragging={isDragging} ref={setNodeRef} style={style}>
+      <Header {...attributes} {...listeners}>
         <TitleRow>
           <Title>{segment.name}</Title>
           <StyledOptions
@@ -80,14 +76,37 @@ export const QuestionSegment = ({ segmentId }: Props) => {
           ></StyledOptions>
         </TitleRow>
       </Header>
-      <QuestionsList ref={questionDropArea}>
-        {questionsList.map((question) => (
-          <BoardQuestion
-            key={question.question.id}
-            questionId={question.question.id}
-            segmentId={segmentId}
-          />
-        ))}
+      <QuestionsList
+      // ref={questionDropArea}
+      >
+        <SortableContext
+          items={questionsList}
+          strategy={verticalListSortingStrategy}
+        >
+          {questionsList.map((question) => (
+            <BoardQuestion
+              key={question.id}
+              questionId={question.id}
+              segmentId={segmentId}
+            />
+          ))}
+          {/* {items[containerId].map((value, index) => {
+            return (
+              <SortableItem
+                disabled={isSortingContainer}
+                key={value}
+                id={value}
+                index={index}
+                handle={handle}
+                style={getItemStyles}
+                wrapperStyle={wrapperStyle}
+                renderItem={renderItem}
+                containerId={containerId}
+                getIndex={getIndex}
+              />
+            )
+          })} */}
+        </SortableContext>
         <QuestionPicker
           segmentName={segment.name}
           onSelect={(questionId) =>
@@ -112,7 +131,7 @@ const Wrapper = styled.div<{ dragging: boolean }>`
   min-width: 300px;
   max-width: 300px;
   padding: 0 8px 8px;
-  opacity: ${(p) => (p.dragging ? 0 : 1)};
+  opacity: ${(p) => (p.dragging ? 0.5 : 1)};
 
   ${StyledOptions} {
     visibility: hidden;
