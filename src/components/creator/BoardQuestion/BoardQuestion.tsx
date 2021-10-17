@@ -1,3 +1,4 @@
+import { useSortable } from '@dnd-kit/sortable'
 import { useDrag, useDrop } from 'react-dnd'
 import styled, { css } from 'styled-components'
 import { useActions, useAppState } from '../../../overmind'
@@ -6,19 +7,31 @@ import { getQuestionAnswer } from '../../../utils/question-utils'
 import { isQuestionSegment } from '../../../utils/type-utils'
 import { DraggedQuestion, DRAG_TYPES } from '../Board'
 import { QuestionOptions } from './QuestionOptions'
+import type { Transform } from '@dnd-kit/utilities'
+import { DraggableSyntheticListeners } from '@dnd-kit/core'
 
 type Props = {
-  questionId: Question['id']
+  id: Question['id']
   segmentId: QuestionSegmentType['id']
+  disabled: boolean
+  isDragging: boolean
+  setNodeRef?: (node: HTMLElement | null) => void // TODO replace with forwardref
+  style?: React.CSSProperties
+  transform?: Transform | null
+  listeners?: DraggableSyntheticListeners
+  transition?: string
 }
 
-export function BoardQuestion({ questionId, segmentId }: Props) {
-  const {
-    findQuestion,
-    moveOrReorderQuestion,
-    moveSegmentQuestion,
-    removeSegmentQuestion,
-  } = useActions().builder
+export function BoardQuestion({
+  id: questionId,
+  segmentId,
+  disabled,
+  setNodeRef,
+  transform,
+  transition,
+  listeners,
+}: Props) {
+  const { moveSegmentQuestion, removeSegmentQuestion } = useActions().builder
   const segmentQuestion = useAppState((state) => {
     const segment = state.selectedShow!.segments[segmentId]
 
@@ -26,11 +39,16 @@ export function BoardQuestion({ questionId, segmentId }: Props) {
 
     return segment.questions[questionId]
   })
+
   const question = segmentQuestion.question
 
   return (
-    <Wrapper hideShadow={false}>
-      <Content type={question.type}>
+    <Wrapper
+      ref={disabled ? undefined : setNodeRef}
+      $transform={transform}
+      style={{ transition }}
+    >
+      <Content type={question.type} {...listeners}>
         <Header>
           <QuestionTitle>{question.question}</QuestionTitle>
           <StyledOptions
@@ -74,16 +92,18 @@ const Header = styled.div`
 
 const StyledOptions = styled(QuestionOptions)``
 
-const Wrapper = styled.div<{ hideShadow: boolean }>`
+const Wrapper = styled.div<{ $transform?: Transform | null }>`
   position: relative;
   border-radius: 8px;
   cursor: pointer;
   overflow: hidden;
-  ${({ hideShadow }) =>
-    !hideShadow &&
-    css`
-      box-shadow: 0 1px 3px hsl(0 0% 0% / 0.2);
-    `}
+
+  transform-origin: 0 0;
+  touch-action: manipulation;
+  transform: ${({ $transform }) =>
+    `translate3d(${$transform?.x || 0}px, ${$transform?.y || 0}px, 0) scaleX(${
+      $transform?.scaleX || 1
+    }) scaleY(${$transform?.scaleY || 1})`}; // replace with CSS vars?
 
   ${StyledOptions} {
     visibility: hidden;
@@ -98,21 +118,4 @@ const Wrapper = styled.div<{ hideShadow: boolean }>`
 
 const QuestionTitle = styled.span`
   font-weight: bold;
-`
-
-const TargetDropArea = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: ${({ theme }) => theme.colors.gray1};
-  background-size: 10px 10px;
-  background-image: repeating-linear-gradient(
-    45deg,
-    ${({ theme }) => theme.colors.gray3} 0,
-    ${({ theme }) => theme.colors.gray3} 2px,
-    ${({ theme }) => theme.colors.gray1} 0,
-    ${({ theme }) => theme.colors.gray1} 50%
-  );
 `

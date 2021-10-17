@@ -1,15 +1,27 @@
 import { nanoid } from 'nanoid'
 import { Context } from '..'
 import { isQuestionSegment } from '../../utils/type-utils'
-import type { QuestionSegmentType, Segment, SegmentQuestion } from '../types'
+import type {
+  Question,
+  QuestionSegmentType,
+  Segment,
+  SegmentQuestion,
+} from '../types'
 
-export const findSegment = ({ state }: Context, id: string) => {
+export const findSegment = (
+  { state }: Context,
+  id: Segment['id'] | Question['id']
+) => {
   if (!state.selectedShow) throw Error('no show :(')
 
   const c = state.selectedShow.segments[id]
-  return {
-    segment: c,
+  if (c) {
+    return c
   }
+
+  return Object.values(state.selectedShow.segments).find(
+    (seg) => seg.type === 'QUESTIONS' && seg.questions.hasOwnProperty(id)
+  )
 }
 
 export const findQuestion = (
@@ -107,6 +119,7 @@ export const moveOrReorderQuestion = (
   const { question, segmentId } = actions.builder.findQuestion(id)
 
   if (segmentId === toSegmentId) {
+    console.log('reorder')
     actions.builder.reorderSegmentQuestion({
       question: question,
       segmentId: segmentId,
@@ -114,6 +127,7 @@ export const moveOrReorderQuestion = (
       toPosition: toPosition,
     })
   } else {
+    console.log('move', segmentId, toSegmentId)
     actions.builder.moveSegmentQuestion({
       question: question,
       fromSegmentId: segmentId,

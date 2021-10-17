@@ -273,10 +273,10 @@ export const mockQuestions: Record<Question['id'], Question> = {
 }
 
 export const mockSegment1: QuestionSegmentType = {
-  id: '1',
+  id: 'seg-1',
   type: 'QUESTIONS',
   name: 'First segment (fast?)',
-  position: 4,
+  position: 2,
   intro: {
     type: 'NONE',
   },
@@ -293,7 +293,7 @@ export const mockSegment1: QuestionSegmentType = {
 }
 
 export const mockSegment2: QuestionSegmentType = {
-  id: '2',
+  id: 'seg-2',
   type: 'QUESTIONS',
   name: 'Second',
   position: 2,
@@ -313,7 +313,7 @@ export const mockSegment2: QuestionSegmentType = {
 }
 
 export const mockSegment3: QuestionSegmentType = {
-  id: '3',
+  id: 'seg-3',
   type: 'QUESTIONS',
   name: '3rd',
   position: 1,
@@ -351,10 +351,10 @@ export const mockShow1: Show = {
   name: 'Ditt å Datt',
   segments: {
     [mockSegment2.id]: mockSegment2,
-    [mockSegment1.id]: mockSegment1,
+    // [mockSegment1.id]: mockSegment1,
     [mockSegment3.id]: mockSegment3,
-    [scoreSegment1.id]: scoreSegment1,
-    [scoreSegment2.id]: scoreSegment2,
+    // [scoreSegment1.id]: scoreSegment1,
+    // [scoreSegment2.id]: scoreSegment2,
   },
 }
 
