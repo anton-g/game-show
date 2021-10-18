@@ -252,7 +252,7 @@ export const mockSegment1: QuestionSegmentType = {
   id: 'seg-1',
   type: 'QUESTIONS',
   name: 'First',
-  position: 3,
+  position: 4,
   intro: {
     type: 'NONE',
   },
@@ -329,8 +329,8 @@ export const mockShow1: Show = {
     [mockSegment2.id]: mockSegment2,
     [mockSegment1.id]: mockSegment1,
     [mockSegment3.id]: mockSegment3,
-    // [scoreSegment1.id]: scoreSegment1,
-    // [scoreSegment2.id]: scoreSegment2,
+    [scoreSegment1.id]: scoreSegment1,
+    [scoreSegment2.id]: scoreSegment2,
   },
 }
 

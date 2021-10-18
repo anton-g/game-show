@@ -1,13 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable'
-import { useDrag, useDrop } from 'react-dnd'
-import styled, { css } from 'styled-components'
-import { useActions, useAppState } from '../../../overmind'
 import type { Question, QuestionSegmentType } from '../../../overmind/types'
-import { getQuestionAnswer } from '../../../utils/question-utils'
-import { isQuestionSegment } from '../../../utils/type-utils'
-import { DraggedQuestion, DRAG_TYPES } from '../Board'
 import { BoardQuestion } from './BoardQuestion'
-import { QuestionOptions } from './QuestionOptions'
 
 type Props = {
   id: Question['id']
