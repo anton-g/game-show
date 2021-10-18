@@ -119,7 +119,6 @@ export const moveOrReorderQuestion = (
   const { question, segmentId } = actions.builder.findQuestion(id)
 
   if (segmentId === toSegmentId) {
-    console.log('reorder')
     actions.builder.reorderSegmentQuestion({
       question: question,
       segmentId: segmentId,
@@ -127,7 +126,6 @@ export const moveOrReorderQuestion = (
       toPosition: toPosition,
     })
   } else {
-    console.log('move', segmentId, toSegmentId)
     actions.builder.moveSegmentQuestion({
       question: question,
       fromSegmentId: segmentId,
@@ -181,6 +179,7 @@ export const reorderSegmentQuestion = (
   segment.questions = newQuestions
 }
 
+// TODO clean this up D:
 export const moveSegmentQuestion = (
   { state }: Context,
   {
@@ -219,18 +218,34 @@ export const moveSegmentQuestion = (
   if (!isQuestionSegment(fromSegment))
     throw Error('Trying to reorder question in invalid segment')
 
-  delete fromSegment.questions[question.question.id]
-  const cardsToUpdateInOldSegment = Object.values(fromSegment.questions).filter(
-    (x) => x.position > fromPosition
+  const fromSegmentNewQuestions: SegmentQuestion[] = Object.values(
+    fromSegment.questions
   )
-  cardsToUpdateInOldSegment.forEach((x) => x.position--)
+    .filter((x) => x.question.id !== question.question.id)
+    .map((x) => {
+      let mod = 0
+      if (x.position > fromPosition) mod = 1
+
+      return {
+        ...x,
+        position: x.position - mod,
+      }
+    })
+
+  fromSegment.questions = fromSegmentNewQuestions.reduce(
+    (a, sq) => ({ ...a, [sq.question.id]: sq }),
+    {}
+  )
 
   const cardsToUpdateInNewSegment = Object.values(toSegment.questions).filter(
     (x) => x.position >= toPosition
   )
   cardsToUpdateInNewSegment.forEach((x) => x.position++)
   question.position = toPosition
-  toSegment.questions[question.question.id] = { ...question }
+  toSegment.questions = {
+    ...toSegment.questions,
+    [question.question.id]: { ...question },
+  }
 
   state.selectedShow.segments = newSegments
 }

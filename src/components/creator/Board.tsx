@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import {
   useSensors,
@@ -27,6 +27,7 @@ import { Question, Segment } from '../../overmind/types'
 import { createPortal } from 'react-dom'
 import { DroppableSegment } from './boardSegment/DroppableSegment'
 import { BoardQuestion } from './boardQuestion/BoardQuestion'
+import { isQuestionSegment } from '../../utils/type-utils'
 
 export type DraggedQuestion = {
   id: string
@@ -99,6 +100,7 @@ export const Board = () => {
     if (!overSegment || !activeSegment) {
       return
     }
+
     if (activeSegment.id !== overSegment.id) {
       let newPosition: number
 
@@ -119,13 +121,13 @@ export const Board = () => {
         newPosition = overSegment.questions[overId].position + modifier
       }
 
-      recentlyMovedToNewContainer.current = true
-
       moveOrReorderQuestion({
         id: active.id,
         toPosition: newPosition,
         toSegmentId: overSegment.id,
       })
+
+      recentlyMovedToNewContainer.current = true
     }
   }
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
@@ -192,6 +194,11 @@ export const Board = () => {
     setActiveId(null)
   }
 
+  const segmentIds = useMemo(
+    () => selectedShowSegmentsList.map((x) => x.id),
+    [selectedShowSegmentsList]
+  )
+
   return (
     <DndContext
       sensors={sensors}
@@ -210,7 +217,7 @@ export const Board = () => {
     >
       <Segments>
         <SortableContext
-          items={selectedShowSegmentsList}
+          items={segmentIds}
           strategy={horizontalListSortingStrategy}
         >
           {selectedShowSegmentsList.map((segment) => {
@@ -230,7 +237,6 @@ export const Board = () => {
                 return _exhaustiveCheck
             }
           })}
-          {/* {children} */}
         </SortableContext>
       </Segments>
       {createPortal(
@@ -267,7 +273,8 @@ export const Board = () => {
         id={questionId}
         segmentId={segmentId}
         disabled={false}
-        isDragging={true}
+        isDragging={false}
+        isSorting={false}
       />
     )
   }
@@ -348,7 +355,7 @@ function useCustomCollisionDetection(
 
           // If a container is matched and it contains items
           if (
-            'questions' in segment &&
+            isQuestionSegment(segment) &&
             Object.values(segment.questions).length > 0
           ) {
             // Return the closest droppable within that container
@@ -356,7 +363,7 @@ function useCustomCollisionDetection(
               ...args,
               droppableContainers: args.droppableContainers.filter(
                 (container) =>
-                  container.id !== overId && selectedShowSegments[container.id]
+                  container.id !== overId && segment.questions[container.id]
               ),
             })
           }

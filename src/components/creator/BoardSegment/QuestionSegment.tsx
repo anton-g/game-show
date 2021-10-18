@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useActions, useAppState } from '../../../overmind'
@@ -35,9 +35,18 @@ export const QuestionSegment = ({
 
   if (!isQuestionSegment(segment)) throw new Error('Invalid segment')
 
-  const questionsList = Object.values(segment.questions)
-    .sort((a, b) => a.position - b.position)
-    .map((x) => x.question)
+  const questionsList = useMemo(
+    () =>
+      Object.values(segment.questions)
+        .sort((a, b) => a.position - b.position)
+        .map((x) => x.question),
+    [segment.questions]
+  )
+
+  const questionIds = useMemo(
+    () => questionsList.map((x) => x.id),
+    [questionsList]
+  )
 
   return (
     <Wrapper dragging={isDragging} ref={setNodeRef} style={style}>
@@ -59,7 +68,7 @@ export const QuestionSegment = ({
       </Header>
       <QuestionsList>
         <SortableContext
-          items={questionsList}
+          items={questionIds}
           strategy={verticalListSortingStrategy}
         >
           {questionsList.map((question) => (
@@ -95,7 +104,7 @@ const Wrapper = styled.div<{ dragging: boolean }>`
   min-width: 300px;
   max-width: 300px;
   padding: 0 8px 8px;
-  opacity: ${(p) => (p.dragging ? 0.5 : 1)};
+  opacity: ${(p) => (p.dragging ? 0.3 : 1)};
 
   ${StyledOptions} {
     visibility: hidden;
