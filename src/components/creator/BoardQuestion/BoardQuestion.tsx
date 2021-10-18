@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { useActions, useAppState } from '../../../overmind'
 import type { Question, QuestionSegmentType } from '../../../overmind/types'
 import { getQuestionAnswer } from '../../../utils/question-utils'
@@ -10,14 +10,15 @@ import { DraggableSyntheticListeners } from '@dnd-kit/core'
 type Props = {
   id: Question['id']
   segmentId: QuestionSegmentType['id']
-  disabled: boolean
-  isDragging: boolean
-  isSorting: boolean
   setNodeRef?: (node: HTMLElement | null) => void // TODO replace with forwardref
   style?: React.CSSProperties
   transform?: Transform | null
   listeners?: DraggableSyntheticListeners
   transition?: string
+  disabled?: boolean
+  isDragging?: boolean
+  isSorting?: boolean
+  isDragOverlay?: boolean
 }
 
 export function BoardQuestion({
@@ -29,7 +30,8 @@ export function BoardQuestion({
   transition,
   listeners,
   isDragging,
-  isSorting,
+  // isSorting,
+  isDragOverlay,
 }: Props) {
   const { moveSegmentQuestion, removeSegmentQuestion } = useActions().builder
   const segmentQuestion = useAppState((state) => {
@@ -47,10 +49,14 @@ export function BoardQuestion({
   return (
     <Wrapper
       ref={disabled ? undefined : setNodeRef}
-      $transform={transform}
-      style={{ transition, opacity: isDragging ? 0.3 : 1 }}
+      transform={transform}
+      style={{ transition, opacity: isDragging ? 0.2 : 1 }}
     >
-      <Content type={question.type} {...listeners}>
+      <Content
+        {...listeners}
+        type={question.type}
+        isDragOverlay={isDragOverlay}
+      >
         <Header>
           <QuestionTitle>{question.question}</QuestionTitle>
           <StyledOptions
@@ -80,11 +86,20 @@ export function BoardQuestion({
   )
 }
 
-const Content = styled.div<{ type: Question['type'] }>`
+const Content = styled.div<{ type: Question['type']; isDragOverlay?: boolean }>`
   border-radius: 8px;
   border-top: 4px solid ${({ theme, type }) => theme.colors.types[type]};
   background-color: ${({ theme }) => theme.colors.gray1};
   padding: 8px;
+
+  ${({ isDragOverlay }) =>
+    isDragOverlay &&
+    css`
+      transform: scale(1.05);
+      box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.05),
+        -1px 0 15px 0 rgba(34, 33, 81, 0.01),
+        0px 15px 15px 0 rgba(34, 33, 81, 0.25);
+    `}
 `
 
 const Header = styled.div`
@@ -94,18 +109,19 @@ const Header = styled.div`
 
 const StyledOptions = styled(QuestionOptions)``
 
-const Wrapper = styled.div<{ $transform?: Transform | null }>`
+const Wrapper = styled.div<{
+  transform?: Transform | null
+}>`
   position: relative;
   border-radius: 8px;
   cursor: pointer;
-  overflow: hidden;
 
   transform-origin: 0 0;
   touch-action: manipulation;
-  transform: ${({ $transform }) =>
-    `translate3d(${$transform?.x || 0}px, ${$transform?.y || 0}px, 0) scaleX(${
-      $transform?.scaleX || 1
-    }) scaleY(${$transform?.scaleY || 1})`}; // replace with CSS vars?
+  transform: ${({ transform }) =>
+    `translate3d(${transform?.x || 0}px, ${transform?.y || 0}px, 0) scaleX(${
+      transform?.scaleX || 1
+    }) scaleY(${transform?.scaleY || 1})`}; // replace with CSS vars?
 
   ${StyledOptions} {
     visibility: hidden;

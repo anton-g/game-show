@@ -46,7 +46,9 @@ export function QuestionOptions({
           <DropdownMenu.Content sideOffset={10}>
             {currentShow &&
               Object.values(currentShow?.segments)
-                .filter((x) => x.id !== activeSegmentId)
+                .filter(
+                  (x) => x.id !== activeSegmentId && x.type === 'QUESTIONS'
+                )
                 .map((s) => (
                   <DropdownMenu.Item key={s.id} onSelect={() => onMove(s.id)}>
                     {s.name}

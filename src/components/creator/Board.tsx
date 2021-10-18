@@ -47,7 +47,7 @@ export enum DRAG_TYPES {
 
 const dropAnimation: DropAnimation = {
   ...defaultDropAnimation,
-  dragSourceOpacity: 0.5,
+  dragSourceOpacity: 0.2,
 }
 
 type ActiveId = Segment['id'] | Question['id'] | null
@@ -85,7 +85,6 @@ export const Board = () => {
   const handleDragStart = ({ active }: DragStartEvent) => {
     setActiveId(active.id)
     // setClonedItems(items);
-    console.log('start dragging', active.id)
   }
   const handleDragOver = ({ active, over }: DragOverEvent) => {
     const overId = over?.id
@@ -255,7 +254,7 @@ export const Board = () => {
             isSortingContainer={true}
             segmentId={segmentId}
             isDragging={false}
-            // shadow
+            isDragOverlay
           ></QuestionSegment>
         )
       case 'SCORES':
@@ -264,6 +263,7 @@ export const Board = () => {
             key={segment.id}
             segmentId={segment.id}
             isDragging={false}
+            isDragOverlay
           ></ScoreSegment>
         )
       default:
@@ -277,15 +277,7 @@ export const Board = () => {
 
     if (!segmentId) throw new Error()
 
-    return (
-      <BoardQuestion
-        id={questionId}
-        segmentId={segmentId}
-        disabled={false}
-        isDragging={false}
-        isSorting={false}
-      />
-    )
+    return <BoardQuestion id={questionId} segmentId={segmentId} isDragOverlay />
   }
 }
 
@@ -310,7 +302,6 @@ function useCustomCollisionDetection(
     (args) => {
       // Start by finding any intersecting droppable
       let overId = rectIntersection(args)
-      console.log({ overId, args })
 
       // Check if dragging segment
       if (activeId && activeId in selectedShowSegments) {

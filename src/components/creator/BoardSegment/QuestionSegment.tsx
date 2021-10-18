@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useActions, useAppState } from '../../../overmind'
 import type { QuestionSegmentType } from '../../../overmind/types'
@@ -16,6 +16,7 @@ type Props = {
   setNodeRef?: (node: HTMLElement | null) => void // TODO replace with forwardref
   style?: React.CSSProperties
   handleProps?: React.HTMLAttributes<any>
+  isDragOverlay?: boolean
 }
 
 export const QuestionSegment = ({
@@ -25,6 +26,7 @@ export const QuestionSegment = ({
   setNodeRef,
   style,
   handleProps,
+  isDragOverlay,
 }: Props) => {
   const [editing, setEditing] = useState(false)
 
@@ -49,7 +51,12 @@ export const QuestionSegment = ({
   )
 
   return (
-    <Wrapper dragging={isDragging} ref={setNodeRef} style={style}>
+    <Wrapper
+      dragging={isDragging}
+      ref={setNodeRef}
+      style={style}
+      isDragOverlay={isDragOverlay}
+    >
       <Header {...handleProps}>
         <TitleRow>
           <Title>{segment.name}</Title>
@@ -98,13 +105,16 @@ export const QuestionSegment = ({
 
 const StyledOptions = styled(SegmentOptions)``
 
-const Wrapper = styled.div<{ dragging: boolean }>`
+const Wrapper = styled.div<{ dragging: boolean; isDragOverlay?: boolean }>`
   display: flex;
   flex-direction: column;
   min-width: 300px;
   max-width: 300px;
   padding: 0 8px 8px;
-  opacity: ${(p) => (p.dragging ? 0.3 : 1)};
+  opacity: ${(p) => (p.dragging ? 0.2 : 1)};
+  background-color: white;
+  border-radius: 8px;
+  height: 100%;
 
   ${StyledOptions} {
     visibility: hidden;
@@ -115,11 +125,18 @@ const Wrapper = styled.div<{ dragging: boolean }>`
       visibility: visible;
     }
   }
+
+  ${({ isDragOverlay }) =>
+    isDragOverlay &&
+    css`
+      box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.02),
+        0 1px 10px 0 rgba(34, 33, 81, 0.1);
+    `}
 `
 
 const Header = styled.div`
   padding: 16px 8px;
-  cursor: move;
+  cursor: grab;
   min-height: 60px;
 `
 
