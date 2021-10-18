@@ -28,6 +28,7 @@ import { createPortal } from 'react-dom'
 import { DroppableSegment } from './boardSegment/DroppableSegment'
 import { BoardQuestion } from './boardQuestion/BoardQuestion'
 import { isQuestionSegment } from '../../utils/type-utils'
+import { ScoreSegment } from './boardSegment/ScoreSegment'
 
 export type DraggedQuestion = {
   id: string
@@ -220,23 +221,13 @@ export const Board = () => {
           items={segmentIds}
           strategy={horizontalListSortingStrategy}
         >
-          {selectedShowSegmentsList.map((segment) => {
-            switch (segment.type) {
-              case 'QUESTIONS':
-                return (
-                  <DroppableSegment
-                    key={segment.id}
-                    segmentId={segment.id}
-                    isSortingContainer={isSortingContainer}
-                  ></DroppableSegment>
-                )
-              case 'SCORES':
-                return null
-              default:
-                const _exhaustiveCheck: never = segment
-                return _exhaustiveCheck
-            }
-          })}
+          {selectedShowSegmentsList.map((segment) => (
+            <DroppableSegment
+              key={segment.id}
+              segmentId={segment.id}
+              isSortingContainer={isSortingContainer}
+            ></DroppableSegment>
+          ))}
         </SortableContext>
       </Segments>
       {createPortal(
@@ -253,14 +244,31 @@ export const Board = () => {
   )
 
   function renderSegmentDragOverlay(segmentId: string) {
-    return (
-      <QuestionSegment
-        isSortingContainer={true}
-        segmentId={segmentId}
-        isDragging={false}
-        // shadow
-      ></QuestionSegment>
-    )
+    const segment = findSegment(segmentId)
+    if (!segment) throw new Error('invalid overlay')
+
+    switch (segment.type) {
+      case 'QUESTIONS':
+        return (
+          <QuestionSegment
+            isSortingContainer={true}
+            segmentId={segmentId}
+            isDragging={false}
+            // shadow
+          ></QuestionSegment>
+        )
+      case 'SCORES':
+        return (
+          <ScoreSegment
+            key={segment.id}
+            segmentId={segment.id}
+            isDragging={false}
+          ></ScoreSegment>
+        )
+      default:
+        const _exhaustiveCheck: never = segment
+        return _exhaustiveCheck
+    }
   }
 
   function renderQuestionDragOverlay(questionId: string) {
@@ -279,39 +287,6 @@ export const Board = () => {
     )
   }
 }
-
-function SegmentPlaceholder() {
-  const { addSegment } = useActions().builder
-
-  return (
-    <Wrapper>
-      <MockSegmentButton onClick={addSegment}>New segment</MockSegmentButton>
-    </Wrapper>
-  )
-}
-
-const Wrapper = styled.div`
-  min-width: 300px;
-  padding-right: 60px;
-  padding-top: 20px;
-`
-
-const MockSegmentButton = styled.button`
-  background: none;
-  border: 2px dashed hsl(0 0% 90%);
-  color: hsl(0 0% 40%);
-  border-radius: 8px;
-  font-size: 20px;
-  padding: 8px 16px;
-  text-align: center;
-  width: 100%;
-  cursor: pointer;
-
-  &:hover {
-    background: hsl(0 0% 98%);
-    border-color: hsl(0 0% 80%);
-  }
-`
 
 const Segments = styled.div`
   display: flex;
