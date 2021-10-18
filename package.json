@@ -24,7 +24,6 @@
     "overmind": "^28.0.1",
     "overmind-react": "^29.0.1",
     "react": "^17.0.1",
-    "react-dnd": "^14.0.1",
     "react-dnd-html5-backend": "^14.0.0",
     "react-dom": "^17.0.1",
     "react-hook-form": "^7.4.0",
