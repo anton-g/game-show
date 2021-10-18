@@ -16,6 +16,7 @@ import {
   DragOverlay,
   defaultDropAnimation,
   DropAnimation,
+  useDroppable,
 } from '@dnd-kit/core'
 import {
   horizontalListSortingStrategy,
@@ -29,6 +30,7 @@ import { DroppableSegment } from './boardSegment/DroppableSegment'
 import { BoardQuestion } from './boardQuestion/BoardQuestion'
 import { isQuestionSegment } from '../../utils/type-utils'
 import { ScoreSegment } from './boardSegment/ScoreSegment'
+import { TrashIcon } from '@radix-ui/react-icons'
 
 export type DraggedQuestion = {
   id: string
@@ -52,10 +54,17 @@ const dropAnimation: DropAnimation = {
 
 type ActiveId = Segment['id'] | Question['id'] | null
 
+export const TRASH_ID = 'void'
+
 export const Board = () => {
   const { selectedShowSegments, selectedShowSegmentsList } = useAppState()
-  const { findSegment, reorderSegment, moveOrReorderQuestion } =
-    useActions().builder
+  const {
+    findSegment,
+    reorderSegment,
+    moveOrReorderQuestion,
+
+    removeSegmentQuestion,
+  } = useActions().builder
   const [activeId, setActiveId] = useState<ActiveId>(null)
   const recentlyMovedToNewContainer = useRef(false)
   const isSortingContainer = activeId
@@ -88,11 +97,7 @@ export const Board = () => {
   }
   const handleDragOver = ({ active, over }: DragOverEvent) => {
     const overId = over?.id
-    if (
-      !overId ||
-      // || overId === TRASH_ID
-      active.id in selectedShowSegments
-    ) {
+    if (!overId || overId === TRASH_ID || active.id in selectedShowSegments) {
       return
     }
     const overSegment = findSegment(overId)
@@ -153,16 +158,14 @@ export const Board = () => {
       return
     }
 
-    // if (overId === TRASH_ID) {
-    //   setItems((items) => ({
-    //     ...items,
-    //     [activeContainer]: items[activeContainer].filter(
-    //       (id) => id !== activeId
-    //     ),
-    //   }))
-    //   setActiveId(null)
-    //   return
-    // }
+    if (overId === TRASH_ID) {
+      removeSegmentQuestion({
+        segmentId: activeSegment.id,
+        questionId: active.id,
+      })
+      setActiveId(null)
+      return
+    }
 
     // if (overId === PLACEHOLDER_ID) {
     //   const newContainerId = getNextContainerId()
@@ -214,7 +217,6 @@ export const Board = () => {
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
       // cancelDrop={cancelDrop}
-      // modifiers={modifiers}
     >
       <Segments>
         <SortableContext
@@ -240,6 +242,9 @@ export const Board = () => {
         </DragOverlay>,
         document.body
       )}
+      {activeId && !(activeId in selectedShowSegments) ? (
+        <Trash id={TRASH_ID} />
+      ) : null}
     </DndContext>
   )
 
@@ -275,7 +280,7 @@ export const Board = () => {
   function renderQuestionDragOverlay(questionId: string) {
     const segmentId = findSegment(questionId)?.id
 
-    if (!segmentId) throw new Error()
+    if (!segmentId) return null
 
     return <BoardQuestion id={questionId} segmentId={segmentId} isDragOverlay />
   }
@@ -314,11 +319,11 @@ function useCustomCollisionDetection(
       }
 
       if (overId != null) {
-        // if (overId === TRASH_ID) {
-        //   // If the intersecting droppable is the trash, return early
-        //   // Remove this if you're not using trashable functionality in your app
-        //   return overId
-        // }
+        if (overId === TRASH_ID) {
+          // If the intersecting droppable is the trash, return early
+          // Remove this if you're not using trashable functionality in your app
+          return overId
+        }
 
         if (overId in selectedShowSegments) {
           const segment = selectedShowSegments[overId]
@@ -358,4 +363,33 @@ function useCustomCollisionDetection(
   )
 
   return collisionDetectionStrategy
+}
+
+function Trash({ id }: { id: string }) {
+  const { setNodeRef, isOver } = useDroppable({
+    id,
+  })
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'fixed',
+        left: '50%',
+        marginLeft: -25,
+        top: 10,
+        width: 50,
+        height: 50,
+        borderRadius: '50%',
+        backgroundColor: 'white',
+        border: '2px solid',
+        borderColor: isOver ? 'red' : '#f3f3f3',
+      }}
+    >
+      <TrashIcon />
+    </div>
+  )
 }
