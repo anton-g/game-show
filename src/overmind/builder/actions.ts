@@ -100,7 +100,24 @@ export const removeSegmentQuestion = (
   if (!isQuestionSegment(segment))
     throw Error('Trying to remove question from invalid segment')
 
-  delete segment.questions[questionId]
+  const q = segment.questions[questionId]
+
+  const newQuestions: SegmentQuestion[] = Object.values(segment.questions)
+    .filter((x) => x.question.id !== questionId)
+    .map((x) => {
+      let mod = 0
+      if (x.position > q.position) mod = 1
+
+      return {
+        ...x,
+        position: x.position - mod,
+      }
+    })
+
+  segment.questions = newQuestions.reduce(
+    (a, sq) => ({ ...a, [sq.question.id]: sq }),
+    {}
+  )
 }
 
 export const moveOrReorderQuestion = (
@@ -180,7 +197,7 @@ export const reorderSegmentQuestion = (
 
 // TODO clean this up D:
 export const moveSegmentQuestion = (
-  { state }: Context,
+  { state, actions }: Context,
   {
     question,
     fromSegmentId,
@@ -217,24 +234,10 @@ export const moveSegmentQuestion = (
   if (!isQuestionSegment(fromSegment))
     throw Error('Trying to reorder question in invalid segment')
 
-  const fromSegmentNewQuestions: SegmentQuestion[] = Object.values(
-    fromSegment.questions
-  )
-    .filter((x) => x.question.id !== question.question.id)
-    .map((x) => {
-      let mod = 0
-      if (x.position > fromPosition) mod = 1
-
-      return {
-        ...x,
-        position: x.position - mod,
-      }
-    })
-
-  fromSegment.questions = fromSegmentNewQuestions.reduce(
-    (a, sq) => ({ ...a, [sq.question.id]: sq }),
-    {}
-  )
+  actions.builder.removeSegmentQuestion({
+    questionId: question.question.id,
+    segmentId: fromSegment.id,
+  })
 
   const cardsToUpdateInNewSegment = Object.values(toSegment.questions).filter(
     (x) => x.position >= toPosition

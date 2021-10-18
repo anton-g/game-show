@@ -276,7 +276,7 @@ export const mockSegment1: QuestionSegmentType = {
   id: 'seg-1',
   type: 'QUESTIONS',
   name: 'First',
-  position: 4,
+  position: 1,
   intro: {
     type: 'NONE',
   },
@@ -296,7 +296,7 @@ export const mockSegment2: QuestionSegmentType = {
   id: 'seg-2',
   type: 'QUESTIONS',
   name: 'Second',
-  position: 1,
+  position: 3,
   intro: {
     type: 'NONE',
   },
@@ -316,7 +316,7 @@ export const mockSegment3: QuestionSegmentType = {
   id: 'seg-3',
   type: 'QUESTIONS',
   name: '3rd',
-  position: 2,
+  position: 4,
   intro: {
     type: 'NONE',
   },
@@ -336,7 +336,7 @@ const scoreSegment1: ScoreSegmentType = {
   id: 'score1',
   type: 'SCORES',
   name: 'Scores',
-  position: 3,
+  position: 2,
 }
 
 const scoreSegment2: ScoreSegmentType = {
@@ -350,10 +350,10 @@ export const mockShow1: Show = {
   id: '1',
   name: 'Ditt å Datt',
   segments: {
-    [mockSegment2.id]: mockSegment2,
     [mockSegment1.id]: mockSegment1,
-    [mockSegment3.id]: mockSegment3,
     [scoreSegment1.id]: scoreSegment1,
+    [mockSegment2.id]: mockSegment2,
+    [mockSegment3.id]: mockSegment3,
     [scoreSegment2.id]: scoreSegment2,
   },
 }
