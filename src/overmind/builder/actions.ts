@@ -33,8 +33,7 @@ export const findQuestion = (
   for (let i = 0; i < state.selectedShowSegmentsList.length; i++) {
     const segment = state.selectedShowSegmentsList[i]
 
-    if (!isQuestionSegment(segment))
-      throw Error('Trying to find question in invalid segment')
+    if (!isQuestionSegment(segment)) continue
 
     if (segment.questions.hasOwnProperty(id)) {
       return {
