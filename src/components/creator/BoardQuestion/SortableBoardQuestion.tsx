@@ -39,6 +39,7 @@ export function SortableBoardQuestion({
       id={questionId}
       segmentId={segmentId}
       isDragging={isDragging}
+      isSorting={isSorting}
       listeners={listeners}
       setNodeRef={setNodeRef}
       transition={transition}

@@ -7,30 +7,6 @@ import {
 } from './types'
 
 export const mockQuestions: Record<Question['id'], Question> = {
-  '1': {
-    id: '1',
-    type: 'TEXT',
-    question: `What's the song name?`,
-    answer: {
-      type: 'BUZZ_SINGLE',
-      value: 'Campione 2000',
-    },
-    scoring: {
-      value: 1,
-    },
-  },
-  '2': {
-    id: '2',
-    type: 'TEXT',
-    question: `What's the song name?`,
-    answer: {
-      type: 'BUZZ_SINGLE',
-      value: 'This is the way',
-    },
-    scoring: {
-      value: 1,
-    },
-  },
   '3': {
     id: '3',
     type: 'IMAGE',
@@ -275,28 +251,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
 export const mockSegment1: QuestionSegmentType = {
   id: 'seg-1',
   type: 'QUESTIONS',
-  name: 'First segment (fast?)',
-  position: 2,
-  intro: {
-    type: 'NONE',
-  },
-  questions: Object.values(mockQuestions)
-    .slice(0, 5)
-    .reduce((prev, curr, index) => {
-      prev[curr.id] = {
-        position: index + 1,
-        question: curr,
-      }
-
-      return prev
-    }, {} as Record<string, SegmentQuestion>),
-}
-
-export const mockSegment2: QuestionSegmentType = {
-  id: 'seg-2',
-  type: 'QUESTIONS',
-  name: 'Second',
-  position: 2,
+  name: 'First',
+  position: 3,
   intro: {
     type: 'NONE',
   },
@@ -312,11 +268,31 @@ export const mockSegment2: QuestionSegmentType = {
     }, {} as Record<string, SegmentQuestion>),
 }
 
+export const mockSegment2: QuestionSegmentType = {
+  id: 'seg-2',
+  type: 'QUESTIONS',
+  name: 'Second',
+  position: 1,
+  intro: {
+    type: 'NONE',
+  },
+  questions: Object.values(mockQuestions)
+    .slice(0, 5)
+    .reduce((prev, curr, index) => {
+      prev[curr.id] = {
+        position: index + 1,
+        question: curr,
+      }
+
+      return prev
+    }, {} as Record<string, SegmentQuestion>),
+}
+
 export const mockSegment3: QuestionSegmentType = {
   id: 'seg-3',
   type: 'QUESTIONS',
   name: '3rd',
-  position: 1,
+  position: 2,
   intro: {
     type: 'NONE',
   },
@@ -351,7 +327,7 @@ export const mockShow1: Show = {
   name: 'Ditt å Datt',
   segments: {
     [mockSegment2.id]: mockSegment2,
-    // [mockSegment1.id]: mockSegment1,
+    [mockSegment1.id]: mockSegment1,
     [mockSegment3.id]: mockSegment3,
     // [scoreSegment1.id]: scoreSegment1,
     // [scoreSegment2.id]: scoreSegment2,

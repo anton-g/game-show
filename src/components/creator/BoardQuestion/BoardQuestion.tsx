@@ -15,6 +15,7 @@ type Props = {
   segmentId: QuestionSegmentType['id']
   disabled: boolean
   isDragging: boolean
+  isSorting: boolean
   setNodeRef?: (node: HTMLElement | null) => void // TODO replace with forwardref
   style?: React.CSSProperties
   transform?: Transform | null
@@ -30,6 +31,8 @@ export function BoardQuestion({
   transform,
   transition,
   listeners,
+  isDragging,
+  isSorting,
 }: Props) {
   const { moveSegmentQuestion, removeSegmentQuestion } = useActions().builder
   const segmentQuestion = useAppState((state) => {
@@ -40,13 +43,15 @@ export function BoardQuestion({
     return segment.questions[questionId]
   })
 
+  if (!segmentQuestion) return <p>where am i</p>
+
   const question = segmentQuestion.question
 
   return (
     <Wrapper
       ref={disabled ? undefined : setNodeRef}
       $transform={transform}
-      style={{ transition }}
+      style={{ transition, opacity: isDragging ? 0.3 : 1 }}
     >
       <Content type={question.type} {...listeners}>
         <Header>
