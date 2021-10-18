@@ -7,6 +7,30 @@ import {
 } from './types'
 
 export const mockQuestions: Record<Question['id'], Question> = {
+  '1': {
+    id: '1',
+    type: 'TEXT',
+    question: `What's the song name?`,
+    answer: {
+      type: 'BUZZ_SINGLE',
+      value: 'Campione 2000',
+    },
+    scoring: {
+      value: 1,
+    },
+  },
+  '2': {
+    id: '2',
+    type: 'TEXT',
+    question: `What's the song name?`,
+    answer: {
+      type: 'BUZZ_SINGLE',
+      value: 'This is the way',
+    },
+    scoring: {
+      value: 1,
+    },
+  },
   '3': {
     id: '3',
     type: 'IMAGE',
