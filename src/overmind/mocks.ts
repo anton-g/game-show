@@ -7,8 +7,8 @@ import {
 } from './types'
 
 export const mockQuestions: Record<Question['id'], Question> = {
-  '1': {
-    id: '1',
+  'q-1': {
+    id: 'q-1',
     type: 'TEXT',
     question: `What's the song name?`,
     answer: {
@@ -19,8 +19,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 1,
     },
   },
-  '2': {
-    id: '2',
+  'q-2': {
+    id: 'q-2',
     type: 'TEXT',
     question: `What's the song name?`,
     answer: {
@@ -31,8 +31,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 1,
     },
   },
-  '3': {
-    id: '3',
+  'q-3': {
+    id: 'q-3',
     type: 'IMAGE',
     question: `Who's this?`,
     answer: {
@@ -43,8 +43,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 1,
     },
   },
-  '4': {
-    id: '4',
+  'q-4': {
+    id: 'q-4',
     type: 'VIDEO',
     question: 'Where are we going?',
     answer: {
@@ -61,8 +61,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 1,
     },
   },
-  '5': {
-    id: '5',
+  'q-5': {
+    id: 'q-5',
     type: 'TEXT',
     question: `What's the song name?`,
     answer: {
@@ -73,8 +73,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 1,
     },
   },
-  '6': {
-    id: '6',
+  'q-6': {
+    id: 'q-6',
     type: 'TEXT',
     question: `What's the artist name?`,
     answer: {
@@ -91,8 +91,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 1,
     },
   },
-  '7': {
-    id: '7',
+  'q-7': {
+    id: 'q-7',
     type: 'IMAGE',
     question: `Who's this?`,
     answer: {
@@ -103,8 +103,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 1,
     },
   },
-  '8': {
-    id: '8',
+  'q-8': {
+    id: 'q-8',
     type: 'IMAGE',
     question: `Who's this?`,
     answer: {
@@ -119,8 +119,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 1,
     },
   },
-  '9': {
-    id: '9',
+  'q-9': {
+    id: 'q-9',
     type: 'VIDEO',
     question: 'What happens next?',
     answer: {
@@ -131,8 +131,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 5,
     },
   },
-  '10': {
-    id: '10',
+  'q-10': {
+    id: 'q-10',
     type: 'VIDEO',
     question: 'How many times does E-Type sing the word "life"?',
     answer: {
@@ -148,8 +148,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 1,
     },
   },
-  '11': {
-    id: '11',
+  'q-11': {
+    id: 'q-11',
     type: 'TEXT',
     question: `What's the artist name?`,
     answer: {
@@ -160,8 +160,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 1,
     },
   },
-  '12': {
-    id: '12',
+  'q-12': {
+    id: 'q-12',
     type: 'TEXT',
     question: `What's E-Type real name?`,
     answer: {
@@ -172,8 +172,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 1,
     },
   },
-  '13': {
-    id: '13',
+  'q-13': {
+    id: 'q-13',
     type: 'IMAGE',
     question: 'How many lingonberries are there in the world?',
     answer: {
@@ -184,8 +184,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 1,
     },
   },
-  '14': {
-    id: '14',
+  'q-14': {
+    id: 'q-14',
     type: 'VIDEO',
     question: 'Who came first, E-Type or Martin Eriksson?',
     answer: {
@@ -200,8 +200,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 1,
     },
   },
-  '15': {
-    id: '15',
+  'q-15': {
+    id: 'q-15',
     type: 'TEXT',
     question: `What's your name?`,
     answer: {
@@ -212,8 +212,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 1,
     },
   },
-  '16': {
-    id: '16',
+  'q-16': {
+    id: 'q-16',
     type: 'TEXT',
     question: 'What do you think about E-Type?',
     answer: {
@@ -230,8 +230,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 1,
     },
   },
-  '17': {
-    id: '17',
+  'q-17': {
+    id: 'q-17',
     type: 'IMAGE',
     question: `Who isn't this?`,
     answer: {
@@ -242,8 +242,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 1,
     },
   },
-  '18': {
-    id: '18',
+  'q-18': {
+    id: 'q-18',
     type: 'IMAGE',
     question: `Whos hair is this?`,
     answer: {
@@ -258,8 +258,8 @@ export const mockQuestions: Record<Question['id'], Question> = {
       value: 1,
     },
   },
-  '19': {
-    id: '19',
+  'q-19': {
+    id: 'q-19',
     type: 'VIDEO',
     question: 'What happened before?',
     answer: {

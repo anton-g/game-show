@@ -57,7 +57,6 @@ export const Board = () => {
   const { findSegment, reorderSegment, moveOrReorderQuestion } =
     useActions().builder
   const [activeId, setActiveId] = useState<ActiveId>(null)
-  const lastOverId = useRef<UniqueIdentifier | null>(null)
   const recentlyMovedToNewContainer = useRef(false)
   const isSortingContainer = activeId
     ? activeId in selectedShowSegmentsList
@@ -77,14 +76,16 @@ export const Board = () => {
   const collisionDetectionStrategy = useCustomCollisionDetection(
     selectedShowSegments,
     activeId,
-    lastOverId,
     recentlyMovedToNewContainer
   )
 
-  const handleDragCancel = () => {}
+  const handleDragCancel = () => {
+    setActiveId(null)
+  }
   const handleDragStart = ({ active }: DragStartEvent) => {
     setActiveId(active.id)
     // setClonedItems(items);
+    console.log('start dragging', active.id)
   }
   const handleDragOver = ({ active, over }: DragOverEvent) => {
     const overId = over?.id
@@ -301,14 +302,17 @@ const Segments = styled.div`
 function useCustomCollisionDetection(
   selectedShowSegments: Record<string, Segment>,
   activeId: ActiveId,
-  lastOverId: React.MutableRefObject<string | null>,
   recentlyMovedToNewContainer: React.MutableRefObject<boolean>
 ) {
+  const lastOverId = useRef<UniqueIdentifier | null>(null)
+
   const collisionDetectionStrategy: CollisionDetection = useCallback(
     (args) => {
       // Start by finding any intersecting droppable
       let overId = rectIntersection(args)
+      console.log({ overId, args })
 
+      // Check if dragging segment
       if (activeId && activeId in selectedShowSegments) {
         return closestCenter({
           ...args,
@@ -327,18 +331,17 @@ function useCustomCollisionDetection(
 
         if (overId in selectedShowSegments) {
           const segment = selectedShowSegments[overId]
-
           // If a container is matched and it contains items
           if (
             isQuestionSegment(segment) &&
-            Object.values(segment.questions).length > 0
+            Object.keys(segment.questions).length > 0
           ) {
             // Return the closest droppable within that container
             overId = closestCenter({
               ...args,
               droppableContainers: args.droppableContainers.filter(
                 (container) =>
-                  container.id !== overId && segment.questions[container.id]
+                  container.id !== overId && container.id in segment.questions
               ),
             })
           }
@@ -360,7 +363,7 @@ function useCustomCollisionDetection(
       // If no droppable is matched, return the last match
       return lastOverId.current
     },
-    [activeId, lastOverId, recentlyMovedToNewContainer, selectedShowSegments]
+    [activeId, recentlyMovedToNewContainer, selectedShowSegments]
   )
 
   return collisionDetectionStrategy
