@@ -3,7 +3,7 @@ import { CSS } from '@dnd-kit/utilities'
 import type { QuestionSegmentType } from '../../../overmind/types'
 import { QuestionSegment } from './QuestionSegment'
 import { DRAG_TYPES } from '../Board'
-import { useAppState } from '../../../overmind'
+import { useActions, useAppState } from '../../../overmind'
 import { ScoreSegment } from './ScoreSegment'
 
 type Props = {
@@ -31,6 +31,12 @@ export const DroppableSegment = ({ segmentId, isSortingContainer }: Props) => {
     // animateLayoutChanges,
   })
 
+  const isOverContainer = over
+    ? (segmentId === over.id &&
+        active?.data.current?.type !== DRAG_TYPES.SEGMENT) ||
+      (segment.type === 'QUESTIONS' && Boolean(segment.questions[over.id]))
+    : false
+
   const style = { transform: CSS.Transform.toString(transform), transition }
 
   switch (segment.type) {
@@ -44,6 +50,7 @@ export const DroppableSegment = ({ segmentId, isSortingContainer }: Props) => {
           style={style}
           segmentId={segmentId}
           isDragging={isDragging}
+          isHovered={isOverContainer}
         ></QuestionSegment>
       )
     case 'SCORES':

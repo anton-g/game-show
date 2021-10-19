@@ -18,6 +18,7 @@ type Props = {
   style?: React.CSSProperties
   handleProps?: React.HTMLAttributes<any>
   isDragOverlay?: boolean
+  isHovered?: boolean
 }
 
 export const QuestionSegment = ({
@@ -28,6 +29,7 @@ export const QuestionSegment = ({
   style,
   handleProps,
   isDragOverlay,
+  isHovered,
 }: Props) => {
   const [editing, setEditing] = useState(false)
 
@@ -74,7 +76,8 @@ export const QuestionSegment = ({
           ></StyledOptions>
         </TitleRow>
       </Header>
-      <QuestionsList>
+      <QuestionsList isHovered={isHovered}>
+        {/* Maybe wanna render children here instead to defer responsibility to DroppableSegment and the DragOverlay */}
         {isDragOverlay ? (
           questionsList.map((question) => (
             <BoardQuestion
@@ -167,12 +170,14 @@ const Title = styled.h2`
   font-size: 24px;
 `
 
-const QuestionsList = styled.div`
+const QuestionsList = styled.div<{ isHovered?: boolean }>`
   height: 100%;
   border-radius: 8px;
   min-width: 150px;
   overflow-y: scroll;
-  background-color: ${({ theme }) => theme.colors.gray3};
+  background-color: ${({ theme, isHovered }) =>
+    isHovered ? theme.colors.gray5 : theme.colors.gray3};
+  transition: background-color 300ms ease-in-out;
   padding: 16px;
 
   > *:not(:last-child) {
