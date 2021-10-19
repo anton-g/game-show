@@ -55,6 +55,7 @@ const dropAnimation: DropAnimation = {
 type ActiveId = Segment['id'] | Question['id'] | null
 
 export const TRASH_ID = 'void'
+export const PLACEHOLDER_ID = 'placeholder'
 
 export const Board = () => {
   const { selectedShowSegments, selectedShowSegmentsList } = useAppState()
@@ -63,6 +64,7 @@ export const Board = () => {
     reorderSegment,
     moveOrReorderQuestion,
     removeSegmentQuestion,
+    addSegment,
   } = useActions().builder
   const [activeId, setActiveId] = useState<ActiveId>(null)
   const recentlyMovedToNewContainer = useRef(false)
@@ -163,22 +165,13 @@ export const Board = () => {
       return
     }
 
-    // if (overId === PLACEHOLDER_ID) {
-    //   const newContainerId = getNextContainerId()
-
-    //   unstable_batchedUpdates(() => {
-    //     setContainers((containers) => [...containers, newContainerId])
-    //     setItems((items) => ({
-    //       ...items,
-    //       [activeContainer]: items[activeContainer].filter(
-    //         (id) => id !== activeId
-    //       ),
-    //       [newContainerId]: [active.id],
-    //     }))
-    //     setActiveId(null)
-    //   })
-    //   return
-    // }
+    if (overId === PLACEHOLDER_ID) {
+      addSegment({
+        withQuestionId: active.id,
+      })
+      setActiveId(null)
+      return
+    }
 
     const overSegment = findSegment(overId)
     if (overSegment && activeSegment.type === 'QUESTIONS') {
@@ -216,7 +209,7 @@ export const Board = () => {
     >
       <Segments>
         <SortableContext
-          items={segmentIds}
+          items={[...segmentIds, PLACEHOLDER_ID]}
           strategy={horizontalListSortingStrategy}
         >
           {selectedShowSegmentsList.map((segment) => (
@@ -226,6 +219,11 @@ export const Board = () => {
               isSortingContainer={isSortingContainer}
             ></DroppableSegment>
           ))}
+          <DroppableSegment
+            segmentId={PLACEHOLDER_ID}
+            isSortingContainer={isSortingContainer}
+            // onClick={handleAddColumn}
+          ></DroppableSegment>
         </SortableContext>
       </Segments>
       {createPortal(

@@ -195,7 +195,8 @@ export const reorderSegmentQuestion = (
   segment.questions = newQuestions
 }
 
-// TODO clean this up D:
+// TODO clean this up D: should probably only receive questionId, toSegmentId, toPosition, forceLast?
+// TODO optimize performance
 export const moveSegmentQuestion = (
   { state, actions }: Context,
   {
@@ -252,7 +253,10 @@ export const moveSegmentQuestion = (
   state.selectedShow.segments = newSegments
 }
 
-export const addSegment = ({ state }: Context) => {
+export const addSegment = (
+  { state, actions }: Context,
+  { withQuestionId }: { withQuestionId?: Question['id'] }
+) => {
   if (!state.selectedShow) return
 
   const ordinal_suffix_of = (i: number) => {
@@ -274,12 +278,28 @@ export const addSegment = ({ state }: Context) => {
     state.selectedShow.segments
   ).length
 
+  const questions: QuestionSegmentType['questions'] = {}
+  if (withQuestionId) {
+    const oldSegment = actions.builder.findSegment(withQuestionId)
+    if (!oldSegment || !isQuestionSegment(oldSegment))
+      throw new Error('should not happen')
+
+    const question = oldSegment.questions[withQuestionId]
+
+    actions.builder.removeSegmentQuestion({
+      questionId: withQuestionId,
+      segmentId: oldSegment.id,
+    })
+
+    questions[question.question.id] = question
+  }
+
   const newSegment: QuestionSegmentType = {
     id: nanoid(),
     type: 'QUESTIONS',
     name: `${ordinal_suffix_of(existingSegmentsCount + 1)} segment`,
     position: existingSegmentsCount + 1,
-    questions: {},
+    questions: questions,
     intro: {
       type: 'NONE',
     },
