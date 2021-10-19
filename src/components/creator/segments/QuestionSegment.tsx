@@ -14,108 +14,111 @@ type Props = {
   segmentId: QuestionSegmentType['id']
   isSortingContainer: boolean
   isDragging: boolean
-  setNodeRef?: (node: HTMLElement | null) => void // TODO replace with forwardref
   style?: React.CSSProperties
   handleProps?: React.HTMLAttributes<any>
   isDragOverlay?: boolean
   isHovered?: boolean
 }
 
-export const QuestionSegment = ({
-  segmentId,
-  isSortingContainer,
-  isDragging,
-  setNodeRef,
-  style,
-  handleProps,
-  isDragOverlay,
-  isHovered,
-}: Props) => {
-  const [editing, setEditing] = useState(false)
+export const QuestionSegment = React.forwardRef<HTMLDivElement, Props>(
+  (
+    {
+      segmentId,
+      isSortingContainer,
+      isDragging,
+      style,
+      handleProps,
+      isDragOverlay,
+      isHovered,
+    },
+    ref
+  ) => {
+    const [editing, setEditing] = useState(false)
 
-  const { removeSegment, addSegmentQuestion } = useActions().builder
-  const segment = useAppState(
-    (state) => state.selectedShow!.segments[segmentId]
-  )
+    const { removeSegment, addSegmentQuestion } = useActions().builder
+    const segment = useAppState(
+      (state) => state.selectedShow!.segments[segmentId]
+    )
 
-  if (!isQuestionSegment(segment)) throw new Error('Invalid segment')
+    if (!isQuestionSegment(segment)) throw new Error('Invalid segment')
 
-  const questionsList = useMemo(
-    () =>
-      Object.values(segment.questions)
-        .sort((a, b) => a.position - b.position)
-        .map((x) => x.question),
-    [segment.questions]
-  )
+    const questionsList = useMemo(
+      () =>
+        Object.values(segment.questions)
+          .sort((a, b) => a.position - b.position)
+          .map((x) => x.question),
+      [segment.questions]
+    )
 
-  const questionIds = useMemo(
-    () => questionsList.map((x) => x.id),
-    [questionsList]
-  )
+    const questionIds = useMemo(
+      () => questionsList.map((x) => x.id),
+      [questionsList]
+    )
 
-  return (
-    <Wrapper
-      dragging={isDragging}
-      ref={setNodeRef}
-      style={style}
-      isDragOverlay={isDragOverlay}
-    >
-      <Header {...handleProps}>
-        <TitleRow>
-          <Title>{segment.name}</Title>
-          <StyledOptions
-            onRemove={() => {
-              if (
-                Object.values(segment.questions).length === 0 ||
-                window.confirm('Are you sure?')
-              ) {
-                removeSegment(segment.id)
-              }
-            }}
-            onEdit={() => setEditing(true)}
-          ></StyledOptions>
-        </TitleRow>
-      </Header>
-      <QuestionsList isHovered={isHovered}>
-        {/* TODO Maybe wanna render children here instead to defer responsibility to DroppableSegment and the DragOverlay */}
-        {isDragOverlay ? (
-          questionsList.map((question) => (
-            <BoardQuestion
-              key={question.id}
-              id={question.id}
-              segmentId={segmentId}
-            />
-          ))
-        ) : (
-          <SortableContext
-            items={questionIds}
-            strategy={verticalListSortingStrategy}
-          >
-            {questionsList.map((question) => (
-              <SortableBoardQuestion
+    return (
+      <Wrapper
+        dragging={isDragging}
+        ref={ref}
+        style={style}
+        isDragOverlay={isDragOverlay}
+      >
+        <Header {...handleProps}>
+          <TitleRow>
+            <Title>{segment.name}</Title>
+            <StyledOptions
+              onRemove={() => {
+                if (
+                  Object.values(segment.questions).length === 0 ||
+                  window.confirm('Are you sure?')
+                ) {
+                  removeSegment(segment.id)
+                }
+              }}
+              onEdit={() => setEditing(true)}
+            ></StyledOptions>
+          </TitleRow>
+        </Header>
+        <QuestionsList isHovered={isHovered}>
+          {/* TODO Maybe wanna render children here instead to defer responsibility to DroppableSegment and the DragOverlay */}
+          {isDragOverlay ? (
+            questionsList.map((question) => (
+              <BoardQuestion
                 key={question.id}
                 id={question.id}
                 segmentId={segmentId}
-                disabled={isSortingContainer}
               />
-            ))}
-          </SortableContext>
-        )}
-        <QuestionPicker
-          segmentName={segment.name}
-          onSelect={(questionId) =>
-            addSegmentQuestion({ segmentId: segment.id, questionId })
-          }
-        ></QuestionPicker>
-      </QuestionsList>
-      <EditSegmentDialog
-        open={editing}
-        onOpenChange={setEditing}
-        segment={segment}
-      />
-    </Wrapper>
-  )
-}
+            ))
+          ) : (
+            <SortableContext
+              items={questionIds}
+              strategy={verticalListSortingStrategy}
+            >
+              {questionsList.map((question) => (
+                <SortableBoardQuestion
+                  key={question.id}
+                  id={question.id}
+                  segmentId={segmentId}
+                  disabled={isSortingContainer}
+                />
+              ))}
+            </SortableContext>
+          )}
+          <QuestionPicker
+            segmentName={segment.name}
+            onSelect={(questionId) =>
+              addSegmentQuestion({ segmentId: segment.id, questionId })
+            }
+          ></QuestionPicker>
+        </QuestionsList>
+        <EditSegmentDialog
+          open={editing}
+          onOpenChange={setEditing}
+          segment={segment}
+        />
+      </Wrapper>
+    )
+  }
+)
 
 const StyledOptions = styled(SegmentOptions)``
 

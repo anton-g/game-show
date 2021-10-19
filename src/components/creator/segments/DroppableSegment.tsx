@@ -51,8 +51,8 @@ export const DroppableSegment = ({ segmentId, isSortingContainer }: Props) => {
   if (segmentId === PLACEHOLDER_ID) {
     return (
       <SegmentPlaceholder
+        ref={setNodeRef}
         disabled={isSortingContainer}
-        setNodeRef={setNodeRef}
         isHovered={isOverContainer}
         style={style}
       />
@@ -65,8 +65,8 @@ export const DroppableSegment = ({ segmentId, isSortingContainer }: Props) => {
     case 'QUESTIONS':
       return (
         <QuestionSegment
+          ref={setNodeRef}
           isSortingContainer={isSortingContainer}
-          setNodeRef={setNodeRef}
           handleProps={{ ...attributes, ...listeners }}
           style={style}
           segmentId={segmentId}
@@ -77,9 +77,8 @@ export const DroppableSegment = ({ segmentId, isSortingContainer }: Props) => {
     case 'SCORES':
       return (
         <ScoreSegment
-          key={segment.id}
+          ref={setNodeRef}
           segmentId={segment.id}
-          setNodeRef={setNodeRef}
           handleProps={{ ...attributes, ...listeners }}
           style={style}
           isDragging={isDragging}

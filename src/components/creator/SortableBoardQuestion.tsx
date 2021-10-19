@@ -26,13 +26,13 @@ export function SortableBoardQuestion({
 
   return (
     <BoardQuestion
+      ref={setNodeRef}
       disabled={disabled}
       id={questionId}
       segmentId={segmentId}
       isDragging={isDragging}
       isSorting={isSorting}
       listeners={listeners}
-      setNodeRef={setNodeRef}
       transition={transition}
       transform={transform}
     ></BoardQuestion>

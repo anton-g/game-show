@@ -1,31 +1,28 @@
+import React from 'react'
 import styled from 'styled-components'
 import { useActions } from '../../../overmind'
 
 type Props = {
   disabled: boolean
-  setNodeRef?: (node: HTMLElement | null) => void // TODO replace with forwardref
   isHovered?: boolean
   style?: React.CSSProperties
 }
 
-export function SegmentPlaceholder({
-  disabled,
-  setNodeRef,
-  isHovered,
-  style,
-}: Props) {
-  const { addSegment } = useActions().builder
+export const SegmentPlaceholder = React.forwardRef<HTMLDivElement, Props>(
+  ({ disabled, isHovered, style }, ref) => {
+    const { addSegment } = useActions().builder
 
-  return (
-    <Wrapper
-      onClick={() => addSegment({})}
-      ref={disabled ? undefined : setNodeRef}
-      style={style}
-    >
-      <Inner hovered={isHovered}>+ Add segment</Inner>
-    </Wrapper>
-  )
-}
+    return (
+      <Wrapper
+        onClick={() => addSegment({})}
+        ref={disabled ? undefined : ref}
+        style={style}
+      >
+        <Inner hovered={isHovered}>+ Add segment</Inner>
+      </Wrapper>
+    )
+  }
+)
 
 const Wrapper = styled.div`
   display: flex;

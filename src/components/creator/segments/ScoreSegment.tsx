@@ -1,34 +1,24 @@
+import React from 'react'
 import styled, { css } from 'styled-components'
 import type { ScoreSegmentType } from '../../../overmind/types'
 
 type Props = {
   segmentId: ScoreSegmentType['id']
   isDragging: boolean
-  setNodeRef?: (node: HTMLElement | null) => void // TODO replace with forwardref
   style?: React.CSSProperties
   handleProps?: React.HTMLAttributes<any>
   isDragOverlay?: boolean
 }
 
-export const ScoreSegment = ({
-  segmentId,
-  isDragging,
-  setNodeRef,
-  style,
-  handleProps,
-  isDragOverlay,
-}: Props) => {
-  return (
-    <Wrapper
-      ref={setNodeRef}
-      style={style}
-      {...handleProps}
-      dragging={isDragging}
-    >
-      <Inner isDragOverlay={isDragOverlay}>Scores</Inner>
-    </Wrapper>
-  )
-}
+export const ScoreSegment = React.forwardRef<HTMLDivElement, Props>(
+  ({ segmentId, isDragging, style, handleProps, isDragOverlay }, ref) => {
+    return (
+      <Wrapper ref={ref} style={style} {...handleProps} dragging={isDragging}>
+        <Inner isDragOverlay={isDragOverlay}>Scores</Inner>
+      </Wrapper>
+    )
+  }
+)
 
 const Wrapper = styled.div<{ dragging?: boolean }>`
   display: flex;
