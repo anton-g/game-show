@@ -7,8 +7,8 @@ import { SegmentOptions } from './SegmentOptions'
 import { QuestionPicker } from '../questionPicker/QuestionPicker'
 import { EditSegmentDialog } from './EditSegmentDialog'
 import { isQuestionSegment } from '../../../utils/type-utils'
-import { SortableBoardQuestion } from '../boardQuestion/SortableBoardQuestion'
-import { BoardQuestion } from '../boardQuestion/BoardQuestion'
+import { SortableBoardQuestion } from '../SortableBoardQuestion'
+import { BoardQuestion } from '../BoardQuestion'
 
 type Props = {
   segmentId: QuestionSegmentType['id']
@@ -77,7 +77,7 @@ export const QuestionSegment = ({
         </TitleRow>
       </Header>
       <QuestionsList isHovered={isHovered}>
-        {/* Maybe wanna render children here instead to defer responsibility to DroppableSegment and the DragOverlay */}
+        {/* TODO Maybe wanna render children here instead to defer responsibility to DroppableSegment and the DragOverlay */}
         {isDragOverlay ? (
           questionsList.map((question) => (
             <BoardQuestion

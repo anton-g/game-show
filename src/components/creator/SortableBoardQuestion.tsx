@@ -1,5 +1,5 @@
 import { useSortable } from '@dnd-kit/sortable'
-import type { Question, QuestionSegmentType } from '../../../overmind/types'
+import type { Question, QuestionSegmentType } from '../../overmind/types'
 import { BoardQuestion } from './BoardQuestion'
 
 type Props = {
@@ -18,8 +18,6 @@ export function SortableBoardQuestion({
     listeners,
     isDragging,
     isSorting,
-    over,
-    overIndex,
     transform,
     transition,
   } = useSortable({

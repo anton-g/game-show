@@ -1,36 +1,33 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import {
   useSensors,
   useSensor,
   PointerSensor,
-  closestCenter,
   DndContext,
   DragEndEvent,
   MeasuringStrategy,
   DragStartEvent,
   DragOverEvent,
-  rectIntersection,
-  CollisionDetection,
-  UniqueIdentifier,
   DragOverlay,
   defaultDropAnimation,
   DropAnimation,
-  useDroppable,
+  KeyboardSensor,
 } from '@dnd-kit/core'
 import {
   horizontalListSortingStrategy,
   SortableContext,
+  sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable'
 import { useActions, useAppState } from '../../overmind'
-import { QuestionSegment } from './boardSegment/QuestionSegment'
+import { QuestionSegment } from './segments/QuestionSegment'
 import { Question, Segment } from '../../overmind/types'
 import { createPortal } from 'react-dom'
-import { DroppableSegment } from './boardSegment/DroppableSegment'
-import { BoardQuestion } from './boardQuestion/BoardQuestion'
-import { isQuestionSegment } from '../../utils/type-utils'
-import { ScoreSegment } from './boardSegment/ScoreSegment'
-import { TrashIcon } from '@radix-ui/react-icons'
+import { DroppableSegment } from './segments/DroppableSegment'
+import { BoardQuestion } from './BoardQuestion'
+import { ScoreSegment } from './segments/ScoreSegment'
+import { useCustomCollisionDetection } from './useCustomCollisionDetection'
+import { Trash } from './Trash'
 
 export type DraggedQuestion = {
   id: string
@@ -52,7 +49,7 @@ const dropAnimation: DropAnimation = {
   dragSourceOpacity: 0.2,
 }
 
-type ActiveId = Segment['id'] | Question['id'] | null
+export type ActiveId = Segment['id'] | Question['id'] | null
 
 export const TRASH_ID = 'void'
 export const PLACEHOLDER_ID = 'placeholder'
@@ -91,7 +88,6 @@ export const Board = () => {
   }
   const handleDragStart = ({ active }: DragStartEvent) => {
     setActiveId(active.id)
-    // setClonedItems(items);
   }
   const handleDragOver = ({ active, over }: DragOverEvent) => {
     const overId = over?.id
@@ -222,7 +218,6 @@ export const Board = () => {
           <DroppableSegment
             segmentId={PLACEHOLDER_ID}
             isSortingContainer={isSortingContainer}
-            // onClick={handleAddColumn}
           ></DroppableSegment>
         </SortableContext>
       </Segments>
@@ -289,101 +284,3 @@ const Segments = styled.div`
     margin-left: 16px;
   }
 `
-
-function useCustomCollisionDetection(
-  selectedShowSegments: Record<string, Segment>,
-  activeId: ActiveId,
-  recentlyMovedToNewContainer: React.MutableRefObject<boolean>
-) {
-  const lastOverId = useRef<UniqueIdentifier | null>(null)
-
-  const collisionDetectionStrategy: CollisionDetection = useCallback(
-    (args) => {
-      // Start by finding any intersecting droppable
-      let overId = rectIntersection(args)
-
-      // Check if dragging segment
-      if (activeId && activeId in selectedShowSegments) {
-        return closestCenter({
-          ...args,
-          droppableContainers: args.droppableContainers.filter(
-            (container) => container.id in selectedShowSegments
-          ),
-        })
-      }
-
-      if (overId != null) {
-        if (overId === TRASH_ID) {
-          // If the intersecting droppable is the trash, return early
-          // Remove this if you're not using trashable functionality in your app
-          return overId
-        }
-
-        if (overId in selectedShowSegments) {
-          const segment = selectedShowSegments[overId]
-          // If a container is matched and it contains items
-          if (
-            isQuestionSegment(segment) &&
-            Object.keys(segment.questions).length > 0
-          ) {
-            // Return the closest droppable within that container
-            overId = closestCenter({
-              ...args,
-              droppableContainers: args.droppableContainers.filter(
-                (container) =>
-                  container.id !== overId && container.id in segment.questions
-              ),
-            })
-          }
-        }
-
-        lastOverId.current = overId
-
-        return overId
-      }
-
-      // When a draggable item moves to a new container, the layout may shift
-      // and the `overId` may become `null`. We manually set the cached `lastOverId`
-      // to the id of the draggable item that was moved to the new container, otherwise
-      // the previous `overId` will be returned which can cause items to incorrectly shift positions
-      if (recentlyMovedToNewContainer.current) {
-        lastOverId.current = activeId
-      }
-
-      // If no droppable is matched, return the last match
-      return lastOverId.current
-    },
-    [activeId, recentlyMovedToNewContainer, selectedShowSegments]
-  )
-
-  return collisionDetectionStrategy
-}
-
-function Trash({ id }: { id: string }) {
-  const { setNodeRef, isOver } = useDroppable({
-    id,
-  })
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'fixed',
-        left: '50%',
-        marginLeft: -25,
-        top: 10,
-        width: 50,
-        height: 50,
-        borderRadius: '50%',
-        backgroundColor: 'white',
-        border: '2px solid',
-        borderColor: isOver ? 'red' : '#f3f3f3',
-      }}
-    >
-      <TrashIcon />
-    </div>
-  )
-}

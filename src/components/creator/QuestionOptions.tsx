@@ -2,8 +2,8 @@ import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { useState } from 'react'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
-import { useAppState } from '../../../overmind'
-import { DropdownMenu } from '../../common/DropdownMenu'
+import { useAppState } from '../../overmind'
+import { DropdownMenu } from '../common/DropdownMenu'
 
 type Props = {
   questionId: string

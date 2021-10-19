@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components'
-import { useActions, useAppState } from '../../../overmind'
-import type { Question, QuestionSegmentType } from '../../../overmind/types'
-import { getQuestionAnswer } from '../../../utils/question-utils'
-import { isQuestionSegment } from '../../../utils/type-utils'
+import { useActions, useAppState } from '../../overmind'
+import type { Question, QuestionSegmentType } from '../../overmind/types'
+import { getQuestionAnswer } from '../../utils/question-utils'
+import { isQuestionSegment } from '../../utils/type-utils'
 import { QuestionOptions } from './QuestionOptions'
 import type { Transform } from '@dnd-kit/utilities'
 import { DraggableSyntheticListeners } from '@dnd-kit/core'
@@ -30,7 +30,6 @@ export function BoardQuestion({
   transition,
   listeners,
   isDragging,
-  // isSorting,
   isDragOverlay,
 }: Props) {
   const { moveSegmentQuestion, removeSegmentQuestion } = useActions().builder
@@ -51,6 +50,7 @@ export function BoardQuestion({
       ref={disabled ? undefined : setNodeRef}
       transform={transform}
       style={{ transition, opacity: isDragging ? 0.2 : 1 }}
+      tabIndex={0}
     >
       <Content
         {...listeners}
