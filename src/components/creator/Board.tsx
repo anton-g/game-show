@@ -12,12 +12,10 @@ import {
   DragOverlay,
   defaultDropAnimation,
   DropAnimation,
-  KeyboardSensor,
 } from '@dnd-kit/core'
 import {
   horizontalListSortingStrategy,
   SortableContext,
-  sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable'
 import { useActions, useAppState } from '../../overmind'
 import { QuestionSegment } from './segments/QuestionSegment'
