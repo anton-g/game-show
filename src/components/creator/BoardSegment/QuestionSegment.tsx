@@ -8,6 +8,7 @@ import { QuestionPicker } from '../questionPicker/QuestionPicker'
 import { EditSegmentDialog } from './EditSegmentDialog'
 import { isQuestionSegment } from '../../../utils/type-utils'
 import { SortableBoardQuestion } from '../boardQuestion/SortableBoardQuestion'
+import { BoardQuestion } from '../boardQuestion/BoardQuestion'
 
 type Props = {
   segmentId: QuestionSegmentType['id']
@@ -74,19 +75,29 @@ export const QuestionSegment = ({
         </TitleRow>
       </Header>
       <QuestionsList>
-        <SortableContext
-          items={questionIds}
-          strategy={verticalListSortingStrategy}
-        >
-          {questionsList.map((question) => (
-            <SortableBoardQuestion
+        {isDragOverlay ? (
+          questionsList.map((question) => (
+            <BoardQuestion
               key={question.id}
               id={question.id}
               segmentId={segmentId}
-              disabled={isSortingContainer}
             />
-          ))}
-        </SortableContext>
+          ))
+        ) : (
+          <SortableContext
+            items={questionIds}
+            strategy={verticalListSortingStrategy}
+          >
+            {questionsList.map((question) => (
+              <SortableBoardQuestion
+                key={question.id}
+                id={question.id}
+                segmentId={segmentId}
+                disabled={isSortingContainer}
+              />
+            ))}
+          </SortableContext>
+        )}
         <QuestionPicker
           segmentName={segment.name}
           onSelect={(questionId) =>
@@ -112,7 +123,7 @@ const Wrapper = styled.div<{ dragging: boolean; isDragOverlay?: boolean }>`
   max-width: 300px;
   padding: 0 8px 8px;
   opacity: ${(p) => (p.dragging ? 0.2 : 1)};
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.gray1};
   border-radius: 8px;
   height: 100%;
 

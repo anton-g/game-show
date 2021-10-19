@@ -62,7 +62,6 @@ export const Board = () => {
     findSegment,
     reorderSegment,
     moveOrReorderQuestion,
-
     removeSegmentQuestion,
   } = useActions().builder
   const [activeId, setActiveId] = useState<ActiveId>(null)
@@ -71,10 +70,7 @@ export const Board = () => {
     ? activeId in selectedShowSegmentsList
     : false
 
-  const sensors = useSensors(
-    useSensor(PointerSensor)
-    // useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  )
+  const sensors = useSensors(useSensor(PointerSensor))
 
   useEffect(() => {
     requestAnimationFrame(() => {
