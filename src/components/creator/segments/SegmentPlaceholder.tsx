@@ -43,7 +43,7 @@ const Inner = styled.div<{ hovered?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: 24px;
+  padding: 24px 0;
   font-size: 24px;
   font-weight: bold;
   color: ${({ theme }) => theme.colors.gray11};

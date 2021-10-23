@@ -1,4 +1,4 @@
-import { DotsHorizontalIcon } from '@radix-ui/react-icons'
+import { CaretDownIcon } from '@radix-ui/react-icons'
 import { useState } from 'react'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
@@ -30,7 +30,7 @@ export function QuestionOptions({
         className={className}
         style={{ visibility: open ? 'visible' : undefined }}
       >
-        <DotsHorizontalIcon></DotsHorizontalIcon>
+        <CaretDownIcon></CaretDownIcon>
       </Trigger>
       <DropdownMenu.Content>
         <DropdownMenu>
@@ -68,16 +68,22 @@ export function QuestionOptions({
 }
 
 const Trigger = styled(DropdownMenu.Trigger)`
+  cursor: pointer;
   background: none;
   border: none;
   color: hsl(0 0% 30%);
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  cursor: pointer;
-  border-radius: 50%;
+  border-radius: 4px;
+  padding: 3px 3px;
+  display: flex;
+  align-items: center;
+  max-height: 24px;
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.gray4};
+  }
+
+  svg {
+    height: 12px;
+    width: 12px;
   }
 `
