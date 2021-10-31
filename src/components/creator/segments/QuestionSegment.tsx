@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useActions, useAppState } from '../../../overmind'
 import type { QuestionSegmentType } from '../../../overmind/types'
-import { SegmentOptions } from './SegmentOptions'
+import { QuestionSegmentOptions } from './QuestionSegmentOptions'
 import { QuestionPicker } from '../questionPicker/QuestionPicker'
 import { EditSegmentDialog } from './EditSegmentDialog'
 import { isQuestionSegment } from '../../../utils/type-utils'
@@ -125,7 +125,7 @@ export const QuestionSegment = React.forwardRef<HTMLDivElement, Props>(
   }
 )
 
-const StyledOptions = styled(SegmentOptions)``
+const StyledOptions = styled(QuestionSegmentOptions)``
 
 const Wrapper = styled.div<{ dragging: boolean; isDragOverlay?: boolean }>`
   display: flex;

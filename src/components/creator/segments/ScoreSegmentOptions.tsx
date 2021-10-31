@@ -5,11 +5,10 @@ import { DropdownMenu } from '../../common/DropdownMenu'
 
 type Props = {
   onRemove: () => void
-  onEdit: () => void
   className?: string
 }
 
-export function SegmentOptions({ onRemove, onEdit, className }: Props) {
+export function ScoreSegmentOptions({ onRemove, className }: Props) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -21,8 +20,6 @@ export function SegmentOptions({ onRemove, onEdit, className }: Props) {
         <CaretDownIcon></CaretDownIcon>
       </Trigger>
       <DropdownMenu.Content>
-        <DropdownMenu.Item onSelect={onEdit}>Edit segment</DropdownMenu.Item>
-        <DropdownMenu.Item disabled>Preview segment</DropdownMenu.Item>
         <DropdownMenu.Item danger onSelect={onRemove}>
           Remove segment
         </DropdownMenu.Item>

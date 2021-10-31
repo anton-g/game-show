@@ -78,6 +78,7 @@ export const DroppableSegment = ({ segmentId, isSortingContainer }: Props) => {
       return (
         <ScoreSegment
           ref={setNodeRef}
+          segmentId={segment.id}
           handleProps={{ ...attributes, ...listeners }}
           style={style}
           isDragging={isDragging}

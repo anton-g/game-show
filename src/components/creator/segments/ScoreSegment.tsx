@@ -2,8 +2,12 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import { DragHandleDots2Icon } from '@radix-ui/react-icons'
 import { DragHandle } from '../DragHandle'
+import { ScoreSegmentOptions } from './ScoreSegmentOptions'
+import { useActions } from '../../../overmind'
+import { ScoreSegmentType } from '../../../overmind/types'
 
 type Props = {
+  segmentId: ScoreSegmentType['id']
   isDragging: boolean
   style?: React.CSSProperties
   handleProps?: React.HTMLAttributes<any>
@@ -11,10 +15,15 @@ type Props = {
 }
 
 export const ScoreSegment = React.forwardRef<HTMLDivElement, Props>(
-  ({ isDragging, style, handleProps, isDragOverlay }, ref) => {
+  ({ segmentId, isDragging, style, handleProps, isDragOverlay }, ref) => {
+    const { removeSegment } = useActions().builder
+
     return (
       <Wrapper ref={ref} style={style} dragging={isDragging}>
         <Actions>
+          <StyledOptions
+            onRemove={() => removeSegment(segmentId)}
+          ></StyledOptions>
           <DragHandle {...handleProps}>
             <DragHandleDots2Icon />
           </DragHandle>
@@ -24,6 +33,8 @@ export const ScoreSegment = React.forwardRef<HTMLDivElement, Props>(
     )
   }
 )
+
+const StyledOptions = styled(ScoreSegmentOptions)``
 
 const Wrapper = styled.div<{ dragging?: boolean }>`
   display: flex;
@@ -35,12 +46,23 @@ const Wrapper = styled.div<{ dragging?: boolean }>`
   user-select: none;
   cursor: grab;
   padding: 0 8px 8px;
+
+  ${StyledOptions} {
+    visibility: hidden;
+  }
+
+  &:hover {
+    ${StyledOptions} {
+      visibility: visible;
+    }
+  }
 `
 
 const Actions = styled.div`
   min-height: 68px;
   padding: 16px 8px;
   align-self: flex-end;
+  display: flex;
 `
 
 const Inner = styled.div<{ isDragOverlay?: boolean }>`
