@@ -10,6 +10,7 @@ import { isQuestionSegment } from '../../../utils/type-utils'
 import { SortableBoardQuestion } from '../SortableBoardQuestion'
 import { BoardQuestion } from '../BoardQuestion'
 import { DragHandleDots1Icon, DragHandleDots2Icon } from '@radix-ui/react-icons'
+import { DragHandle } from '../DragHandle'
 
 type Props = {
   segmentId: QuestionSegmentType['id']
@@ -174,26 +175,6 @@ const Title = styled.h2`
   max-width: 100%;
   width: 100%;
   font-size: 24px;
-`
-
-const DragHandle = styled.button`
-  cursor: grab;
-  background: none;
-  border: none;
-  color: hsl(0 0% 30%);
-  border-radius: 4px;
-  padding: 8px 4px;
-  display: flex;
-  align-items: center;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.gray4};
-  }
-
-  svg {
-    height: 20px;
-    width: 20px;
-  }
 `
 
 const QuestionsList = styled.div<{ isHovered?: boolean }>`

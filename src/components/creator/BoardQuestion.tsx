@@ -1,12 +1,16 @@
 import styled, { css } from 'styled-components'
 import { useActions, useAppState } from '../../overmind'
-import type { Question, QuestionSegmentType } from '../../overmind/types'
+import type {
+  Question,
+  QuestionSegmentType,
+  SegmentQuestion,
+} from '../../overmind/types'
 import { getQuestionAnswer } from '../../utils/question-utils'
 import { isQuestionSegment } from '../../utils/type-utils'
 import { QuestionOptions } from './QuestionOptions'
 import type { Transform } from '@dnd-kit/utilities'
 import { DraggableSyntheticListeners } from '@dnd-kit/core'
-import React from 'react'
+import React, { useCallback } from 'react'
 
 type Props = {
   id: Question['id']
@@ -21,73 +25,85 @@ type Props = {
   isDragOverlay?: boolean
 }
 
-export const BoardQuestion = React.forwardRef<HTMLDivElement, Props>(
-  (
-    {
-      id: questionId,
-      segmentId,
-      disabled,
-      transform,
-      transition,
-      listeners,
-      isDragging,
-      isDragOverlay,
-    },
-    ref
-  ) => {
-    const { moveSegmentQuestion, removeSegmentQuestion } = useActions().builder
-    const segmentQuestion = useAppState((state) => {
-      const segment = state.selectedShow!.segments[segmentId]
+export const BoardQuestion = React.memo(
+  React.forwardRef<HTMLDivElement, Props>(
+    (
+      {
+        id: questionId,
+        segmentId,
+        disabled,
+        transform,
+        transition,
+        listeners,
+        isDragging,
+        isDragOverlay,
+      },
+      ref
+    ) => {
+      const { moveSegmentQuestion, removeSegmentQuestion } =
+        useActions().builder
+      const segmentQuestion: SegmentQuestion | undefined = useAppState(
+        (state) => {
+          const segment = state.selectedShow!.segments[segmentId]
 
-      if (!isQuestionSegment(segment)) throw new Error('Invalid segment')
+          if (!isQuestionSegment(segment)) throw new Error('Invalid segment')
 
-      return segment.questions[questionId]
-    })
+          return segment.questions[questionId]
+        }
+      )
 
-    if (!segmentQuestion) return <p>where am i</p>
+      const question = segmentQuestion?.question
 
-    const question = segmentQuestion.question
+      const handleOnRemove = useCallback(() => {
+        removeSegmentQuestion({
+          segmentId: segmentId,
+          questionId: question.id,
+        })
+      }, [question.id, removeSegmentQuestion, segmentId])
 
-    return (
-      <Wrapper
-        ref={disabled ? undefined : ref}
-        transform={transform}
-        style={{ transition, opacity: isDragging ? 0.2 : 1 }}
-        tabIndex={0}
-      >
-        <Content
-          {...listeners}
-          type={question.type}
-          isDragOverlay={isDragOverlay}
+      const handleOnMove = useCallback(
+        (targetSegmentId) => {
+          moveSegmentQuestion({
+            question: segmentQuestion,
+            fromSegmentId: segmentId,
+            toSegmentId: targetSegmentId,
+            fromPosition: segmentQuestion.position,
+            toPosition: 0,
+            forceLast: true,
+          })
+        },
+        [moveSegmentQuestion, segmentId, segmentQuestion]
+      )
+
+      if (!question) return <p>where am i</p>
+
+      return (
+        <Wrapper
+          ref={disabled ? undefined : ref}
+          transform={transform}
+          style={{ transition, opacity: isDragging ? 0.2 : 1 }}
+          tabIndex={0}
         >
-          <Header>
-            <QuestionTitle>{question.question}</QuestionTitle>
-            <StyledOptions
-              questionId={question.id}
-              activeSegmentId={segmentId}
-              onRemove={() => {
-                removeSegmentQuestion({
-                  segmentId: segmentId,
-                  questionId: question.id,
-                })
-              }}
-              onMove={(targetSegmentId) => {
-                moveSegmentQuestion({
-                  question: segmentQuestion,
-                  fromSegmentId: segmentId,
-                  toSegmentId: targetSegmentId,
-                  fromPosition: segmentQuestion.position,
-                  toPosition: 0,
-                  forceLast: true,
-                })
-              }}
-            ></StyledOptions>
-          </Header>
-          <p>{getQuestionAnswer(question)}</p>
-        </Content>
-      </Wrapper>
-    )
-  }
+          <Content
+            {...listeners}
+            type={question.type}
+            isDragOverlay={isDragOverlay}
+          >
+            <Header>
+              <QuestionTitle>{question.question}</QuestionTitle>
+              <StyledOptions
+                questionId={question.id}
+                activeSegmentId={segmentId}
+                onRemove={handleOnRemove}
+                onMove={handleOnMove}
+              ></StyledOptions>
+            </Header>
+            <p>{getQuestionAnswer(question)}</p>
+          </Content>
+        </Wrapper>
+      )
+    }
+  )
 )
 
 const Content = styled.div<{ type: Question['type']; isDragOverlay?: boolean }>`

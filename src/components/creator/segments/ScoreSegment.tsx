@@ -1,9 +1,9 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import type { ScoreSegmentType } from '../../../overmind/types'
+import { DragHandleDots2Icon } from '@radix-ui/react-icons'
+import { DragHandle } from '../DragHandle'
 
 type Props = {
-  segmentId: ScoreSegmentType['id']
   isDragging: boolean
   style?: React.CSSProperties
   handleProps?: React.HTMLAttributes<any>
@@ -11,9 +11,14 @@ type Props = {
 }
 
 export const ScoreSegment = React.forwardRef<HTMLDivElement, Props>(
-  ({ segmentId, isDragging, style, handleProps, isDragOverlay }, ref) => {
+  ({ isDragging, style, handleProps, isDragOverlay }, ref) => {
     return (
-      <Wrapper ref={ref} style={style} {...handleProps} dragging={isDragging}>
+      <Wrapper ref={ref} style={style} dragging={isDragging}>
+        <Actions>
+          <DragHandle {...handleProps}>
+            <DragHandleDots2Icon />
+          </DragHandle>
+        </Actions>
         <Inner isDragOverlay={isDragOverlay}>Scores</Inner>
       </Wrapper>
     )
@@ -26,10 +31,16 @@ const Wrapper = styled.div<{ dragging?: boolean }>`
   justify-content: center;
   min-width: 80px;
   max-width: 80px;
-  padding: 64px 8px 8px;
   opacity: ${(p) => (p.dragging ? 0.2 : 1)};
   user-select: none;
   cursor: grab;
+  padding: 0 8px 8px;
+`
+
+const Actions = styled.div`
+  min-height: 68px;
+  padding: 16px 8px;
+  align-self: flex-end;
 `
 
 const Inner = styled.div<{ isDragOverlay?: boolean }>`

@@ -1,5 +1,5 @@
 import { CaretDownIcon } from '@radix-ui/react-icons'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
 import { useAppState } from '../../overmind'
@@ -13,7 +13,7 @@ type Props = {
   className?: string
 }
 
-export function QuestionOptions({
+export const QuestionOptions = React.memo(function QuestionOptions({
   questionId,
   activeSegmentId,
   onMove,
@@ -65,7 +65,7 @@ export function QuestionOptions({
       </DropdownMenu.Content>
     </DropdownMenu>
   )
-}
+})
 
 const Trigger = styled(DropdownMenu.Trigger)`
   cursor: pointer;

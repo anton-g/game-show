@@ -253,7 +253,6 @@ export const Board = () => {
         return (
           <ScoreSegment
             key={segment.id}
-            segmentId={segment.id}
             isDragging={false}
             isDragOverlay
           ></ScoreSegment>
