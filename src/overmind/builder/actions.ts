@@ -4,6 +4,7 @@ import { isQuestionSegment } from '../../utils/type-utils'
 import type {
   Question,
   QuestionSegmentType,
+  ScoreSegmentType,
   Segment,
   SegmentQuestion,
 } from '../types'
@@ -253,7 +254,7 @@ export const moveSegmentQuestion = (
   state.selectedShow.segments = newSegments
 }
 
-export const addSegment = (
+export const addQuestionSegment = (
   { state, actions }: Context,
   { withQuestionId }: { withQuestionId?: Question['id'] }
 ) => {
@@ -303,6 +304,23 @@ export const addSegment = (
     intro: {
       type: 'NONE',
     },
+  }
+
+  state.selectedShow.segments[newSegment.id] = newSegment
+}
+
+export const addScoreSegment = ({ state }: Context) => {
+  if (!state.selectedShow) return
+
+  const existingSegmentsCount = Object.values(
+    state.selectedShow.segments
+  ).length
+
+  const newSegment: ScoreSegmentType = {
+    id: nanoid(),
+    name: 'Scores',
+    type: 'SCORES',
+    position: existingSegmentsCount + 1,
   }
 
   state.selectedShow.segments[newSegment.id] = newSegment

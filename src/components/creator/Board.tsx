@@ -59,7 +59,7 @@ export const Board = () => {
     reorderSegment,
     moveOrReorderQuestion,
     removeSegmentQuestion,
-    addSegment,
+    addQuestionSegment,
   } = useActions().builder
   const [activeId, setActiveId] = useState<ActiveId>(null)
   const recentlyMovedToNewContainer = useRef(false)
@@ -160,7 +160,7 @@ export const Board = () => {
     }
 
     if (overId === PLACEHOLDER_ID) {
-      addSegment({
+      addQuestionSegment({
         withQuestionId: active.id,
       })
       setActiveId(null)
