@@ -44,8 +44,7 @@ const NewSegment = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px 0;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   color: ${({ theme }) => theme.colors.gray11};
   cursor: pointer;
@@ -61,6 +60,7 @@ const NewQuestionSegment = styled(NewSegment)<{ hovered?: boolean }>`
   min-height: 300px;
   background-color: ${({ theme, hovered }) =>
     hovered ? theme.colors.gray3 : undefined};
+  padding: 24px 0;
 
   border-bottom: 0;
   border-bottom-left-radius: 0;
@@ -74,6 +74,7 @@ const NewQuestionSegment = styled(NewSegment)<{ hovered?: boolean }>`
 `
 
 const NewScoreSegment = styled(NewSegment)`
+  padding: 16px 0;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 

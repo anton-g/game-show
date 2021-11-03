@@ -44,7 +44,6 @@ const Wrapper = styled.div<{ dragging?: boolean }>`
   max-width: 80px;
   opacity: ${(p) => (p.dragging ? 0.2 : 1)};
   user-select: none;
-  cursor: grab;
   padding: 0 8px 8px;
 
   ${StyledOptions} {

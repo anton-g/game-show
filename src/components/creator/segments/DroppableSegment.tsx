@@ -3,9 +3,8 @@ import { CSS } from '@dnd-kit/utilities'
 import type { QuestionSegmentType, Segment } from '../../../overmind/types'
 import { QuestionSegment } from './QuestionSegment'
 import { DRAG_TYPES, PLACEHOLDER_ID } from '../Board'
-import { useActions, useAppState } from '../../../overmind'
+import { useAppState } from '../../../overmind'
 import { ScoreSegment } from './ScoreSegment'
-import styled from 'styled-components'
 import { SegmentPlaceholder } from './SegmentPlaceholder'
 
 type Props = {

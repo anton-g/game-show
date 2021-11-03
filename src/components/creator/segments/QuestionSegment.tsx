@@ -9,7 +9,7 @@ import { EditSegmentDialog } from './EditSegmentDialog'
 import { isQuestionSegment } from '../../../utils/type-utils'
 import { SortableBoardQuestion } from '../SortableBoardQuestion'
 import { BoardQuestion } from '../BoardQuestion'
-import { DragHandleDots1Icon, DragHandleDots2Icon } from '@radix-ui/react-icons'
+import { DragHandleDots2Icon } from '@radix-ui/react-icons'
 import { DragHandle } from '../DragHandle'
 
 type Props = {
