@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import reportWebVitals from './reportWebVitals'
 import { createOvermind } from 'overmind'
 import { Provider } from 'overmind-react'
+import reportWebVitals from './reportWebVitals'
 import { config } from './overmind'
 import { App } from './App'
 import { Router, Route, Switch } from 'react-router-dom'
@@ -13,6 +13,7 @@ import { Library } from './components/library/grid/Library'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import 'modern-css-reset'
 import { lightTheme } from './themes'
+import { Player } from './components/player/Player'
 
 const overmind = createOvermind(config, {
   devtools: false,
@@ -59,6 +60,9 @@ ReactDOM.render(
           <Switch>
             <Route path="/" exact>
               <App />
+            </Route>
+            <Route path="/play" exact>
+              <Player />
             </Route>
             <Route path="/creator">
               <Creator />
