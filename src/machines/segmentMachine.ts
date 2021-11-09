@@ -1,9 +1,9 @@
-import { spawn } from 'xstate'
+import { ActorRefFrom, sendParent, spawn } from 'xstate'
 import { createModel } from 'xstate/lib/model'
 import { QuestionActor, questionMachine } from './questionMachine'
 
-const questions = ['a', 'b', 'c']
 const segmentModel = createModel({
+  questions: ['q-a', 'q-b', 'q-c'],
   currentQuestionIndex: -1,
   questionMachineRef: null as QuestionActor | null,
 }) // TODO should probably type events but weird TS issue so I give up D: https://github.com/statelyai/xstate/pull/2426/files
@@ -28,11 +28,22 @@ export const segmentMachine = segmentModel.createMachine(
             target: 'question',
             actions: 'nextQuestion',
           },
-          'QUESTION.END': 'end',
+          'QUESTION.END': [
+            {
+              target: 'end',
+              cond: (context) =>
+                context.currentQuestionIndex >= context.questions.length - 1,
+            },
+            {
+              target: 'question',
+              actions: 'nextQuestion',
+            },
+          ],
         },
       },
       end: {
         type: 'final',
+        entry: sendParent('SEGMENT.END'),
       },
     },
   },
@@ -41,7 +52,7 @@ export const segmentMachine = segmentModel.createMachine(
       nextQuestion: segmentModel.assign((context) => {
         const nextQuestionIndex = context.currentQuestionIndex + 1
 
-        const question = questions[nextQuestionIndex]
+        const question = context.questions[nextQuestionIndex]
         const machine = spawn(questionMachine, question)
 
         return {
@@ -52,3 +63,5 @@ export const segmentMachine = segmentModel.createMachine(
     },
   }
 )
+
+export type SegmentActor = ActorRefFrom<typeof segmentMachine>
