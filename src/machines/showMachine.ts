@@ -1,15 +1,55 @@
-import { ActorRefFrom, spawn } from 'xstate'
+import { spawn } from 'xstate'
 import { createModel } from 'xstate/lib/model'
-import { SegmentActor, segmentMachine } from './segmentMachine'
+import { ModelContextFrom } from 'xstate/lib/model.types'
+import { Show } from '../overmind/types'
+import {
+  QuestionSegmentActor,
+  questionSegmentMachine,
+  ScoreSegmentActor,
+  scoreSegmentMachine,
+} from './segmentMachine'
 
-const showModel = createModel({
-  segments: ['a', 'b', 'c'],
-  currentSegmentIndex: -1,
-  segmentMachineRef: null as SegmentActor | null,
-}) // TODO should probably type events but weird TS issue so I give up D: https://github.com/statelyai/xstate/pull/2426/files
+export type AnySegmentActor = QuestionSegmentActor | ScoreSegmentActor
 
-export const showMachine = showModel.createMachine(
-  {
+export const createShowMachine = (show: Show) => {
+  const showModel = createModel(
+    {
+      show: show,
+      segments: Object.values(show.segments).sort(
+        (a, b) => a.position - b.position
+      ),
+      currentSegmentIndex: -1,
+      segmentMachineRef: null as AnySegmentActor | null,
+    },
+    {
+      events: {
+        NEXT: () => ({}),
+        'SEGMENT.END': () => ({}),
+      },
+    }
+  )
+
+  // Workaround due to weird typings ;(
+  // Would be fantastic if this could be put in actions instead but: https://github.com/statelyai/xstate/pull/2426/files
+  const nextSegmentAssign = (context: ModelContextFrom<typeof showModel>) => {
+    const nextSegmentIndex = context.currentSegmentIndex + 1
+
+    const segment = context.segments[nextSegmentIndex]
+    if (!segment) return { currentSegmentIndex: nextSegmentIndex }
+
+    const machine =
+      segment.type === 'QUESTIONS'
+        ? questionSegmentMachine
+        : scoreSegmentMachine
+    const ref = spawn(machine)
+
+    return {
+      currentSegmentIndex: nextSegmentIndex,
+      segmentMachineRef: ref as AnySegmentActor, // This shouldn't be needed? :(
+    }
+  }
+
+  return showModel.createMachine({
     id: 'show',
     initial: 'intro',
     context: showModel.initialContext,
@@ -18,7 +58,7 @@ export const showMachine = showModel.createMachine(
         on: {
           NEXT: {
             target: 'segment',
-            actions: 'nextSegment',
+            actions: showModel.assign(nextSegmentAssign),
           },
         },
       },
@@ -26,7 +66,7 @@ export const showMachine = showModel.createMachine(
         on: {
           NEXT: {
             target: 'segment',
-            actions: 'nextSegment',
+            actions: showModel.assign(nextSegmentAssign),
           },
           'SEGMENT.END': [
             {
@@ -36,7 +76,7 @@ export const showMachine = showModel.createMachine(
             },
             {
               target: 'segment',
-              actions: 'nextSegment',
+              actions: showModel.assign(nextSegmentAssign),
             },
           ],
         },
@@ -45,22 +85,7 @@ export const showMachine = showModel.createMachine(
         type: 'final',
       },
     },
-  },
-  {
-    actions: {
-      nextSegment: showModel.assign((context) => {
-        const nextSegmentIndex = context.currentSegmentIndex + 1
+  })
+}
 
-        const segment = context.segments[nextSegmentIndex]
-        const machine = spawn(segmentMachine, segment)
-
-        return {
-          currentSegmentIndex: nextSegmentIndex,
-          segmentMachineRef: machine,
-        }
-      }),
-    },
-  }
-)
-
-export type ShowActor = ActorRefFrom<typeof showMachine>
+// export type ShowActor = ActorRefFrom<typeof showMachine>

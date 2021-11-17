@@ -1,39 +1,104 @@
 import { useActor, useMachine } from '@xstate/react'
 import { QuestionActor } from '../../machines/questionMachine'
-import { SegmentActor } from '../../machines/segmentMachine'
-import { showMachine } from '../../machines/showMachine'
+import {
+  QuestionSegmentActor,
+  ScoreSegmentActor,
+} from '../../machines/segmentMachine'
+import { AnySegmentActor, createShowMachine } from '../../machines/showMachine'
+import { useAppState } from '../../overmind'
+import { Segment } from '../../overmind/types'
 
 export function Player() {
-  const [state, send] = useMachine(showMachine)
+  const show = useAppState((state) => state.selectedShow)
+  const showMachine = createShowMachine(show!) // TODO fix
+
+  return <ShowPlayer machine={showMachine} />
+}
+
+type ShowPlayerProps = {
+  machine: ReturnType<typeof createShowMachine>
+}
+
+function ShowPlayer({ machine }: ShowPlayerProps) {
+  const [state, send] = useMachine(machine)
 
   return (
     <div>
-      <h3>show</h3>
+      <h3>show {state.context.show.name}</h3>
       <button disabled={!state.can('NEXT')} onClick={() => send('NEXT')}>
         next
       </button>
       {state.value}
       {state.context.segmentMachineRef && (
-        <SegmentPlayer
+        <SegmentPlayerFactory
           machine={state.context.segmentMachineRef}
           segment={state.context.segments[state.context.currentSegmentIndex]}
-        ></SegmentPlayer>
+        ></SegmentPlayerFactory>
       )}
     </div>
   )
 }
 
-type SegmentPlayerProps = {
-  machine: SegmentActor
-  segment: string // TODO
+function SegmentPlayerFactory({
+  machine,
+  segment,
+}: {
+  machine: AnySegmentActor
+  segment: Segment
+}) {
+  switch ((machine as any).machine.id) {
+    case 'questionSegment':
+      return (
+        <QuestionSegmentPlayer
+          machine={machine as QuestionSegmentActor}
+          segment={segment}
+        ></QuestionSegmentPlayer>
+      )
+    case 'scoreSegment':
+      return (
+        <ScoreSegmentPlayer
+          machine={machine as ScoreSegmentActor}
+          segment={segment}
+        ></ScoreSegmentPlayer>
+      )
+    default:
+      throw new Error(`Unsupported segment machine ${machine.id}`)
+  }
 }
 
-function SegmentPlayer({ machine, segment }: SegmentPlayerProps) {
+type ScoreSegmentPlayerProps = {
+  machine: ScoreSegmentActor
+  segment: Segment
+}
+
+function ScoreSegmentPlayer({ machine, segment }: ScoreSegmentPlayerProps) {
   const [state, send] = useActor(machine)
 
   return (
     <div>
-      <h3>segment {segment}</h3>
+      <h3>segment {segment.name}</h3>
+      <button disabled={!state.can('NEXT')} onClick={() => send('NEXT')}>
+        next
+      </button>
+      {state.value}
+    </div>
+  )
+}
+
+type QuestionSegmentPlayerProps = {
+  machine: QuestionSegmentActor
+  segment: Segment
+}
+
+function QuestionSegmentPlayer({
+  machine,
+  segment,
+}: QuestionSegmentPlayerProps) {
+  const [state, send] = useActor(machine)
+
+  return (
+    <div>
+      <h3>segment {segment.name}</h3>
       <button disabled={!state.can('NEXT')} onClick={() => send('NEXT')}>
         next
       </button>
