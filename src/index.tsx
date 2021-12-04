@@ -14,6 +14,12 @@ import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import 'modern-css-reset'
 import { lightTheme } from './themes'
 import { Player } from './components/player/Player'
+import { inspect } from '@xstate/inspect'
+
+inspect({
+  url: 'https://statecharts.io/inspect',
+  iframe: false,
+})
 
 const overmind = createOvermind(config, {
   devtools: false,

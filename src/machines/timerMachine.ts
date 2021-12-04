@@ -4,7 +4,7 @@ import { createModel } from 'xstate/lib/model'
 export const timerModel = createModel(
   {
     elapsed: 0,
-    duration: 5,
+    duration: 30,
     interval: 0.1,
   },
   {

@@ -20,7 +20,7 @@ type ShowPlayerProps = {
 }
 
 function ShowPlayer({ machine }: ShowPlayerProps) {
-  const [state, send] = useMachine(machine)
+  const [state, send] = useMachine(machine, { devTools: true })
 
   return (
     <div style={{ padding: 16 }}>
