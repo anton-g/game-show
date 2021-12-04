@@ -23,12 +23,12 @@ function ShowPlayer({ machine }: ShowPlayerProps) {
   const [state, send] = useMachine(machine)
 
   return (
-    <div>
+    <div style={{ padding: 16 }}>
       <h3>show {state.context.show.name}</h3>
       <button disabled={!state.can('NEXT')} onClick={() => send('NEXT')}>
         next
-      </button>
-      {state.value}
+      </button>{' '}
+      Current state: {state.value}
       {state.context.segmentMachineRef && (
         <SegmentPlayerFactory
           machine={state.context.segmentMachineRef}
@@ -79,8 +79,8 @@ function ScoreSegmentPlayer({ machine, segment }: ScoreSegmentPlayerProps) {
       <h3>segment {segment.name}</h3>
       <button disabled={!state.can('NEXT')} onClick={() => send('NEXT')}>
         next
-      </button>
-      {state.value}
+      </button>{' '}
+      Current state: {state.value}
     </div>
   )
 }
@@ -101,8 +101,8 @@ function QuestionSegmentPlayer({
       <h3>segment {segment.name}</h3>
       <button disabled={!state.can('NEXT')} onClick={() => send('NEXT')}>
         next
-      </button>
-      {state.value}
+      </button>{' '}
+      Current state: {state.value}
       {state.context.questionMachineRef && (
         <QuestionPlayer
           machine={state.context.questionMachineRef}
@@ -127,29 +127,50 @@ function QuestionPlayer({ machine, question }: QuestionPlayerProps) {
   return (
     <div>
       <h3>question {question}</h3>
-      <button disabled={!state.can('START')} onClick={() => send('START')}>
+      <button
+        style={{ marginRight: 8 }}
+        disabled={!state.can('START')}
+        onClick={() => send('START')}
+      >
         start
       </button>
-      <button disabled={!state.can('BUZZ')} onClick={() => send('BUZZ')}>
+      <button
+        style={{ marginRight: 8 }}
+        disabled={!state.can('BUZZ')}
+        onClick={() => send('BUZZ')}
+      >
         buzz
       </button>
-      <button disabled={!state.can('CORRECT')} onClick={() => send('CORRECT')}>
+      <button
+        style={{ marginRight: 8 }}
+        disabled={!state.can('CORRECT')}
+        onClick={() => send('CORRECT')}
+      >
         correct
       </button>
       <button
+        style={{ marginRight: 8 }}
         disabled={!state.can('INCORRECT')}
         onClick={() => send('INCORRECT')}
       >
         incorrect
       </button>
-      <button disabled={!state.can('REVEAL')} onClick={() => send('REVEAL')}>
+      <button
+        style={{ marginRight: 8 }}
+        disabled={!state.can('REVEAL')}
+        onClick={() => send('REVEAL')}
+      >
         reveal
       </button>
-      <button disabled={!state.can('END')} onClick={() => send('END')}>
+      <button
+        style={{ marginRight: 8 }}
+        disabled={!state.can('END')}
+        onClick={() => send('END')}
+      >
         end
       </button>
       <div>
-        {state.value} {elapsed}
+        Current state: {state.value}, {elapsed && `Timer: ${elapsed}`}
       </div>
     </div>
   )
