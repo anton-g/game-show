@@ -1,4 +1,5 @@
 import { ActorRefFrom, sendParent, spawn } from 'xstate'
+import { stop } from 'xstate/lib/actions'
 import { createModel } from 'xstate/lib/model'
 import { ModelContextFrom } from 'xstate/lib/model.types'
 import { QuestionActor, questionMachine } from './questionMachine'
@@ -64,31 +65,34 @@ const nextQuestionAssign = (
     questionMachineRef: machine,
   }
 }
-const nextQuestion = questionSegmentModel.assign(nextQuestionAssign, 'NEXT')
-const nextQuestionOnEnd = questionSegmentModel.assign(
-  nextQuestionAssign,
-  'QUESTION.END'
-)
 
 export const questionSegmentMachine = questionSegmentModel.createMachine({
   id: 'questionSegment',
   initial: 'intro',
+  preserveActionOrder: true, // TODO remove in v5
   context: questionSegmentModel.initialContext,
   states: {
     intro: {
       on: {
         NEXT: {
           target: 'question',
-          actions: nextQuestion,
         },
       },
     },
     question: {
+      entry: questionSegmentModel.assign(nextQuestionAssign),
+      exit: stop((context) => context.questionMachineRef!),
       on: {
-        NEXT: {
-          target: 'question',
-          actions: nextQuestion,
-        },
+        NEXT: [
+          {
+            target: 'end',
+            cond: (context) =>
+              context.currentQuestionIndex >= context.questions.length - 1,
+          },
+          {
+            target: 'question',
+          },
+        ],
         'QUESTION.END': [
           {
             target: 'end',
@@ -97,7 +101,6 @@ export const questionSegmentMachine = questionSegmentModel.createMachine({
           },
           {
             target: 'question',
-            actions: nextQuestionOnEnd,
           },
         ],
       },

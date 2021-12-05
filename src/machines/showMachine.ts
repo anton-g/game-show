@@ -1,4 +1,5 @@
 import { spawn } from 'xstate'
+import { stop } from 'xstate/lib/actions'
 import { createModel } from 'xstate/lib/model'
 import { ModelContextFrom } from 'xstate/lib/model.types'
 import { Show } from '../overmind/types'
@@ -29,9 +30,11 @@ export const createShowMachine = (show: Show) => {
     }
   )
 
+  type ShowMachineContext = ModelContextFrom<typeof showModel>
+
   // Workaround due to weird typings ;(
   // Would be fantastic if this could be put in actions instead but: https://github.com/statelyai/xstate/pull/2426/files
-  const nextSegmentAssign = (context: ModelContextFrom<typeof showModel>) => {
+  const nextSegmentAssign = (context: ShowMachineContext) => {
     const nextSegmentIndex = context.currentSegmentIndex + 1
 
     const segment = context.segments[nextSegmentIndex]
@@ -51,41 +54,45 @@ export const createShowMachine = (show: Show) => {
 
   return showModel.createMachine({
     id: 'show',
+    preserveActionOrder: true, // TODO remove in v5
     initial: 'intro',
     context: showModel.initialContext,
     states: {
       intro: {
         on: {
-          NEXT: {
-            target: 'segment',
-            actions: showModel.assign(nextSegmentAssign),
-          },
+          NEXT: 'segment',
         },
       },
       segment: {
+        entry: showModel.assign(nextSegmentAssign),
+        exit: stop((context) => context.segmentMachineRef!),
         on: {
-          NEXT: {
-            target: 'segment',
-            actions: showModel.assign(nextSegmentAssign),
-          },
-          'SEGMENT.END': [
+          NEXT: [
             {
-              target: 'end',
               cond: (context) =>
                 context.currentSegmentIndex >= context.segments.length - 1,
+              target: 'end',
             },
             {
               target: 'segment',
-              actions: showModel.assign(nextSegmentAssign),
+            },
+          ],
+          'SEGMENT.END': [
+            {
+              cond: (context) =>
+                context.currentSegmentIndex >= context.segments.length - 1,
+              target: 'end',
+            },
+            {
+              target: 'segment',
             },
           ],
         },
       },
       end: {
+        entry: showModel.assign(() => ({ segmentMachineRef: null })),
         type: 'final',
       },
     },
   })
 }
-
-// export type ShowActor = ActorRefFrom<typeof showMachine>

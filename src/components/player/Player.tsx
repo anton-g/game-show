@@ -46,7 +46,9 @@ function SegmentPlayerFactory({
   machine: AnySegmentActor
   segment: Segment
 }) {
-  switch ((machine as any).machine.id) {
+  switch (
+    (machine as any).machine.id // TODO fix types
+  ) {
     case 'questionSegment':
       return (
         <QuestionSegmentPlayer
