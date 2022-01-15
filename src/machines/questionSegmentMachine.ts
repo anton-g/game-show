@@ -2,7 +2,7 @@ import { ActorRefFrom, sendParent, spawn } from 'xstate'
 import { stop } from 'xstate/lib/actions'
 import { createModel } from 'xstate/lib/model'
 import { ModelContextFrom } from 'xstate/lib/model.types'
-import { QuestionActor, questionMachine } from './questionMachine'
+import { QuestionActor, createQuestionMachine } from './questionMachine'
 
 export const createQuestionSegmentMachine = () => {
   const questionSegmentModel = createModel(
@@ -27,7 +27,7 @@ export const createQuestionSegmentMachine = () => {
     const nextQuestionIndex = context.currentQuestionIndex + 1
 
     const question = context.questions[nextQuestionIndex]
-    const machine = spawn(questionMachine, question)
+    const machine = spawn(createQuestionMachine(), question)
 
     return {
       currentQuestionIndex: nextQuestionIndex,
