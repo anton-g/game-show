@@ -9,11 +9,42 @@ import { useAppState } from '../../overmind'
 import { Spacer } from '../common/Spacer'
 import { Preview } from './Preview'
 
+type Player = {
+  id: string
+  name: string
+  score: number
+}
+
+export type Players = Record<Player['id'], Player>
+
+const playersMock: Players = {
+  '1': {
+    id: '1',
+    name: 'Player1',
+    score: 0,
+  },
+  '2': {
+    id: '2',
+    name: 'Player2',
+    score: 0,
+  },
+  '3': {
+    id: '3',
+    name: 'Player3',
+    score: 0,
+  },
+  '4': {
+    id: '4',
+    name: 'Player4',
+    score: 0,
+  },
+}
+
 export function Admin() {
   const show = useAppState((state) => state.selectedShow)
   if (!show) return null
 
-  const showMachine = createShowMachine(show)
+  const showMachine = createShowMachine(show, playersMock)
 
   return <ShowAdmin machine={showMachine} />
 }
@@ -43,7 +74,20 @@ function ShowAdmin({ machine }: ShowAdminProps) {
           ></SegmentAdminFactory>
         )}
       </Tools>
-      <Overview>scores</Overview>
+      <Spacer axis={'horizontal'} size={16} />
+      <Overview>
+        <h3>Scores</h3>
+        <ol>
+          {Object.values(state.context.players)
+            .sort((a, b) => a.score - b.score)
+            .map((x) => (
+              <li>
+                {x.name} - {x.score} pts
+              </li>
+            ))}
+        </ol>
+      </Overview>
+      <Spacer axis={'horizontal'} size={16} />
       <PreviewWrapper>
         <Preview showState={state}></Preview>
       </PreviewWrapper>
@@ -54,7 +98,7 @@ function ShowAdmin({ machine }: ShowAdminProps) {
 const Wrapper = styled.div`
   display: flex;
   width: 100%;
-  padding: 8px;
+  padding: 16px;
 `
 
 const Tools = styled.div`

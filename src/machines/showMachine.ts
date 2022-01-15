@@ -2,6 +2,7 @@ import { spawn } from 'xstate'
 import { stop } from 'xstate/lib/actions'
 import { createModel } from 'xstate/lib/model'
 import { ModelContextFrom } from 'xstate/lib/model.types'
+import { Players } from '../components/admin/Admin'
 import { Show } from '../overmind/types'
 import {
   QuestionSegmentActor,
@@ -14,10 +15,11 @@ import {
 
 export type AnySegmentActor = QuestionSegmentActor | ScoreSegmentActor
 
-export const createShowMachine = (show: Show) => {
+export const createShowMachine = (show: Show, players: Players) => {
   const showModel = createModel(
     {
       show: show,
+      players: players,
       segments: Object.values(show.segments).sort(
         (a, b) => a.position - b.position
       ),
