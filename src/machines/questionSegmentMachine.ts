@@ -2,12 +2,13 @@ import { ActorRefFrom, sendParent, spawn } from 'xstate'
 import { stop } from 'xstate/lib/actions'
 import { createModel } from 'xstate/lib/model'
 import { ModelContextFrom } from 'xstate/lib/model.types'
+import { QuestionSegmentType } from '../overmind/types'
 import { QuestionActor, createQuestionMachine } from './questionMachine'
 
-export const createQuestionSegmentMachine = () => {
+export const createQuestionSegmentMachine = (segment: QuestionSegmentType) => {
   const questionSegmentModel = createModel(
     {
-      questions: ['q-a', 'q-b', 'q-c'],
+      questions: Object.values(segment.questions),
       currentQuestionIndex: -1,
       questionMachineRef: null as QuestionActor | null,
     },
@@ -27,7 +28,7 @@ export const createQuestionSegmentMachine = () => {
     const nextQuestionIndex = context.currentQuestionIndex + 1
 
     const question = context.questions[nextQuestionIndex]
-    const machine = spawn(createQuestionMachine(), question)
+    const machine = spawn(createQuestionMachine(), question.question.id)
 
     return {
       currentQuestionIndex: nextQuestionIndex,

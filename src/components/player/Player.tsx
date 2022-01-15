@@ -4,11 +4,13 @@ import { QuestionSegmentActor } from '../../machines/questionSegmentMachine'
 import { ScoreSegmentActor } from '../../machines/scoreSegmentMachine'
 import { AnySegmentActor, createShowMachine } from '../../machines/showMachine'
 import { useAppState } from '../../overmind'
-import { Segment } from '../../overmind/types'
+import { Segment, SegmentQuestion } from '../../overmind/types'
 
 export function Player() {
   const show = useAppState((state) => state.selectedShow)
-  const showMachine = createShowMachine(show!) // TODO fix
+  if (!show) return null
+
+  const showMachine = createShowMachine(show)
 
   return <ShowPlayer machine={showMachine} />
 }
@@ -115,7 +117,7 @@ function QuestionSegmentPlayer({
 
 type QuestionPlayerProps = {
   machine: QuestionActor
-  question: string // TODO
+  question: SegmentQuestion
 }
 
 function QuestionPlayer({ machine, question }: QuestionPlayerProps) {
@@ -126,7 +128,7 @@ function QuestionPlayer({ machine, question }: QuestionPlayerProps) {
 
   return (
     <div>
-      <h3>question {question}</h3>
+      <h3>{question.question.question}</h3>
       <button
         style={{ marginRight: 8 }}
         disabled={!state.can('START')}
