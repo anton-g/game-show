@@ -5,7 +5,7 @@ import { ModelContextFrom } from 'xstate/lib/model.types'
 import { Show } from '../overmind/types'
 import {
   QuestionSegmentActor,
-  questionSegmentMachine,
+  createQuestionSegmentMachine,
 } from './questionSegmentMachine'
 import {
   ScoreSegmentActor,
@@ -44,7 +44,7 @@ export const createShowMachine = (show: Show) => {
 
     const machine =
       segment.type === 'QUESTIONS'
-        ? questionSegmentMachine
+        ? createQuestionSegmentMachine()
         : createScoreSegmentMachine()
     const ref = spawn(machine)
 
