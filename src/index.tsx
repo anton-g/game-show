@@ -13,7 +13,7 @@ import { Library } from './components/library/grid/Library'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import 'modern-css-reset'
 import { lightTheme } from './themes'
-import { Player } from './components/player/Player'
+import { Admin } from './components/admin/Admin'
 import { inspect } from '@xstate/inspect'
 
 inspect({
@@ -68,7 +68,7 @@ ReactDOM.render(
               <App />
             </Route>
             <Route path="/play" exact>
-              <Player />
+              <Admin />
             </Route>
             <Route path="/creator">
               <Creator />

@@ -6,20 +6,20 @@ import { AnySegmentActor, createShowMachine } from '../../machines/showMachine'
 import { useAppState } from '../../overmind'
 import { SegmentQuestion } from '../../overmind/types'
 
-export function Player() {
+export function Admin() {
   const show = useAppState((state) => state.selectedShow)
   if (!show) return null
 
   const showMachine = createShowMachine(show)
 
-  return <ShowPlayer machine={showMachine} />
+  return <ShowAdmin machine={showMachine} />
 }
 
-type ShowPlayerProps = {
+type ShowAdminProps = {
   machine: ReturnType<typeof createShowMachine>
 }
 
-function ShowPlayer({ machine }: ShowPlayerProps) {
+function ShowAdmin({ machine }: ShowAdminProps) {
   const [state, send] = useMachine(machine, { devTools: true })
 
   return (
@@ -30,40 +30,40 @@ function ShowPlayer({ machine }: ShowPlayerProps) {
       </button>{' '}
       Current state: {state.value}
       {state.context.segmentMachineRef && (
-        <SegmentPlayerFactory
+        <SegmentAdminFactory
           machine={state.context.segmentMachineRef}
-        ></SegmentPlayerFactory>
+        ></SegmentAdminFactory>
       )}
     </div>
   )
 }
 
-function SegmentPlayerFactory({ machine }: { machine: AnySegmentActor }) {
+function SegmentAdminFactory({ machine }: { machine: AnySegmentActor }) {
   switch (
     (machine as any).machine.id // TODO fix types
   ) {
     case 'questionSegment':
       return (
-        <QuestionSegmentPlayer
+        <QuestionSegmentAdmin
           machine={machine as QuestionSegmentActor}
-        ></QuestionSegmentPlayer>
+        ></QuestionSegmentAdmin>
       )
     case 'scoreSegment':
       return (
-        <ScoreSegmentPlayer
+        <ScoreSegmentAdmin
           machine={machine as ScoreSegmentActor}
-        ></ScoreSegmentPlayer>
+        ></ScoreSegmentAdmin>
       )
     default:
       throw new Error(`Unsupported segment machine ${machine.id}`)
   }
 }
 
-type ScoreSegmentPlayerProps = {
+type ScoreSegmentAdminProps = {
   machine: ScoreSegmentActor
 }
 
-function ScoreSegmentPlayer({ machine }: ScoreSegmentPlayerProps) {
+function ScoreSegmentAdmin({ machine }: ScoreSegmentAdminProps) {
   const [state, send] = useActor(machine)
   const segment = state.context.segment
 
@@ -78,11 +78,11 @@ function ScoreSegmentPlayer({ machine }: ScoreSegmentPlayerProps) {
   )
 }
 
-type QuestionSegmentPlayerProps = {
+type QuestionSegmentAdminProps = {
   machine: QuestionSegmentActor
 }
 
-function QuestionSegmentPlayer({ machine }: QuestionSegmentPlayerProps) {
+function QuestionSegmentAdmin({ machine }: QuestionSegmentAdminProps) {
   const [state, send] = useActor(machine)
   const segment = state.context.segment
 
@@ -94,21 +94,21 @@ function QuestionSegmentPlayer({ machine }: QuestionSegmentPlayerProps) {
       </button>{' '}
       Current state: {state.value}
       {state.context.questionMachineRef && (
-        <QuestionPlayer
+        <QuestionAdmin
           machine={state.context.questionMachineRef}
           question={state.context.questions[state.context.currentQuestionIndex]}
-        ></QuestionPlayer>
+        ></QuestionAdmin>
       )}
     </div>
   )
 }
 
-type QuestionPlayerProps = {
+type QuestionAdminProps = {
   machine: QuestionActor
   question: SegmentQuestion
 }
 
-function QuestionPlayer({ machine, question }: QuestionPlayerProps) {
+function QuestionAdmin({ machine, question }: QuestionAdminProps) {
   const [state, send] = useActor(machine)
   const [timerState] = useActor(state.context.timerRef!)
 
