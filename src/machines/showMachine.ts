@@ -7,7 +7,10 @@ import {
   QuestionSegmentActor,
   questionSegmentMachine,
 } from './questionSegmentMachine'
-import { ScoreSegmentActor, scoreSegmentMachine } from './scoreSegmentMachine'
+import {
+  ScoreSegmentActor,
+  createScoreSegmentMachine,
+} from './scoreSegmentMachine'
 
 export type AnySegmentActor = QuestionSegmentActor | ScoreSegmentActor
 
@@ -42,7 +45,7 @@ export const createShowMachine = (show: Show) => {
     const machine =
       segment.type === 'QUESTIONS'
         ? questionSegmentMachine
-        : scoreSegmentMachine
+        : createScoreSegmentMachine()
     const ref = spawn(machine)
 
     return {
