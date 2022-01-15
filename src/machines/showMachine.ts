@@ -54,7 +54,7 @@ export const createShowMachine = (show: Show) => {
     }
   }
 
-  return showModel.createMachine({
+  const showMachine = showModel.createMachine({
     id: 'show',
     preserveActionOrder: true, // TODO remove in v5
     initial: 'intro',
@@ -97,4 +97,6 @@ export const createShowMachine = (show: Show) => {
       },
     },
   })
+
+  return showMachine
 }

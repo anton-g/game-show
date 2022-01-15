@@ -7,7 +7,7 @@ export const createScoreSegmentMachine = (segment: Segment) => {
     segment: segment,
   })
 
-  return scoreSegmentModel.createMachine({
+  const scoreMachine = scoreSegmentModel.createMachine({
     id: 'scoreSegment',
     initial: 'hidden',
     context: scoreSegmentModel.initialContext,
@@ -32,6 +32,8 @@ export const createScoreSegmentMachine = (segment: Segment) => {
       },
     },
   })
+
+  return scoreMachine
 }
 
 export type ScoreSegmentActor = ActorRefFrom<

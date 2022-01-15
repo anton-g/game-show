@@ -1,9 +1,11 @@
 import { useActor, useMachine } from '@xstate/react'
+import styled from 'styled-components'
 import { QuestionActor } from '../../machines/questionMachine'
 import { QuestionSegmentActor } from '../../machines/questionSegmentMachine'
 import { ScoreSegmentActor } from '../../machines/scoreSegmentMachine'
 import { AnySegmentActor, createShowMachine } from '../../machines/showMachine'
 import { useAppState } from '../../overmind'
+import { Preview } from './Preview'
 
 export function Admin() {
   const show = useAppState((state) => state.selectedShow)
@@ -22,7 +24,7 @@ function ShowAdmin({ machine }: ShowAdminProps) {
   const [state, send] = useMachine(machine, { devTools: true })
 
   return (
-    <div style={{ padding: 16 }}>
+    <div>
       <h3>show {state.context.show.name}</h3>
       <button disabled={!state.can('NEXT')} onClick={() => send('NEXT')}>
         next segment
@@ -33,6 +35,7 @@ function ShowAdmin({ machine }: ShowAdminProps) {
           machine={state.context.segmentMachineRef}
         ></SegmentAdminFactory>
       )}
+      <Preview showState={state}></Preview>
     </div>
   )
 }
