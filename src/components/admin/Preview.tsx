@@ -22,8 +22,8 @@ export function Preview({ showState }: PreviewProps) {
 }
 
 const Wrapper = styled.div`
-  width: 350px;
-  height: 350px;
+  width: 450px;
+  height: 450px;
   display: flex;
   align-items: center;
   justify-content: center;

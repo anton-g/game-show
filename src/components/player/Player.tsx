@@ -34,10 +34,25 @@ type ScoreSegmentPlayerProps = {
 }
 
 function ScoreSegmentPlayer({ machine }: ScoreSegmentPlayerProps) {
-  // const [state] = useActor(machine)
+  const [state] = useActor(machine)
   // const segment = state.context.segment
 
-  return <div>Showing scores</div>
+  return (
+    <div>
+      <h3>Scores</h3>
+      {state.matches('visible') && (
+        <ol>
+          {Object.values(state.context.players)
+            .sort((a, b) => a.score - b.score)
+            .map((x) => (
+              <li key={x.id}>
+                {x.name} - {x.score} pts
+              </li>
+            ))}
+        </ol>
+      )}
+    </div>
+  )
 }
 
 type QuestionSegmentPlayerProps = {

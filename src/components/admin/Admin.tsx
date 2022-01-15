@@ -81,7 +81,7 @@ function ShowAdmin({ machine }: ShowAdminProps) {
           {Object.values(state.context.players)
             .sort((a, b) => a.score - b.score)
             .map((x) => (
-              <li>
+              <li key={x.id}>
                 {x.name} - {x.score} pts
               </li>
             ))}
@@ -202,13 +202,6 @@ function QuestionAdmin({ machine }: QuestionAdminProps) {
       </button>
       <button
         style={{ marginRight: 8 }}
-        disabled={!state.can('BUZZ')}
-        onClick={() => send('BUZZ')}
-      >
-        buzz
-      </button>
-      <button
-        style={{ marginRight: 8 }}
         disabled={!state.can('CORRECT')}
         onClick={() => send('CORRECT')}
       >
@@ -237,6 +230,15 @@ function QuestionAdmin({ machine }: QuestionAdminProps) {
       </button>
       <div>
         Current state: {state.value}, {elapsed && `Timer: ${elapsed}`}
+      </div>
+      <div>
+        <button
+          style={{ marginRight: 8 }}
+          disabled={!state.can('BUZZ')}
+          onClick={() => send('BUZZ')}
+        >
+          buzz
+        </button>
       </div>
     </ControlPanel>
   )

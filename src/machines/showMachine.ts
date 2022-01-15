@@ -47,7 +47,7 @@ export const createShowMachine = (show: Show, players: Players) => {
     const machine =
       segment.type === 'QUESTIONS'
         ? createQuestionSegmentMachine(segment)
-        : createScoreSegmentMachine(segment)
+        : createScoreSegmentMachine(segment, context.players)
     const ref = spawn(machine)
 
     return {
