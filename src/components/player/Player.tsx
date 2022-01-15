@@ -1,9 +1,7 @@
 import { useActor, useMachine } from '@xstate/react'
 import { QuestionActor } from '../../machines/questionMachine'
-import {
-  QuestionSegmentActor,
-  ScoreSegmentActor,
-} from '../../machines/segmentMachine'
+import { QuestionSegmentActor } from '../../machines/questionSegmentMachine'
+import { ScoreSegmentActor } from '../../machines/scoreSegmentMachine'
 import { AnySegmentActor, createShowMachine } from '../../machines/showMachine'
 import { useAppState } from '../../overmind'
 import { Segment } from '../../overmind/types'

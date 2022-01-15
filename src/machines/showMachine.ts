@@ -6,9 +6,8 @@ import { Show } from '../overmind/types'
 import {
   QuestionSegmentActor,
   questionSegmentMachine,
-  ScoreSegmentActor,
-  scoreSegmentMachine,
-} from './segmentMachine'
+} from './questionSegmentMachine'
+import { ScoreSegmentActor, scoreSegmentMachine } from './scoreSegmentMachine'
 
 export type AnySegmentActor = QuestionSegmentActor | ScoreSegmentActor
 

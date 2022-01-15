@@ -4,8 +4,8 @@ import { TimerActor, timerMachine } from './timerMachine'
 
 const questionModel = createModel(
   {
-    timerRef: undefined as TimerActor | undefined,
-    customReveal: false,
+    timerRef: null! as TimerActor,
+    customReveal: true,
   },
   {
     events: {
