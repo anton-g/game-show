@@ -1,10 +1,12 @@
 import { useActor, useMachine } from '@xstate/react'
+import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { QuestionActor } from '../../machines/questionMachine'
 import { QuestionSegmentActor } from '../../machines/questionSegmentMachine'
 import { ScoreSegmentActor } from '../../machines/scoreSegmentMachine'
 import { AnySegmentActor, createShowMachine } from '../../machines/showMachine'
 import { useAppState } from '../../overmind'
+import { Spacer } from '../common/Spacer'
 import { Preview } from './Preview'
 
 export function Admin() {
@@ -24,21 +26,47 @@ function ShowAdmin({ machine }: ShowAdminProps) {
   const [state, send] = useMachine(machine, { devTools: true })
 
   return (
-    <div>
-      <h3>show {state.context.show.name}</h3>
-      <button disabled={!state.can('NEXT')} onClick={() => send('NEXT')}>
-        next segment
-      </button>{' '}
-      Current state: {state.value}
-      {state.context.segmentMachineRef && (
-        <SegmentAdminFactory
-          machine={state.context.segmentMachineRef}
-        ></SegmentAdminFactory>
-      )}
-      <Preview showState={state}></Preview>
-    </div>
+    <Wrapper>
+      <Tools>
+        <h3>show {state.context.show.name}</h3>
+        <Spacer size={16} />
+        <ControlPanel title="Show controls">
+          <button disabled={!state.can('NEXT')} onClick={() => send('NEXT')}>
+            next segment
+          </button>{' '}
+          Current state: {state.value}
+        </ControlPanel>
+        <Spacer size={16} />
+        {state.context.segmentMachineRef && (
+          <SegmentAdminFactory
+            machine={state.context.segmentMachineRef}
+          ></SegmentAdminFactory>
+        )}
+      </Tools>
+      <Overview>scores</Overview>
+      <PreviewWrapper>
+        <Preview showState={state}></Preview>
+      </PreviewWrapper>
+    </Wrapper>
   )
 }
+
+const Wrapper = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 8px;
+`
+
+const Tools = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const Overview = styled.div``
+
+const PreviewWrapper = styled.div`
+  margin-left: auto;
+`
 
 function SegmentAdminFactory({ machine }: { machine: AnySegmentActor }) {
   switch (
@@ -70,13 +98,13 @@ function ScoreSegmentAdmin({ machine }: ScoreSegmentAdminProps) {
   const segment = state.context.segment
 
   return (
-    <div>
+    <ControlPanel title="Score controls">
       <h3>segment {segment.name}</h3>
       <button disabled={!state.can('NEXT')} onClick={() => send('NEXT')}>
         next
       </button>{' '}
       Current state: {state.value}
-    </div>
+    </ControlPanel>
   )
 }
 
@@ -90,11 +118,14 @@ function QuestionSegmentAdmin({ machine }: QuestionSegmentAdminProps) {
 
   return (
     <div>
-      <h3>segment {segment.name}</h3>
-      <button disabled={!state.can('NEXT')} onClick={() => send('NEXT')}>
-        next question
-      </button>{' '}
-      Current state: {state.value}
+      <ControlPanel title="Segment controls">
+        <h3>segment {segment.name}</h3>
+        <button disabled={!state.can('NEXT')} onClick={() => send('NEXT')}>
+          next question
+        </button>{' '}
+        Current state: {state.value}
+      </ControlPanel>
+      <Spacer size={16} />
       {state.context.questionMachineRef && (
         <QuestionAdmin
           machine={state.context.questionMachineRef}
@@ -116,7 +147,7 @@ function QuestionAdmin({ machine }: QuestionAdminProps) {
   const { elapsed } = timerState.context
 
   return (
-    <div>
+    <ControlPanel title="Questions controls">
       <h3>{question.question}</h3>
       <button
         style={{ marginRight: 8 }}
@@ -163,6 +194,39 @@ function QuestionAdmin({ machine }: QuestionAdminProps) {
       <div>
         Current state: {state.value}, {elapsed && `Timer: ${elapsed}`}
       </div>
-    </div>
+    </ControlPanel>
   )
 }
+
+const ControlPanel = ({
+  title,
+  children,
+}: {
+  title: string
+  children: ReactNode
+}) => {
+  return (
+    <PanelWrapper>
+      <PanelTitle>{title}</PanelTitle> {/* todo move to composable */}
+      <Spacer size={8} />
+      {children}
+    </PanelWrapper>
+  )
+}
+
+const PanelWrapper = styled.div`
+  padding: 16px;
+  border: 1px solid ${({ theme }) => theme.colors.gray6};
+  border-radius: 4px;
+`
+
+const PanelTitle = styled.h2`
+  width: fit-content;
+  padding: 0 8px;
+  margin: -24px -8px 0;
+  font-size: 14px;
+  line-height: 1;
+  font-weight: normal;
+  background-color: ${({ theme }) => theme.colors.gray1};
+  color: ${({ theme }) => theme.colors.gray11};
+`
