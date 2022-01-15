@@ -1,15 +1,16 @@
 import { useActor, useMachine } from '@xstate/react'
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 import { QuestionActor } from '../../machines/questionMachine'
 import { QuestionSegmentActor } from '../../machines/questionSegmentMachine'
 import { ScoreSegmentActor } from '../../machines/scoreSegmentMachine'
 import { AnySegmentActor, createShowMachine } from '../../machines/showMachine'
 import { useAppState } from '../../overmind'
+import { DropdownMenu } from '../common/DropdownMenu'
 import { Spacer } from '../common/Spacer'
 import { Preview } from './Preview'
 
-type Player = {
+export type Player = {
   id: string
   name: string
   score: number
@@ -71,6 +72,7 @@ function ShowAdmin({ machine }: ShowAdminProps) {
         {state.context.segmentMachineRef && (
           <SegmentAdminFactory
             machine={state.context.segmentMachineRef}
+            players={state.context.players}
           ></SegmentAdminFactory>
         )}
       </Tools>
@@ -79,7 +81,7 @@ function ShowAdmin({ machine }: ShowAdminProps) {
         <h3>Scores</h3>
         <ol>
           {Object.values(state.context.players)
-            .sort((a, b) => a.score - b.score)
+            .sort((a, b) => b.score - a.score)
             .map((x) => (
               <li key={x.id}>
                 {x.name} - {x.score} pts
@@ -112,7 +114,13 @@ const PreviewWrapper = styled.div`
   margin-left: auto;
 `
 
-function SegmentAdminFactory({ machine }: { machine: AnySegmentActor }) {
+function SegmentAdminFactory({
+  machine,
+  players,
+}: {
+  players: Players
+  machine: AnySegmentActor
+}) {
   switch (
     (machine as any).machine.id // TODO fix types
   ) {
@@ -120,6 +128,7 @@ function SegmentAdminFactory({ machine }: { machine: AnySegmentActor }) {
       return (
         <QuestionSegmentAdmin
           machine={machine as QuestionSegmentActor}
+          players={players}
         ></QuestionSegmentAdmin>
       )
     case 'scoreSegment':
@@ -154,9 +163,10 @@ function ScoreSegmentAdmin({ machine }: ScoreSegmentAdminProps) {
 
 type QuestionSegmentAdminProps = {
   machine: QuestionSegmentActor
+  players: Players
 }
 
-function QuestionSegmentAdmin({ machine }: QuestionSegmentAdminProps) {
+function QuestionSegmentAdmin({ machine, players }: QuestionSegmentAdminProps) {
   const [state, send] = useActor(machine)
   const segment = state.context.segment
 
@@ -173,6 +183,7 @@ function QuestionSegmentAdmin({ machine }: QuestionSegmentAdminProps) {
       {state.context.questionMachineRef && (
         <QuestionAdmin
           machine={state.context.questionMachineRef}
+          players={players}
         ></QuestionAdmin>
       )}
     </div>
@@ -181,9 +192,10 @@ function QuestionSegmentAdmin({ machine }: QuestionSegmentAdminProps) {
 
 type QuestionAdminProps = {
   machine: QuestionActor
+  players: Players
 }
 
-function QuestionAdmin({ machine }: QuestionAdminProps) {
+function QuestionAdmin({ machine, players }: QuestionAdminProps) {
   const [state, send] = useActor(machine)
   const [timerState] = useActor(state.context.timerRef!)
   const question = state.context.question
@@ -232,13 +244,43 @@ function QuestionAdmin({ machine }: QuestionAdminProps) {
         Current state: {state.value}, {elapsed && `Timer: ${elapsed}`}
       </div>
       <div>
-        <button
-          style={{ marginRight: 8 }}
-          disabled={!state.can('BUZZ')}
-          onClick={() => send('BUZZ')}
-        >
-          buzz
-        </button>
+        {state.context.activeTeam && `Team: ${state.context.activeTeam}`}
+      </div>
+      <div>
+        <DropdownMenu>
+          <DropdownMenu.Trigger
+            style={{ marginRight: 8, display: 'flex', alignItems: 'center' }}
+            disabled={!state.can({ type: 'BUZZ', team: '_' })}
+          >
+            buzz
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              style={{
+                height: 20,
+                width: 20,
+              }}
+            >
+              <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content>
+            {Object.values(players).map((p) => (
+              <DropdownMenu.Item
+                key={p.id}
+                onSelect={() => send({ type: 'BUZZ', team: p.id })}
+              >
+                {p.name}
+              </DropdownMenu.Item>
+            ))}
+          </DropdownMenu.Content>
+        </DropdownMenu>
       </div>
     </ControlPanel>
   )

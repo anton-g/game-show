@@ -2,6 +2,7 @@ import { ActorRefFrom, sendParent, spawn } from 'xstate'
 import { stop } from 'xstate/lib/actions'
 import { createModel } from 'xstate/lib/model'
 import { ModelContextFrom } from 'xstate/lib/model.types'
+import { Player } from '../components/admin/Admin'
 import { QuestionSegmentType } from '../overmind/types'
 import { QuestionActor, createQuestionMachine } from './questionMachine'
 
@@ -17,6 +18,13 @@ export const createQuestionSegmentMachine = (segment: QuestionSegmentType) => {
       events: {
         NEXT: () => ({}),
         'QUESTION.END': () => ({}),
+        'QUESTION.SCORE': ({
+          team,
+          score,
+        }: {
+          team: Player['id']
+          score: number
+        }) => ({ team, score }),
       },
     }
   )
@@ -77,6 +85,13 @@ export const createQuestionSegmentMachine = (segment: QuestionSegmentType) => {
               target: 'question',
             },
           ],
+          'QUESTION.SCORE': {
+            actions: sendParent((_, event) => ({
+              type: 'SEGMENT.SCORE',
+              team: event.team,
+              score: event.score,
+            })),
+          },
         },
       },
       end: {

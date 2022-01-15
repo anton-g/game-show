@@ -1,8 +1,9 @@
 import { spawn } from 'xstate'
 import { stop } from 'xstate/lib/actions'
+import { assign } from 'xstate/lib/actionTypes'
 import { createModel } from 'xstate/lib/model'
 import { ModelContextFrom } from 'xstate/lib/model.types'
-import { Players } from '../components/admin/Admin'
+import { Player, Players } from '../components/admin/Admin'
 import { Show } from '../overmind/types'
 import {
   QuestionSegmentActor,
@@ -30,6 +31,13 @@ export const createShowMachine = (show: Show, players: Players) => {
       events: {
         NEXT: () => ({}),
         'SEGMENT.END': () => ({}),
+        'SEGMENT.SCORE': ({
+          team,
+          score,
+        }: {
+          team: Player['id']
+          score: number
+        }) => ({ team, score }),
       },
     }
   )
@@ -81,6 +89,15 @@ export const createShowMachine = (show: Show, players: Players) => {
               target: 'segment',
             },
           ],
+          'SEGMENT.SCORE': {
+            actions: showModel.assign((context, event) => {
+              const updatedPlayers = context.players
+              updatedPlayers[event.team].score += event.score
+              return {
+                players: updatedPlayers,
+              }
+            }),
+          },
           'SEGMENT.END': [
             {
               cond: (context) =>

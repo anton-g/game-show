@@ -1,5 +1,6 @@
-import { ActorRefFrom, send, sendParent, spawn } from 'xstate'
+import { ActorRefFrom, assign, send, sendParent, spawn } from 'xstate'
 import { createModel } from 'xstate/lib/model'
+import { Player } from '../components/admin/Admin'
 import { Question } from '../overmind/types'
 import { TimerActor, timerMachine } from './timerMachine'
 
@@ -9,11 +10,12 @@ export const createQuestionMachine = (question: Question) => {
       question: question,
       timerRef: null! as TimerActor,
       customReveal: true,
+      activeTeam: null as Player['id'] | null,
     },
     {
       events: {
         START: () => ({}),
-        BUZZ: () => ({}),
+        BUZZ: (team: string) => ({ team }),
         CORRECT: () => ({}),
         INCORRECT: () => ({}),
         REVEAL: () => ({}),
@@ -41,15 +43,32 @@ export const createQuestionMachine = (question: Question) => {
       idle: {
         entry: send({ type: 'START' }, { to: 'timer' }),
         on: {
-          BUZZ: 'buzzed',
+          BUZZ: {
+            actions: questionModel.assign({
+              activeTeam: (_, event) => event.team,
+            }),
+            target: 'buzzed',
+          },
           'TIMER.END': 'waitingForReveal',
         },
       },
       buzzed: {
         entry: send({ type: 'PAUSE' }, { to: 'timer' }),
         on: {
-          CORRECT: 'waitingForReveal',
-          INCORRECT: 'idle',
+          CORRECT: {
+            actions: sendParent((context) => ({
+              type: 'QUESTION.SCORE',
+              team: context.activeTeam,
+              score: context.question.scoring.value,
+            })),
+            target: 'waitingForReveal',
+          },
+          INCORRECT: {
+            actions: questionModel.assign({
+              activeTeam: null,
+            }),
+            target: 'idle',
+          },
         },
       },
       waitingForReveal: {

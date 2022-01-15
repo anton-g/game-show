@@ -43,7 +43,7 @@ function ScoreSegmentPlayer({ machine }: ScoreSegmentPlayerProps) {
       {state.matches('visible') && (
         <ol>
           {Object.values(state.context.players)
-            .sort((a, b) => a.score - b.score)
+            .sort((a, b) => b.score - a.score)
             .map((x) => (
               <li key={x.id}>
                 {x.name} - {x.score} pts
