@@ -1,8 +1,11 @@
 import { ActorRefFrom, sendParent } from 'xstate'
 import { createModel } from 'xstate/lib/model'
+import { Segment } from '../overmind/types'
 
-export const createScoreSegmentMachine = () => {
-  const scoreSegmentModel = createModel({})
+export const createScoreSegmentMachine = (segment: Segment) => {
+  const scoreSegmentModel = createModel({
+    segment: segment,
+  })
 
   return scoreSegmentModel.createMachine({
     id: 'scoreSegment',

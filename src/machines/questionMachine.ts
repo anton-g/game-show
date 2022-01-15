@@ -1,8 +1,9 @@
 import { ActorRefFrom, send, sendParent, spawn } from 'xstate'
 import { createModel } from 'xstate/lib/model'
+import { Question } from '../overmind/types'
 import { TimerActor, timerMachine } from './timerMachine'
 
-export const createQuestionMachine = () => {
+export const createQuestionMachine = (question: Question) => {
   const questionModel = createModel(
     {
       timerRef: null! as TimerActor,

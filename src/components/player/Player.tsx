@@ -4,7 +4,7 @@ import { QuestionSegmentActor } from '../../machines/questionSegmentMachine'
 import { ScoreSegmentActor } from '../../machines/scoreSegmentMachine'
 import { AnySegmentActor, createShowMachine } from '../../machines/showMachine'
 import { useAppState } from '../../overmind'
-import { Segment, SegmentQuestion } from '../../overmind/types'
+import { SegmentQuestion } from '../../overmind/types'
 
 export function Player() {
   const show = useAppState((state) => state.selectedShow)
@@ -26,26 +26,19 @@ function ShowPlayer({ machine }: ShowPlayerProps) {
     <div style={{ padding: 16 }}>
       <h3>show {state.context.show.name}</h3>
       <button disabled={!state.can('NEXT')} onClick={() => send('NEXT')}>
-        next
+        next segment
       </button>{' '}
       Current state: {state.value}
       {state.context.segmentMachineRef && (
         <SegmentPlayerFactory
           machine={state.context.segmentMachineRef}
-          segment={state.context.segments[state.context.currentSegmentIndex]}
         ></SegmentPlayerFactory>
       )}
     </div>
   )
 }
 
-function SegmentPlayerFactory({
-  machine,
-  segment,
-}: {
-  machine: AnySegmentActor
-  segment: Segment
-}) {
+function SegmentPlayerFactory({ machine }: { machine: AnySegmentActor }) {
   switch (
     (machine as any).machine.id // TODO fix types
   ) {
@@ -53,14 +46,12 @@ function SegmentPlayerFactory({
       return (
         <QuestionSegmentPlayer
           machine={machine as QuestionSegmentActor}
-          segment={segment}
         ></QuestionSegmentPlayer>
       )
     case 'scoreSegment':
       return (
         <ScoreSegmentPlayer
           machine={machine as ScoreSegmentActor}
-          segment={segment}
         ></ScoreSegmentPlayer>
       )
     default:
@@ -70,11 +61,11 @@ function SegmentPlayerFactory({
 
 type ScoreSegmentPlayerProps = {
   machine: ScoreSegmentActor
-  segment: Segment
 }
 
-function ScoreSegmentPlayer({ machine, segment }: ScoreSegmentPlayerProps) {
+function ScoreSegmentPlayer({ machine }: ScoreSegmentPlayerProps) {
   const [state, send] = useActor(machine)
+  const segment = state.context.segment
 
   return (
     <div>
@@ -89,20 +80,17 @@ function ScoreSegmentPlayer({ machine, segment }: ScoreSegmentPlayerProps) {
 
 type QuestionSegmentPlayerProps = {
   machine: QuestionSegmentActor
-  segment: Segment
 }
 
-function QuestionSegmentPlayer({
-  machine,
-  segment,
-}: QuestionSegmentPlayerProps) {
+function QuestionSegmentPlayer({ machine }: QuestionSegmentPlayerProps) {
   const [state, send] = useActor(machine)
+  const segment = state.context.segment
 
   return (
     <div>
       <h3>segment {segment.name}</h3>
       <button disabled={!state.can('NEXT')} onClick={() => send('NEXT')}>
-        next
+        next question
       </button>{' '}
       Current state: {state.value}
       {state.context.questionMachineRef && (

@@ -8,6 +8,7 @@ import { QuestionActor, createQuestionMachine } from './questionMachine'
 export const createQuestionSegmentMachine = (segment: QuestionSegmentType) => {
   const questionSegmentModel = createModel(
     {
+      segment: segment,
       questions: Object.values(segment.questions),
       currentQuestionIndex: -1,
       questionMachineRef: null as QuestionActor | null,
@@ -28,7 +29,10 @@ export const createQuestionSegmentMachine = (segment: QuestionSegmentType) => {
     const nextQuestionIndex = context.currentQuestionIndex + 1
 
     const question = context.questions[nextQuestionIndex]
-    const machine = spawn(createQuestionMachine(), question.question.id)
+    const machine = spawn(
+      createQuestionMachine(question.question),
+      question.question.id
+    )
 
     return {
       currentQuestionIndex: nextQuestionIndex,
