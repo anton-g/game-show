@@ -6,6 +6,7 @@ import { TimerActor, timerMachine } from './timerMachine'
 export const createQuestionMachine = (question: Question) => {
   const questionModel = createModel(
     {
+      question: question,
       timerRef: null! as TimerActor,
       customReveal: true,
     },

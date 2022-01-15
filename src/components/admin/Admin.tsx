@@ -4,7 +4,6 @@ import { QuestionSegmentActor } from '../../machines/questionSegmentMachine'
 import { ScoreSegmentActor } from '../../machines/scoreSegmentMachine'
 import { AnySegmentActor, createShowMachine } from '../../machines/showMachine'
 import { useAppState } from '../../overmind'
-import { SegmentQuestion } from '../../overmind/types'
 
 export function Admin() {
   const show = useAppState((state) => state.selectedShow)
@@ -96,7 +95,6 @@ function QuestionSegmentAdmin({ machine }: QuestionSegmentAdminProps) {
       {state.context.questionMachineRef && (
         <QuestionAdmin
           machine={state.context.questionMachineRef}
-          question={state.context.questions[state.context.currentQuestionIndex]}
         ></QuestionAdmin>
       )}
     </div>
@@ -105,18 +103,18 @@ function QuestionSegmentAdmin({ machine }: QuestionSegmentAdminProps) {
 
 type QuestionAdminProps = {
   machine: QuestionActor
-  question: SegmentQuestion
 }
 
-function QuestionAdmin({ machine, question }: QuestionAdminProps) {
+function QuestionAdmin({ machine }: QuestionAdminProps) {
   const [state, send] = useActor(machine)
   const [timerState] = useActor(state.context.timerRef!)
+  const question = state.context.question
 
   const { elapsed } = timerState.context
 
   return (
     <div>
-      <h3>{question.question.question}</h3>
+      <h3>{question.question}</h3>
       <button
         style={{ marginRight: 8 }}
         disabled={!state.can('START')}
