@@ -1,4 +1,4 @@
-import { ActorRefFrom, assign, send, sendParent, spawn } from 'xstate'
+import { ActorRefFrom, send, sendParent, spawn } from 'xstate'
 import { createModel } from 'xstate/lib/model'
 import { Player } from '../components/admin/Admin'
 import { Question } from '../overmind/types'

@@ -64,7 +64,7 @@ function ShowAdmin({ machine }: ShowAdminProps) {
         <Spacer size={16} />
         <ControlPanel title="Show controls">
           <button disabled={!state.can('NEXT')} onClick={() => send('NEXT')}>
-            next segment
+            next
           </button>{' '}
           Current state: {state.value}
         </ControlPanel>

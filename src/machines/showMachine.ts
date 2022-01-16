@@ -1,6 +1,5 @@
 import { spawn } from 'xstate'
 import { stop } from 'xstate/lib/actions'
-import { assign } from 'xstate/lib/actionTypes'
 import { createModel } from 'xstate/lib/model'
 import { ModelContextFrom } from 'xstate/lib/model.types'
 import { Player, Players } from '../components/admin/Admin'
@@ -67,9 +66,15 @@ export const createShowMachine = (show: Show, players: Players) => {
   const showMachine = showModel.createMachine({
     id: 'show',
     preserveActionOrder: true, // TODO remove in v5
-    initial: 'intro',
+    initial: 'loading',
     context: showModel.initialContext,
     states: {
+      loading: {
+        on: { NEXT: 'ready' },
+      },
+      ready: {
+        on: { NEXT: 'intro' },
+      },
       intro: {
         on: {
           NEXT: 'segment',

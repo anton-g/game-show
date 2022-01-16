@@ -23,7 +23,8 @@ export function Preview({ showState }: PreviewProps) {
 
 const Wrapper = styled.div`
   width: 450px;
-  height: 450px;
+  height: 100%;
+  aspect-ratio: 16 / 9;
   display: flex;
   align-items: center;
   justify-content: center;
