@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { StateFrom } from 'xstate'
 import { createShowMachine } from '../../machines/showMachine'
-import { SegmentPlayerFactory } from '../player/Player'
+import { Player } from '../player/Player'
 
 type PreviewProps = {
   showState: StateFrom<ReturnType<typeof createShowMachine>>
@@ -10,20 +10,13 @@ type PreviewProps = {
 export function Preview({ showState }: PreviewProps) {
   return (
     <Wrapper>
-      {showState.context.segmentMachineRef ? (
-        <SegmentPlayerFactory
-          machine={showState.context.segmentMachineRef}
-        ></SegmentPlayerFactory>
-      ) : (
-        <h3>{showState.context.show.name}</h3>
-      )}
+      <Player showState={showState} />
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
   width: 450px;
-  height: 100%;
   aspect-ratio: 16 / 9;
   display: flex;
   align-items: center;

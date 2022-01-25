@@ -106,12 +106,18 @@ const Wrapper = styled.div`
 const Tools = styled.div`
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
+  flex-basis: 0;
 `
 
-const Overview = styled.div``
+const Overview = styled.div`
+  flex-grow: 1;
+  flex-basis: 0;
+`
 
 const PreviewWrapper = styled.div`
-  margin-left: auto;
+  flex-grow: 1;
+  flex-basis: 0;
 `
 
 function SegmentAdminFactory({

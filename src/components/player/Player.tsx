@@ -1,14 +1,31 @@
 import { useActor } from '@xstate/react'
+import { StateFrom } from 'xstate'
 import { QuestionActor } from '../../machines/questionMachine'
 import { QuestionSegmentActor } from '../../machines/questionSegmentMachine'
 import { ScoreSegmentActor } from '../../machines/scoreSegmentMachine'
-import { AnySegmentActor } from '../../machines/showMachine'
+import { AnySegmentActor, createShowMachine } from '../../machines/showMachine'
 
-export function SegmentPlayerFactory({
-  machine,
-}: {
-  machine: AnySegmentActor
-}) {
+type PlayerProps = {
+  showState: StateFrom<ReturnType<typeof createShowMachine>>
+}
+
+export function Player({ showState }: PlayerProps) {
+  if (showState.matches('loading')) return <h3>Loading</h3>
+  if (showState.matches('ready')) return <h3>ready</h3>
+  if (showState.matches('intro')) return <h3>{showState.context.show.name}</h3>
+
+  if (showState.matches('segment') && showState.context.segmentMachineRef) {
+    return (
+      <SegmentPlayerFactory
+        machine={showState.context.segmentMachineRef}
+      ></SegmentPlayerFactory>
+    )
+  }
+
+  return <h3>end</h3>
+}
+
+function SegmentPlayerFactory({ machine }: { machine: AnySegmentActor }) {
   switch (
     (machine as any).machine.id // TODO fix types
   ) {
