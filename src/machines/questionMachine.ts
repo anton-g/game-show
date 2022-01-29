@@ -1,96 +1,124 @@
-import { ActorRefFrom, send, sendParent, spawn } from 'xstate'
-import { createModel } from 'xstate/lib/model'
-import { Player } from '../components/admin/Admin'
+import {
+  ActorRefFrom,
+  assign,
+  createMachine,
+  send,
+  sendParent,
+  spawn,
+} from 'xstate'
+import { PlayerType } from '../components/admin/Admin'
 import { Question } from '../overmind/types'
 import { TimerActor, timerMachine } from './timerMachine'
 
 export const createQuestionMachine = (question: Question) => {
-  const questionModel = createModel(
+  const questionMachine = createMachine(
     {
-      question: question,
-      timerRef: null! as TimerActor,
-      customReveal: true,
-      activeTeam: null as Player['id'] | null,
+      id: 'question',
+      tsTypes: {} as import('./questionMachine.typegen').Typegen0,
+      schema: {
+        events: {} as
+          | { type: 'START' }
+          | { type: 'BUZZ'; team: string }
+          | { type: 'CORRECT' }
+          | { type: 'INCORRECT' }
+          | { type: 'REVEAL' }
+          | { type: 'END' }
+          | { type: 'TIMER.END' },
+        context: {} as {
+          question: Question
+          timerRef: TimerActor
+          customReveal: boolean
+          activeTeam: PlayerType['id'] | null
+        },
+      },
+      initial: 'intro',
+      context: {
+        question: question,
+        timerRef: spawn(timerMachine, 'timer'),
+        customReveal: true,
+        activeTeam: null,
+      },
+      states: {
+        intro: {
+          // entry: 'createTimer',
+          on: {
+            START: 'idle',
+          },
+        },
+        idle: {
+          entry: 'startTimer',
+          on: {
+            BUZZ: {
+              actions: 'setTeam',
+              target: 'buzzed',
+            },
+            'TIMER.END': 'waitingForReveal',
+          },
+        },
+        buzzed: {
+          entry: 'pauseTimer',
+          on: {
+            CORRECT: {
+              actions: 'updateScore',
+              target: 'waitingForReveal',
+            },
+            INCORRECT: {
+              actions: 'resetTeam',
+              target: 'idle',
+            },
+          },
+        },
+        waitingForReveal: {
+          always: {
+            target: 'revealed',
+            cond: 'ignoreReveal',
+          },
+          on: {
+            REVEAL: 'revealed',
+          },
+        },
+        revealed: {
+          on: {
+            END: 'ended',
+          },
+        },
+        ended: {
+          type: 'final',
+          entry: 'notifyParent',
+        },
+      },
     },
     {
-      events: {
-        START: () => ({}),
-        BUZZ: (team: string) => ({ team }),
-        CORRECT: () => ({}),
-        INCORRECT: () => ({}),
-        REVEAL: () => ({}),
-        END: () => ({}),
-        'TIMER.END': () => ({}),
+      actions: {
+        updateScore: sendParent((context) => ({
+          type: 'QUESTION.SCORE',
+          team: context.activeTeam,
+          score: context.question.scoring.value,
+        })),
+        // createTimer: assign(() => ({
+        //   timerRef: () => spawn(timerMachine, 'timer'),
+        // })),
+        startTimer: send(
+          { type: 'START' },
+          { to: (context) => context.timerRef }
+        ),
+        pauseTimer: send(
+          { type: 'PAUSE' },
+          { to: (context) => context.timerRef }
+        ),
+        setTeam: assign({
+          activeTeam: (_, event) => event.team,
+        }),
+        resetTeam: assign((context) => ({
+          activeTeam: null,
+        })),
+        notifyParent: sendParent('QUESTION.END'),
+      },
+      guards: {
+        ignoreReveal: (context) => !context.customReveal,
       },
     }
   )
-
-  // type QuestionEvent = EventFrom<typeof questionModel>
-
-  const questionMachine = questionModel.createMachine({
-    id: 'question',
-    initial: 'intro',
-    context: questionModel.initialContext,
-    states: {
-      intro: {
-        entry: questionModel.assign({
-          timerRef: () => spawn(timerMachine, 'timer'),
-        }),
-        on: {
-          START: 'idle',
-        },
-      },
-      idle: {
-        entry: send({ type: 'START' }, { to: 'timer' }),
-        on: {
-          BUZZ: {
-            actions: questionModel.assign({
-              activeTeam: (_, event) => event.team,
-            }),
-            target: 'buzzed',
-          },
-          'TIMER.END': 'waitingForReveal',
-        },
-      },
-      buzzed: {
-        entry: send({ type: 'PAUSE' }, { to: 'timer' }),
-        on: {
-          CORRECT: {
-            actions: sendParent((context) => ({
-              type: 'QUESTION.SCORE',
-              team: context.activeTeam,
-              score: context.question.scoring.value,
-            })),
-            target: 'waitingForReveal',
-          },
-          INCORRECT: {
-            actions: questionModel.assign({
-              activeTeam: null,
-            }),
-            target: 'idle',
-          },
-        },
-      },
-      waitingForReveal: {
-        always: {
-          target: 'revealed',
-          cond: (context) => !context.customReveal,
-        },
-        on: {
-          REVEAL: 'revealed',
-        },
-      },
-      revealed: {
-        on: {
-          END: 'ended',
-        },
-      },
-      ended: {
-        type: 'final',
-        entry: sendParent('QUESTION.END'),
-      },
-    },
-  })
 
   return questionMachine
 }

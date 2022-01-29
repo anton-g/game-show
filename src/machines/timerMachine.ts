@@ -1,69 +1,72 @@
-import { ActorRefFrom, sendParent } from 'xstate'
-import { createModel } from 'xstate/lib/model'
+import { ActorRefFrom, assign, createMachine, sendParent } from 'xstate'
 
-export const timerModel = createModel(
+export const timerMachine = createMachine(
   {
-    elapsed: 0,
-    duration: 30,
-    interval: 0.1,
+    context: { elapsed: 0, duration: 30, interval: 0.1 },
+    tsTypes: {} as import('./timerMachine.typegen').Typegen0,
+    schema: {
+      context: {} as { elapsed: number; duration: number; interval: number },
+      events: {} as { type: 'START' } | { type: 'TICK' } | { type: 'PAUSE' },
+    },
+    id: 'timer',
+    initial: 'paused',
+    states: {
+      running: {
+        invoke: {
+          id: 'interval',
+          src: 'interval',
+        },
+        always: {
+          cond: 'hasEnded',
+          target: '#timer.ended',
+        },
+        on: {
+          TICK: {
+            actions: 'update',
+            target: '#timer.running',
+          },
+          PAUSE: {
+            target: '#timer.paused',
+          },
+        },
+      },
+      paused: {
+        on: {
+          START: {
+            cond: 'notEnded',
+            target: '#timer.running',
+          },
+        },
+      },
+      ended: {
+        entry: 'notifyParent',
+        type: 'final',
+      },
+    },
   },
   {
-    events: {
-      TICK: (value: number) => ({ value }),
-      PAUSE: () => ({}),
-      START: () => ({}),
+    actions: {
+      notifyParent: sendParent('TIMER.END'),
+      update: assign({
+        elapsed: (context) => +(context.elapsed + context.interval).toFixed(2),
+      }),
+    },
+    guards: {
+      notEnded: (context) => context.elapsed < context.duration,
+      hasEnded: (context) => context.elapsed >= context.duration,
+    },
+    services: {
+      interval: (context) => (cb) => {
+        const interval = setInterval(() => {
+          cb('TICK')
+        }, 1000 * context.interval)
+
+        return () => {
+          clearInterval(interval)
+        }
+      },
     },
   }
 )
-
-export const timerMachine = timerModel.createMachine({
-  id: 'timer',
-  initial: 'paused',
-  context: timerModel.initialContext,
-  states: {
-    running: {
-      invoke: {
-        src: (context) => (cb) => {
-          const interval = setInterval(() => {
-            cb('TICK')
-          }, 1000 * context.interval)
-
-          return () => {
-            clearInterval(interval)
-          }
-        },
-      },
-      always: {
-        target: 'ended',
-        cond: (context) => {
-          return context.elapsed >= context.duration
-        },
-      },
-      on: {
-        TICK: {
-          actions: timerModel.assign({
-            elapsed: (context) =>
-              +(context.elapsed + context.interval).toFixed(2),
-          }),
-        },
-        PAUSE: {
-          target: 'paused',
-        },
-      },
-    },
-    paused: {
-      on: {
-        START: {
-          target: 'running',
-          cond: (context) => context.elapsed < context.duration,
-        },
-      },
-    },
-    ended: {
-      type: 'final',
-      entry: sendParent('TIMER.END'),
-    },
-  },
-})
 
 export type TimerActor = ActorRefFrom<typeof timerMachine>

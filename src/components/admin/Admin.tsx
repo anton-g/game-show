@@ -1,5 +1,5 @@
 import { useActor, useMachine } from '@xstate/react'
-import React, { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import styled from 'styled-components'
 import { QuestionActor } from '../../machines/questionMachine'
 import { QuestionSegmentActor } from '../../machines/questionSegmentMachine'
@@ -10,13 +10,13 @@ import { DropdownMenu } from '../common/DropdownMenu'
 import { Spacer } from '../common/Spacer'
 import { Preview } from './Preview'
 
-export type Player = {
+export type PlayerType = {
   id: string
   name: string
   score: number
 }
 
-export type Players = Record<Player['id'], Player>
+export type Players = Record<PlayerType['id'], PlayerType>
 
 const playersMock: Players = {
   '1': {

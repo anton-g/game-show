@@ -26,9 +26,8 @@ export function Player({ showState }: PlayerProps) {
 }
 
 function SegmentPlayerFactory({ machine }: { machine: AnySegmentActor }) {
-  switch (
-    (machine as any).machine.id // TODO fix types
-  ) {
+  const machineId = machine.getSnapshot()?.machine?.id
+  switch (machineId) {
     case 'questionSegment':
       return (
         <QuestionSegmentPlayer
@@ -52,14 +51,15 @@ type ScoreSegmentPlayerProps = {
 
 function ScoreSegmentPlayer({ machine }: ScoreSegmentPlayerProps) {
   const [state] = useActor(machine)
-  // const segment = state.context.segment
+
+  const players = Object.values(state.context.players)
 
   return (
     <div>
       <h3>Scores</h3>
       {state.matches('visible') && (
         <ol>
-          {Object.values(state.context.players)
+          {players
             .sort((a, b) => b.score - a.score)
             .map((x) => (
               <li key={x.id}>

@@ -1,5 +1,4 @@
-import { ActorRefFrom, sendParent } from 'xstate'
-import { createModel } from 'xstate/lib/model'
+import { ActorRefFrom, createMachine, sendParent } from 'xstate'
 import { Players } from '../components/admin/Admin'
 import { Segment } from '../overmind/types'
 
@@ -7,36 +6,49 @@ export const createScoreSegmentMachine = (
   segment: Segment,
   players: Players
 ) => {
-  const scoreSegmentModel = createModel({
-    segment: segment,
-    players: players,
-  })
-
-  const scoreMachine = scoreSegmentModel.createMachine({
-    id: 'scoreSegment',
-    initial: 'hidden',
-    context: scoreSegmentModel.initialContext,
-    states: {
-      hidden: {
-        on: {
-          NEXT: {
-            target: 'visible',
+  const scoreMachine = createMachine(
+    {
+      id: 'scoreSegment',
+      schema: {
+        context: {} as {
+          segment: Segment
+          players: Players
+        },
+        events: {} as { type: 'NEXT' },
+      },
+      tsTypes: {} as import('./scoreSegmentMachine.typegen').Typegen0,
+      initial: 'hidden',
+      context: {
+        segment: segment,
+        players: players,
+      },
+      states: {
+        hidden: {
+          on: {
+            NEXT: {
+              target: 'visible',
+            },
           },
         },
-      },
-      visible: {
-        on: {
-          NEXT: {
-            target: 'ended',
+        visible: {
+          on: {
+            NEXT: {
+              target: 'ended',
+            },
           },
         },
-      },
-      ended: {
-        type: 'final',
-        entry: sendParent('SEGMENT.END'),
+        ended: {
+          type: 'final',
+          entry: 'notifyParent',
+        },
       },
     },
-  })
+    {
+      actions: {
+        notifyParent: sendParent('SEGMENT.END'),
+      },
+    }
+  )
 
   return scoreMachine
 }

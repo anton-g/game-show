@@ -1,105 +1,109 @@
-import { ActorRefFrom, sendParent, spawn } from 'xstate'
+import { ActorRefFrom, createMachine, sendParent, spawn, assign } from 'xstate'
 import { stop } from 'xstate/lib/actions'
-import { createModel } from 'xstate/lib/model'
-import { ModelContextFrom } from 'xstate/lib/model.types'
-import { Player } from '../components/admin/Admin'
-import { QuestionSegmentType } from '../overmind/types'
+import { PlayerType } from '../components/admin/Admin'
+import {
+  QuestionSegmentType,
+  Segment,
+  SegmentQuestion,
+} from '../overmind/types'
 import { QuestionActor, createQuestionMachine } from './questionMachine'
 
 export const createQuestionSegmentMachine = (segment: QuestionSegmentType) => {
-  const questionSegmentModel = createModel(
+  const questionSegmentMachine = createMachine(
     {
-      segment: segment,
-      questions: Object.values(segment.questions),
-      currentQuestionIndex: -1,
-      questionMachineRef: null as QuestionActor | null,
+      id: 'questionSegment',
+      schema: {
+        context: {} as {
+          segment: Segment
+          questions: SegmentQuestion[]
+          currentQuestionIndex: number
+          questionMachineRef: QuestionActor | null
+        },
+        events: {} as
+          | { type: 'NEXT' }
+          | { type: 'QUESTION.END' }
+          | { type: 'QUESTION.SCORE'; team: PlayerType['id']; score: number },
+      },
+      tsTypes: {} as import('./questionSegmentMachine.typegen').Typegen0,
+      initial: 'intro',
+      preserveActionOrder: true, // TODO remove in v5
+      context: {
+        segment: segment,
+        questions: Object.values(segment.questions),
+        currentQuestionIndex: -1,
+        questionMachineRef: null as QuestionActor | null,
+      },
+      states: {
+        intro: {
+          on: {
+            NEXT: {
+              target: 'question',
+            },
+          },
+        },
+        question: {
+          entry: 'nextQuestionAssign',
+          exit: 'stopQuestionActor',
+          on: {
+            NEXT: [
+              {
+                target: 'end',
+                cond: 'outOfQuestions',
+              },
+              {
+                target: 'question',
+              },
+            ],
+            'QUESTION.END': [
+              {
+                target: 'end',
+                cond: 'outOfQuestions',
+              },
+              {
+                target: 'question',
+              },
+            ],
+            'QUESTION.SCORE': {
+              actions: 'sendScoreToParent',
+            },
+          },
+        },
+        end: {
+          type: 'final',
+          entry: 'notifyParent',
+        },
+      },
     },
     {
-      events: {
-        NEXT: () => ({}),
-        'QUESTION.END': () => ({}),
-        'QUESTION.SCORE': ({
-          team,
-          score,
-        }: {
-          team: Player['id']
-          score: number
-        }) => ({ team, score }),
+      actions: {
+        notifyParent: sendParent('SEGMENT.END'),
+        stopQuestionActor: stop((context) => context.questionMachineRef!),
+        sendScoreToParent: sendParent((_, event) => ({
+          type: 'SEGMENT.SCORE',
+          team: event.team,
+          score: event.score,
+        })),
+        nextQuestionAssign: assign((context) => {
+          const nextQuestionIndex = context.currentQuestionIndex + 1
+
+          const question = context.questions[nextQuestionIndex]
+          const machine = spawn(
+            createQuestionMachine(question.question),
+            question.question.id
+          )
+
+          return {
+            currentQuestionIndex: nextQuestionIndex,
+            questionMachineRef: machine,
+          }
+        }),
+      },
+      guards: {
+        outOfQuestions: (context) =>
+          context.currentQuestionIndex >= context.questions.length - 1,
       },
     }
   )
-
-  // Workaround due to weird typings ;(
-  // Would be fantastic if this could be put in actions instead but: https://github.com/statelyai/xstate/pull/2426/files
-  const nextQuestionAssign = (
-    context: ModelContextFrom<typeof questionSegmentModel>
-  ) => {
-    const nextQuestionIndex = context.currentQuestionIndex + 1
-
-    const question = context.questions[nextQuestionIndex]
-    const machine = spawn(
-      createQuestionMachine(question.question),
-      question.question.id
-    )
-
-    return {
-      currentQuestionIndex: nextQuestionIndex,
-      questionMachineRef: machine,
-    }
-  }
-
-  const questionSegmentMachine = questionSegmentModel.createMachine({
-    id: 'questionSegment',
-    initial: 'intro',
-    preserveActionOrder: true, // TODO remove in v5
-    context: questionSegmentModel.initialContext,
-    states: {
-      intro: {
-        on: {
-          NEXT: {
-            target: 'question',
-          },
-        },
-      },
-      question: {
-        entry: questionSegmentModel.assign(nextQuestionAssign),
-        exit: stop((context) => context.questionMachineRef!),
-        on: {
-          NEXT: [
-            {
-              target: 'end',
-              cond: (context) =>
-                context.currentQuestionIndex >= context.questions.length - 1,
-            },
-            {
-              target: 'question',
-            },
-          ],
-          'QUESTION.END': [
-            {
-              target: 'end',
-              cond: (context) =>
-                context.currentQuestionIndex >= context.questions.length - 1,
-            },
-            {
-              target: 'question',
-            },
-          ],
-          'QUESTION.SCORE': {
-            actions: sendParent((_, event) => ({
-              type: 'SEGMENT.SCORE',
-              team: event.team,
-              score: event.score,
-            })),
-          },
-        },
-      },
-      end: {
-        type: 'final',
-        entry: sendParent('SEGMENT.END'),
-      },
-    },
-  })
 
   return questionSegmentMachine
 }
