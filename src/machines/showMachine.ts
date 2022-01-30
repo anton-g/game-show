@@ -37,7 +37,10 @@ export const createShowMachine = (show: Show, players: Players) => {
         events: {} as
           | { type: 'NEXT' }
           | { type: 'SEGMENT.END' }
-          | { type: 'SEGMENT.SCORE'; team: PlayerType['id']; score: number },
+          | {
+              type: 'SEGMENT.SCORE'
+              scores: { team: PlayerType['id']; score: number }[]
+            },
       },
       preserveActionOrder: true,
       id: 'show',
@@ -117,7 +120,11 @@ export const createShowMachine = (show: Show, players: Players) => {
         }),
         assignScore: assign((context, event) => {
           const updatedPlayers = context.players
-          updatedPlayers[event.team].score += event.score
+
+          for (const score of event.scores) {
+            updatedPlayers[score.team].score += score.score
+          }
+
           return {
             players: updatedPlayers,
           }

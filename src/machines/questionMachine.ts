@@ -92,8 +92,9 @@ export const createQuestionMachine = (question: Question) => {
       actions: {
         updateScore: sendParent((context) => ({
           type: 'QUESTION.SCORE',
-          team: context.activeTeam,
-          score: context.question.scoring.value,
+          scores: [
+            { team: context.activeTeam, score: context.question.scoring.value },
+          ],
         })),
         // createTimer: assign(() => ({
         //   timerRef: () => spawn(timerMachine, 'timer'),

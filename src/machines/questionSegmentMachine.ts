@@ -22,7 +22,10 @@ export const createQuestionSegmentMachine = (segment: QuestionSegmentType) => {
         events: {} as
           | { type: 'NEXT' }
           | { type: 'QUESTION.END' }
-          | { type: 'QUESTION.SCORE'; team: PlayerType['id']; score: number },
+          | {
+              type: 'QUESTION.SCORE'
+              scores: { team: PlayerType['id']; score: number }[]
+            },
       },
       tsTypes: {} as import('./questionSegmentMachine.typegen').Typegen0,
       initial: 'intro',
@@ -80,8 +83,7 @@ export const createQuestionSegmentMachine = (segment: QuestionSegmentType) => {
         stopQuestionActor: stop((context) => context.questionMachineRef!),
         sendScoreToParent: sendParent((_, event) => ({
           type: 'SEGMENT.SCORE',
-          team: event.team,
-          score: event.score,
+          scores: event.scores,
         })),
         nextQuestionAssign: assign((context) => {
           const nextQuestionIndex = context.currentQuestionIndex + 1
