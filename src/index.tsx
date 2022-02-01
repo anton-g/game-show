@@ -15,6 +15,7 @@ import 'modern-css-reset'
 import { lightTheme } from './themes'
 import { Admin } from './components/admin/Admin'
 import { inspect } from '@xstate/inspect'
+import { PresentationControl } from './components/presentation/Presentation'
 
 inspect({
   url: 'https://statecharts.io/inspect',
@@ -69,6 +70,9 @@ ReactDOM.render(
             </Route>
             <Route path="/play" exact>
               <Admin />
+            </Route>
+            <Route path="/play/external" exact>
+              <PresentationControl />
             </Route>
             <Route path="/creator">
               <Creator />

@@ -1,6 +1,7 @@
 import { useActor, useMachine } from '@xstate/react'
-import type { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
 import styled from 'styled-components'
+import usePresentation from '../../hooks/usePresentation'
 import { QuestionActor } from '../../machines/questionMachine'
 import { QuestionSegmentActor } from '../../machines/questionSegmentMachine'
 import { ScoreSegmentActor } from '../../machines/scoreSegmentMachine'
@@ -55,11 +56,38 @@ type ShowAdminProps = {
 }
 
 function ShowAdmin({ machine }: ShowAdminProps) {
-  const [state, send] = useMachine(machine, { devTools: true })
+  const { startConnection, sendMessage, errors, terminateConnection } =
+    usePresentation()
+  const [state, internalSend] = useMachine(machine, { devTools: true })
+
+  useEffect(() => {
+    console.log(errors)
+  }, [errors])
+
+  const send = (...params: Parameters<typeof internalSend>) => {
+    sendMessage({
+      type: 'EVENT',
+      payload: { machine: '', event: params },
+    })
+    internalSend(...params)
+  }
 
   return (
     <Wrapper>
       <Tools>
+        <ControlPanel title="Presentation controls">
+          <button onClick={() => startConnection('/play/external')}>
+            start
+          </button>{' '}
+          <button onClick={() => terminateConnection()}>stop</button>{' '}
+          <button
+            onClick={() => {
+              sendMessage({ type: 'PLAYERS', payload: playersMock })
+            }}
+          >
+            debug
+          </button>{' '}
+        </ControlPanel>
         <h3>show {state.context.show.name}</h3>
         <Spacer size={16} />
         <ControlPanel title="Show controls">
@@ -127,20 +155,19 @@ function SegmentAdminFactory({
   players: Players
   machine: AnySegmentActor
 }) {
-  switch (
-    (machine as any).machine.id // TODO fix types
-  ) {
+  const machineId = machine.getSnapshot()?.machine?.id
+  switch (machineId) {
     case 'questionSegment':
       return (
         <QuestionSegmentAdmin
-          machine={machine as QuestionSegmentActor}
+          actor={machine as QuestionSegmentActor}
           players={players}
         ></QuestionSegmentAdmin>
       )
     case 'scoreSegment':
       return (
         <ScoreSegmentAdmin
-          machine={machine as ScoreSegmentActor}
+          actor={machine as ScoreSegmentActor}
         ></ScoreSegmentAdmin>
       )
     default:
@@ -149,11 +176,11 @@ function SegmentAdminFactory({
 }
 
 type ScoreSegmentAdminProps = {
-  machine: ScoreSegmentActor
+  actor: ScoreSegmentActor
 }
 
-function ScoreSegmentAdmin({ machine }: ScoreSegmentAdminProps) {
-  const [state, send] = useActor(machine)
+function ScoreSegmentAdmin({ actor }: ScoreSegmentAdminProps) {
+  const [state, send] = useActor(actor)
   const segment = state.context.segment
 
   return (
@@ -168,12 +195,12 @@ function ScoreSegmentAdmin({ machine }: ScoreSegmentAdminProps) {
 }
 
 type QuestionSegmentAdminProps = {
-  machine: QuestionSegmentActor
+  actor: QuestionSegmentActor
   players: Players
 }
 
-function QuestionSegmentAdmin({ machine, players }: QuestionSegmentAdminProps) {
-  const [state, send] = useActor(machine)
+function QuestionSegmentAdmin({ actor, players }: QuestionSegmentAdminProps) {
+  const [state, send] = useActor(actor)
   const segment = state.context.segment
 
   return (

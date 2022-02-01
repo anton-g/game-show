@@ -1,16 +1,7 @@
 // Inspired by use-presentation.js from https://github.com/FormidableLabs/spectacle/blob/main/src/hooks/use-presentation.js
 
 import { useEffect, useState, useCallback, useRef } from 'react'
-
-// The PresentationRequest API doesn't exist in TypeScripts window definitions yet
-declare global {
-  interface Navigator {
-    presentation: any
-  }
-  interface Window {
-    PresentationRequest: any
-  }
-}
+import { Players } from '../components/admin/Admin'
 
 function getReceiver() {
   return (
@@ -19,6 +10,10 @@ function getReceiver() {
     window.navigator.presentation.receiver
   )
 }
+
+export type PresentationMessage =
+  | { type: 'EVENT'; payload: { machine: string; event: any } }
+  | { type: 'PLAYERS'; payload: Players }
 
 function usePresentation() {
   const [connection, setConnection] = useState<any>(null)
@@ -83,7 +78,7 @@ function usePresentation() {
 
   // Send a message from the controller to the presenter
   const sendMessage = useCallback(
-    (msg: { type: MessageType; payload: any }) => {
+    (msg: PresentationMessage) => {
       // This may throw if message isn't stringify-able
       try {
         if (connection) {
@@ -111,7 +106,3 @@ function usePresentation() {
 }
 
 export default usePresentation
-
-export enum MessageType {
-  TEMP = 'TEMP',
-}
