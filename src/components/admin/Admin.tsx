@@ -1,7 +1,9 @@
 import { useActor, useMachine } from '@xstate/react'
 import { ReactNode, useEffect } from 'react'
 import styled from 'styled-components'
-import usePresentation from '../../hooks/usePresentation'
+import usePresentation, {
+  PresentationMessage,
+} from '../../hooks/usePresentation'
 import { QuestionActor } from '../../machines/questionMachine'
 import { QuestionSegmentActor } from '../../machines/questionSegmentMachine'
 import { ScoreSegmentActor } from '../../machines/scoreSegmentMachine'
@@ -67,7 +69,7 @@ function ShowAdmin({ machine }: ShowAdminProps) {
   const send = (...params: Parameters<typeof internalSend>) => {
     sendMessage({
       type: 'EVENT',
-      payload: { machine: '', event: params },
+      payload: { machine: state.machine!.id, event: params },
     })
     internalSend(...params)
   }
@@ -85,7 +87,7 @@ function ShowAdmin({ machine }: ShowAdminProps) {
               sendMessage({ type: 'PLAYERS', payload: playersMock })
             }}
           >
-            debug
+            fake players
           </button>{' '}
         </ControlPanel>
         <h3>show {state.context.show.name}</h3>
@@ -101,6 +103,7 @@ function ShowAdmin({ machine }: ShowAdminProps) {
           <SegmentAdminFactory
             machine={state.context.segmentMachineRef}
             players={state.context.players}
+            sendMessage={sendMessage} // Might actually wanna create a context for this
           ></SegmentAdminFactory>
         )}
       </Tools>
@@ -151,9 +154,11 @@ const PreviewWrapper = styled.div`
 function SegmentAdminFactory({
   machine,
   players,
+  sendMessage,
 }: {
   players: Players
   machine: AnySegmentActor
+  sendMessage: (msg: PresentationMessage) => void
 }) {
   const machineId = machine.getSnapshot()?.machine?.id
   switch (machineId) {
@@ -162,12 +167,14 @@ function SegmentAdminFactory({
         <QuestionSegmentAdmin
           actor={machine as QuestionSegmentActor}
           players={players}
+          sendMessage={sendMessage}
         ></QuestionSegmentAdmin>
       )
     case 'scoreSegment':
       return (
         <ScoreSegmentAdmin
           actor={machine as ScoreSegmentActor}
+          sendMessage={sendMessage}
         ></ScoreSegmentAdmin>
       )
     default:
@@ -177,11 +184,20 @@ function SegmentAdminFactory({
 
 type ScoreSegmentAdminProps = {
   actor: ScoreSegmentActor
+  sendMessage: (msg: PresentationMessage) => void
 }
 
-function ScoreSegmentAdmin({ actor }: ScoreSegmentAdminProps) {
-  const [state, send] = useActor(actor)
+function ScoreSegmentAdmin({ actor, sendMessage }: ScoreSegmentAdminProps) {
+  const [state, internalSend] = useActor(actor)
   const segment = state.context.segment
+
+  const send = (...params: Parameters<typeof internalSend>) => {
+    sendMessage({
+      type: 'EVENT',
+      payload: { machine: actor.id, event: params },
+    })
+    internalSend(...params)
+  }
 
   return (
     <ControlPanel title="Score controls">
@@ -197,11 +213,24 @@ function ScoreSegmentAdmin({ actor }: ScoreSegmentAdminProps) {
 type QuestionSegmentAdminProps = {
   actor: QuestionSegmentActor
   players: Players
+  sendMessage: (msg: PresentationMessage) => void
 }
 
-function QuestionSegmentAdmin({ actor, players }: QuestionSegmentAdminProps) {
-  const [state, send] = useActor(actor)
+function QuestionSegmentAdmin({
+  actor,
+  players,
+  sendMessage,
+}: QuestionSegmentAdminProps) {
+  const [state, internalSend] = useActor(actor)
   const segment = state.context.segment
+
+  const send = (...params: Parameters<typeof internalSend>) => {
+    sendMessage({
+      type: 'EVENT',
+      payload: { machine: actor.id, event: params },
+    })
+    internalSend(...params)
+  }
 
   return (
     <div>
@@ -215,8 +244,9 @@ function QuestionSegmentAdmin({ actor, players }: QuestionSegmentAdminProps) {
       <Spacer size={16} />
       {state.context.questionMachineRef && (
         <QuestionAdmin
-          machine={state.context.questionMachineRef}
+          actor={state.context.questionMachineRef}
           players={players}
+          sendMessage={sendMessage}
         ></QuestionAdmin>
       )}
     </div>
@@ -224,14 +254,23 @@ function QuestionSegmentAdmin({ actor, players }: QuestionSegmentAdminProps) {
 }
 
 type QuestionAdminProps = {
-  machine: QuestionActor
+  actor: QuestionActor
   players: Players
+  sendMessage: (msg: PresentationMessage) => void
 }
 
-function QuestionAdmin({ machine, players }: QuestionAdminProps) {
-  const [state, send] = useActor(machine)
+function QuestionAdmin({ actor, players, sendMessage }: QuestionAdminProps) {
+  const [state, internalSend] = useActor(actor)
   const [timerState] = useActor(state.context.timerRef!)
   const question = state.context.question
+
+  const send = (...params: Parameters<typeof internalSend>) => {
+    sendMessage({
+      type: 'EVENT',
+      payload: { machine: actor.id, event: params },
+    })
+    internalSend(...params)
+  }
 
   const { elapsed } = timerState.context
 

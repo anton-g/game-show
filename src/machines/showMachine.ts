@@ -2,6 +2,7 @@ import { spawn, assign, createMachine } from 'xstate'
 import { stop } from 'xstate/lib/actions'
 import { PlayerType, Players } from '../components/admin/Admin'
 import { Segment, Show } from '../overmind/types'
+import { QuestionActor } from './questionMachine'
 import {
   QuestionSegmentActor,
   createQuestionSegmentMachine,
@@ -10,8 +11,11 @@ import {
   ScoreSegmentActor,
   createScoreSegmentMachine,
 } from './scoreSegmentMachine'
+import { TimerActor } from './timerMachine'
 
 export type AnySegmentActor = QuestionSegmentActor | ScoreSegmentActor
+export type AnyQuestionActor = QuestionActor
+export type AnyActor = AnySegmentActor | AnyQuestionActor | TimerActor
 
 export const createShowMachine = (show: Show, players: Players) => {
   const showMachine = createMachine(
@@ -110,8 +114,11 @@ export const createShowMachine = (show: Show, players: Players) => {
 
           const ref =
             segment.type === 'QUESTIONS'
-              ? spawn(createQuestionSegmentMachine(segment))
-              : spawn(createScoreSegmentMachine(segment, context.players))
+              ? spawn(createQuestionSegmentMachine(segment), segment.id)
+              : spawn(
+                  createScoreSegmentMachine(segment, context.players),
+                  segment.id
+                )
 
           return {
             currentSegmentIndex: nextSegmentIndex,

@@ -45,11 +45,12 @@ function usePresentation() {
     if (receiver) {
       const handleConnectionList = (list: any) => {
         list.connections.forEach((listConnection: any) => {
-          const oldHandler = listConnection.onmessage || (() => {})
+          // const oldHandler = listConnection.onmessage || (() => {})
+          // Should probably store a reference to all handlers instead and then just call all handlers in the list in onmessage.
           listConnection.onmessage = (event: any) => {
             const parsedData = JSON.parse(event.data)
             handler(parsedData)
-            oldHandler(event)
+            // oldHandler(event)
           }
         })
       }
