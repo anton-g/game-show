@@ -13,9 +13,9 @@ import { Library } from './components/library/grid/Library'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import 'modern-css-reset'
 import { lightTheme } from './themes'
-import { Admin } from './components/admin/Admin'
+import { PresentationControls } from './components/presentation/PresentationsControl'
 import { inspect } from '@xstate/inspect'
-import { PresentationControl } from './components/presentation/Presentation'
+import { ExternalPresentationReceiver } from './components/presentation/ExternalPresentation'
 
 inspect({
   url: 'https://statecharts.io/inspect',
@@ -69,10 +69,10 @@ ReactDOM.render(
               <App />
             </Route>
             <Route path="/play" exact>
-              <Admin />
+              <PresentationControls />
             </Route>
             <Route path="/play/external" exact>
-              <PresentationControl />
+              <ExternalPresentationReceiver />
             </Route>
             <Route path="/creator">
               <Creator />

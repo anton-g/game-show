@@ -8,10 +8,10 @@ import usePresentation, {
 import { createShowMachine } from '../../machines/showMachine'
 import { useAppState } from '../../overmind'
 import { Show } from '../../overmind/types'
-import { Players } from '../admin/Admin'
+import { Players } from './PresentationsControl'
 import { Player } from '../player/Player'
 
-export function PresentationControl() {
+export function ExternalPresentationReceiver() {
   const show = useAppState((state) => state.selectedShow)
   const [players, setPlayers] = useState<Players>()
   const { addMessageHandler } = usePresentation()
@@ -26,15 +26,15 @@ export function PresentationControl() {
 
   if (!show || !players) return null
 
-  return <Presentation show={show} players={players} />
+  return <ExternalPresentation show={show} players={players} />
 }
 
-type PresentationProps = {
+type ExternalPresentationProps = {
   show: Show
   players: Players
 }
 
-function Presentation({ show, players }: PresentationProps) {
+function ExternalPresentation({ show, players }: ExternalPresentationProps) {
   const machine = useMemo(
     () => createShowMachine(show, players),
     [show, players]

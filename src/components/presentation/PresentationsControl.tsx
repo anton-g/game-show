@@ -44,7 +44,7 @@ const playersMock: Players = {
   },
 }
 
-export function Admin() {
+export function PresentationControls() {
   const show = useAppState((state) => state.selectedShow)
   if (!show) return null
 

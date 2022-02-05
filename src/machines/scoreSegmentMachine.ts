@@ -1,5 +1,5 @@
 import { ActorRefFrom, createMachine, sendParent } from 'xstate'
-import { Players } from '../components/admin/Admin'
+import { Players } from '../components/presentation/PresentationsControl'
 import { Segment } from '../overmind/types'
 
 export const createScoreSegmentMachine = (

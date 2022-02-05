@@ -1,6 +1,9 @@
 import { spawn, assign, createMachine } from 'xstate'
 import { stop } from 'xstate/lib/actions'
-import { PlayerType, Players } from '../components/admin/Admin'
+import {
+  PlayerType,
+  Players,
+} from '../components/presentation/PresentationsControl'
 import { Segment, Show } from '../overmind/types'
 import { QuestionActor } from './questionMachine'
 import {

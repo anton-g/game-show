@@ -1,7 +1,7 @@
 // Inspired by use-presentation.js from https://github.com/FormidableLabs/spectacle/blob/main/src/hooks/use-presentation.js
 
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { Players } from '../components/admin/Admin'
+import { Players } from '../components/presentation/PresentationsControl'
 
 function getReceiver() {
   return (

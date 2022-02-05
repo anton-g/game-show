@@ -6,7 +6,7 @@ import {
   sendParent,
   spawn,
 } from 'xstate'
-import { PlayerType } from '../components/admin/Admin'
+import { PlayerType } from '../components/presentation/PresentationsControl'
 import { Question } from '../overmind/types'
 import { TimerActor, timerMachine } from './timerMachine'
 

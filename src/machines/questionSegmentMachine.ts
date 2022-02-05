@@ -1,6 +1,6 @@
 import { ActorRefFrom, createMachine, sendParent, spawn, assign } from 'xstate'
 import { stop } from 'xstate/lib/actions'
-import { PlayerType } from '../components/admin/Admin'
+import { PlayerType } from '../components/presentation/PresentationsControl'
 import {
   QuestionSegmentType,
   Segment,
