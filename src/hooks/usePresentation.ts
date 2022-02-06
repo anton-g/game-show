@@ -85,7 +85,8 @@ function usePresentation() {
         if (connection) {
           connection.send(JSON.stringify(msg))
         } else {
-          addError(new Error('Cannot send message before starting a conection'))
+          console.log('Cannot send message before starting a conection')
+          // addError(new Error('Cannot send message before starting a conection'))
         }
       } catch (e) {
         console.log('error', e)

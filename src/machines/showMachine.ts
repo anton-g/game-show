@@ -1,5 +1,5 @@
 import { spawn, assign, createMachine } from 'xstate'
-import { stop } from 'xstate/lib/actions'
+import { forwardTo, stop } from 'xstate/lib/actions'
 import {
   PlayerType,
   Players,
@@ -43,6 +43,7 @@ export const createShowMachine = (show: Show, players: Players) => {
         },
         events: {} as
           | { type: 'NEXT' }
+          | { type: 'BUZZ'; team: string }
           | { type: 'SEGMENT.END' }
           | {
               type: 'SEGMENT.SCORE'
@@ -99,6 +100,9 @@ export const createShowMachine = (show: Show, players: Players) => {
                 target: '#show.segment',
               },
             ],
+            BUZZ: {
+              actions: 'forwardBuzz',
+            },
           },
         },
         end: {
@@ -143,6 +147,7 @@ export const createShowMachine = (show: Show, players: Players) => {
           segmentMachineRef: null,
         })),
         stopSegmentActor: stop((context) => context.segmentMachineRef!),
+        forwardBuzz: forwardTo((context) => context.segmentMachineRef!),
       },
       guards: {
         outOfSegments: (context) =>

@@ -12,6 +12,7 @@ import { useAppState } from '../../overmind'
 import { DropdownMenu } from '../common/DropdownMenu'
 import { Spacer } from '../common/Spacer'
 import { Preview } from './Preview'
+import { DevPanel } from './DevPanel'
 
 export type PlayerType = {
   id: string
@@ -24,12 +25,12 @@ export type Players = Record<PlayerType['id'], PlayerType>
 const playersMock: Players = {
   '1': {
     id: '1',
-    name: 'Player1',
+    name: 'Crewbb',
     score: 0,
   },
   '2': {
     id: '2',
-    name: 'Player2',
+    name: 'Penelopé Crews',
     score: 0,
   },
   '3': {
@@ -76,6 +77,10 @@ function ShowAdmin({ machine }: ShowAdminProps) {
 
   return (
     <Wrapper>
+      <DevPanel
+        players={playersMock}
+        onBuzz={(teamId) => send({ type: 'BUZZ', team: teamId })}
+      ></DevPanel>
       <Tools>
         <ControlPanel title="Presentation controls">
           <button onClick={() => startConnection('/play/external')}>
@@ -317,42 +322,6 @@ function QuestionAdmin({ actor, players, sendMessage }: QuestionAdminProps) {
       </div>
       <div>
         {state.context.activeTeam && `Team: ${state.context.activeTeam}`}
-      </div>
-      <div>
-        <DropdownMenu>
-          <DropdownMenu.Trigger
-            style={{ marginRight: 8, display: 'flex', alignItems: 'center' }}
-            disabled={!state.can({ type: 'BUZZ', team: '_' })}
-          >
-            buzz
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              style={{
-                height: 20,
-                width: 20,
-              }}
-            >
-              <path
-                fillRule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            {Object.values(players).map((p) => (
-              <DropdownMenu.Item
-                key={p.id}
-                onSelect={() => send({ type: 'BUZZ', team: p.id })}
-              >
-                {p.name}
-              </DropdownMenu.Item>
-            ))}
-          </DropdownMenu.Content>
-        </DropdownMenu>
       </div>
     </ControlPanel>
   )

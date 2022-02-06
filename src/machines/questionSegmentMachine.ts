@@ -1,5 +1,5 @@
 import { ActorRefFrom, createMachine, sendParent, spawn, assign } from 'xstate'
-import { stop } from 'xstate/lib/actions'
+import { forwardTo, stop } from 'xstate/lib/actions'
 import { PlayerType } from '../components/presentation/PresentationsControl'
 import {
   QuestionSegmentType,
@@ -21,6 +21,7 @@ export const createQuestionSegmentMachine = (segment: QuestionSegmentType) => {
         },
         events: {} as
           | { type: 'NEXT' }
+          | { type: 'BUZZ'; team: string }
           | { type: 'QUESTION.END' }
           | {
               type: 'QUESTION.SCORE'
@@ -69,6 +70,9 @@ export const createQuestionSegmentMachine = (segment: QuestionSegmentType) => {
             'QUESTION.SCORE': {
               actions: 'sendScoreToParent',
             },
+            BUZZ: {
+              actions: 'forwardBuzz',
+            },
           },
         },
         end: {
@@ -99,6 +103,7 @@ export const createQuestionSegmentMachine = (segment: QuestionSegmentType) => {
             questionMachineRef: machine,
           }
         }),
+        forwardBuzz: forwardTo((context) => context.questionMachineRef!),
       },
       guards: {
         outOfQuestions: (context) =>

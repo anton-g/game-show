@@ -4,6 +4,7 @@ export interface Typegen0 {
   "@@xstate/typegen": true;
   eventsCausingActions: {
     sendScoreToParent: "QUESTION.SCORE";
+    forwardBuzz: "BUZZ";
     stopQuestionActor: "xstate.init";
     nextQuestionAssign: "NEXT" | "QUESTION.END";
     notifyParent: "NEXT" | "QUESTION.END";

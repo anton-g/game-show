@@ -4,6 +4,7 @@ export interface Typegen0 {
   "@@xstate/typegen": true;
   eventsCausingActions: {
     assignScore: "SEGMENT.SCORE";
+    forwardBuzz: "BUZZ";
     stopSegmentActor: "xstate.init";
     assignNextSegment: "NEXT" | "SEGMENT.END";
     removeSegmentActor: "NEXT" | "SEGMENT.END";
