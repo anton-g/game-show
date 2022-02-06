@@ -21,7 +21,7 @@ export const createQuestionSegmentMachine = (segment: QuestionSegmentType) => {
         },
         events: {} as
           | { type: 'NEXT' }
-          | { type: 'BUZZ'; team: string }
+          | { type: 'BUZZ'; team: PlayerType['id'] }
           | { type: 'QUESTION.END' }
           | {
               type: 'QUESTION.SCORE'
