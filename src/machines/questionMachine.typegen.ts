@@ -6,6 +6,7 @@ export interface Typegen0 {
     setTeam: "BUZZ";
     updateScore: "CORRECT";
     resetTeam: "INCORRECT";
+    createTimer: "xstate.init";
     startTimer: "START" | "INCORRECT";
     pauseTimer: "BUZZ";
     notifyParent: "END";

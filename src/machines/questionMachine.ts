@@ -34,13 +34,13 @@ export const createQuestionMachine = (question: Question) => {
       initial: 'intro',
       context: {
         question: question,
-        timerRef: spawn(timerMachine, 'timer'),
+        timerRef: null!,
         customReveal: true,
         activeTeam: null,
       },
       states: {
         intro: {
-          // entry: 'createTimer',
+          entry: 'createTimer',
           on: {
             START: 'idle',
           },
@@ -96,9 +96,9 @@ export const createQuestionMachine = (question: Question) => {
             { team: context.activeTeam, score: context.question.scoring.value },
           ],
         })),
-        // createTimer: assign(() => ({
-        //   timerRef: () => spawn(timerMachine, 'timer'),
-        // })),
+        createTimer: assign({
+          timerRef: (context) => spawn(timerMachine, 'timer'),
+        }),
         startTimer: send(
           { type: 'START' },
           { to: (context) => context.timerRef }
