@@ -8,7 +8,7 @@ import {
 } from 'xstate'
 import { PlayerType } from '../components/presentation/PresentationsControl'
 import { Question } from '../overmind/types'
-import { TimerActor, timerMachine } from './timerMachine'
+import { TimerActor, createTimerMachine } from './timerMachine'
 
 export const createQuestionMachine = (question: Question) => {
   const questionMachine = createMachine(
@@ -97,7 +97,11 @@ export const createQuestionMachine = (question: Question) => {
           ],
         })),
         createTimer: assign({
-          timerRef: (context) => spawn(timerMachine, 'timer'),
+          timerRef: (context) =>
+            spawn(
+              createTimerMachine(context.question.settings.timeLimit),
+              'timer'
+            ),
         }),
         startTimer: send(
           { type: 'START' },

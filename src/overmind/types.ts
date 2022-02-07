@@ -39,12 +39,17 @@ type Scoring = {
   value: number
 }
 
+type QuestionSettings = {
+  timeLimit: number
+}
+
 type BaseQuestion = {
   id: string
   question: string
   lore?: string
   answer: Answer
   scoring: Scoring
+  settings: QuestionSettings
 }
 
 export type TextQuestion = {

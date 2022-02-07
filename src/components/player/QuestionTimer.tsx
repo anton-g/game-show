@@ -10,8 +10,8 @@ export function QuestionTimer({ progress }: { progress: number }) {
           cy="10"
           fill="transparent"
           stroke="tomato"
-          stroke-width="10"
-          stroke-dasharray={`calc(${progress} * 31.4 / 100) 31.4`}
+          strokeWidth="10"
+          strokeDasharray={`calc(${progress} * 31.4 / 100) 31.4`}
           transform="rotate(-90) translate(-20)"
         />
       </svg>

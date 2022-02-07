@@ -18,6 +18,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     scoring: {
       value: 1,
     },
+    settings: {
+      timeLimit: 0,
+    },
   },
   'q-2': {
     id: 'q-2',
@@ -30,6 +33,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     scoring: {
       value: 1,
     },
+    settings: {
+      timeLimit: 0,
+    },
   },
   'q-3': {
     id: 'q-3',
@@ -41,6 +47,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     },
     scoring: {
       value: 1,
+    },
+    settings: {
+      timeLimit: 0,
     },
     assets: {
       imageSrc:
@@ -64,6 +73,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     scoring: {
       value: 1,
     },
+    settings: {
+      timeLimit: 0,
+    },
   },
   'q-5': {
     id: 'q-5',
@@ -75,6 +87,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     },
     scoring: {
       value: 1,
+    },
+    settings: {
+      timeLimit: 0,
     },
   },
   'q-6': {
@@ -94,6 +109,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     scoring: {
       value: 1,
     },
+    settings: {
+      timeLimit: 0,
+    },
   },
   'q-7': {
     id: 'q-7',
@@ -105,6 +123,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     },
     scoring: {
       value: 1,
+    },
+    settings: {
+      timeLimit: 15,
     },
     assets: {
       imageSrc:
@@ -126,6 +147,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     scoring: {
       value: 1,
     },
+    settings: {
+      timeLimit: 0,
+    },
     assets: {
       imageSrc:
         'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80',
@@ -141,6 +165,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     },
     scoring: {
       value: 5,
+    },
+    settings: {
+      timeLimit: 0,
     },
   },
   'q-10': {
@@ -159,6 +186,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     scoring: {
       value: 1,
     },
+    settings: {
+      timeLimit: 0,
+    },
   },
   'q-11': {
     id: 'q-11',
@@ -171,6 +201,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     scoring: {
       value: 1,
     },
+    settings: {
+      timeLimit: 0,
+    },
   },
   'q-12': {
     id: 'q-12',
@@ -182,6 +215,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     },
     scoring: {
       value: 1,
+    },
+    settings: {
+      timeLimit: 15,
     },
   },
   'q-13': {
@@ -199,6 +235,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
       imageSrc:
         'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80',
     },
+    settings: {
+      timeLimit: 0,
+    },
   },
   'q-14': {
     id: 'q-14',
@@ -215,6 +254,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     scoring: {
       value: 1,
     },
+    settings: {
+      timeLimit: 0,
+    },
   },
   'q-15': {
     id: 'q-15',
@@ -226,6 +268,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     },
     scoring: {
       value: 1,
+    },
+    settings: {
+      timeLimit: 0,
     },
   },
   'q-16': {
@@ -245,6 +290,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     scoring: {
       value: 1,
     },
+    settings: {
+      timeLimit: 0,
+    },
   },
   'q-17': {
     id: 'q-17',
@@ -260,6 +308,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     assets: {
       imageSrc:
         'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80',
+    },
+    settings: {
+      timeLimit: 0,
     },
   },
   'q-18': {
@@ -277,6 +328,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     scoring: {
       value: 1,
     },
+    settings: {
+      timeLimit: 0,
+    },
     assets: {
       imageSrc:
         'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80',
@@ -292,6 +346,9 @@ export const mockQuestions: Record<Question['id'], Question> = {
     },
     scoring: {
       value: 5,
+    },
+    settings: {
+      timeLimit: 0,
     },
   },
 }

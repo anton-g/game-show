@@ -33,6 +33,7 @@ export interface Typegen0 {
   };
   eventsCausingGuards: {
     hasEnded: "";
+    disabled: "START";
     notEnded: "START";
   };
   eventsCausingDelays: {};

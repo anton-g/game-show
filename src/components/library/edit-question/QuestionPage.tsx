@@ -71,9 +71,20 @@ export function QuestionPage() {
           </Field>
           <Spacer size={16} />
           <Field>
+            <Label htmlFor="timerValue">Time limit</Label>
+            <Input
+              {...register('settings.timeLimit')}
+              id="timerValue"
+              type="number"
+              min="0"
+            ></Input>
+          </Field>
+          <Spacer size={16} />
+          <Field>
             <Label htmlFor="questionType">Question type</Label>
             <Select {...register('type')} id="questionType">
               <option value="TEXT">Text</option>
+              <option value="IMAGE">Image</option>
               <option value="VIDEO">Video</option>
             </Select>
           </Field>

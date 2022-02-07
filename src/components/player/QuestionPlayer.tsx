@@ -16,11 +16,13 @@ export function QuestionPlayer({ machine }: QuestionPlayerProps) {
   const [timerState] = useActor(state.context.timerRef!)
   const question = state.context.question
 
-  const { elapsed, duration } = timerState.context
+  const { enabled, elapsed, duration } = timerState.context
 
   return (
     <QuestionPlayerWrapper>
-      <QuestionTimer progress={(elapsed / duration) * 100}></QuestionTimer>
+      {enabled && (
+        <QuestionTimer progress={(elapsed / duration) * 100}></QuestionTimer>
+      )}
       <QuestionPlayerFactory
         question={question}
         machineState={state}
