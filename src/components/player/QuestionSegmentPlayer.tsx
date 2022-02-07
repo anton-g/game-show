@@ -10,15 +10,9 @@ export function QuestionSegmentPlayer({ machine }: QuestionSegmentPlayerProps) {
   const [state] = useActor(machine)
   const segment = state.context.segment
 
-  return (
-    <div>
-      {state.context.questionMachineRef ? (
-        <QuestionPlayer
-          machine={state.context.questionMachineRef}
-        ></QuestionPlayer>
-      ) : (
-        segment.name
-      )}
-    </div>
+  return state.context.questionMachineRef ? (
+    <QuestionPlayer machine={state.context.questionMachineRef}></QuestionPlayer>
+  ) : (
+    <div>{segment.name}</div>
   )
 }

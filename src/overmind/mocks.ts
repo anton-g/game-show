@@ -42,6 +42,10 @@ export const mockQuestions: Record<Question['id'], Question> = {
     scoring: {
       value: 1,
     },
+    assets: {
+      imageSrc:
+        'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80',
+    },
   },
   'q-4': {
     id: 'q-4',
@@ -94,13 +98,17 @@ export const mockQuestions: Record<Question['id'], Question> = {
   'q-7': {
     id: 'q-7',
     type: 'IMAGE',
-    question: `Who's this?`,
+    question: `What is E-Types real name?`,
     answer: {
       type: 'BUZZ_SINGLE',
-      value: 'E-Type',
+      value: 'Martin Eriksson',
     },
     scoring: {
       value: 1,
+    },
+    assets: {
+      imageSrc:
+        'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80',
     },
   },
   'q-8': {
@@ -117,6 +125,10 @@ export const mockQuestions: Record<Question['id'], Question> = {
     },
     scoring: {
       value: 1,
+    },
+    assets: {
+      imageSrc:
+        'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80',
     },
   },
   'q-9': {
@@ -183,6 +195,10 @@ export const mockQuestions: Record<Question['id'], Question> = {
     scoring: {
       value: 1,
     },
+    assets: {
+      imageSrc:
+        'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80',
+    },
   },
   'q-14': {
     id: 'q-14',
@@ -241,6 +257,10 @@ export const mockQuestions: Record<Question['id'], Question> = {
     scoring: {
       value: 1,
     },
+    assets: {
+      imageSrc:
+        'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80',
+    },
   },
   'q-18': {
     id: 'q-18',
@@ -256,6 +276,10 @@ export const mockQuestions: Record<Question['id'], Question> = {
     },
     scoring: {
       value: 1,
+    },
+    assets: {
+      imageSrc:
+        'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80',
     },
   },
   'q-19': {

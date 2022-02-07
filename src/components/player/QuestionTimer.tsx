@@ -24,6 +24,7 @@ const Wrapper = styled.div`
   left: 8px;
   width: 20px;
   height: 20px;
+  z-index: 2;
 
   svg {
     display: block;

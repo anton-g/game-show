@@ -47,19 +47,22 @@ type BaseQuestion = {
   scoring: Scoring
 }
 
-type TextQuestion = {
+export type TextQuestion = {
   type: 'TEXT'
 } & BaseQuestion
 
-type SoundQuestion = {
+export type SoundQuestion = {
   type: 'SOUND'
 } & BaseQuestion
 
-type ImageQuestion = {
+export type ImageQuestion = {
   type: 'IMAGE'
+  assets: {
+    imageSrc: string
+  }
 } & BaseQuestion
 
-type VideoQuestion = {
+export type VideoQuestion = {
   type: 'VIDEO'
 } & BaseQuestion
 
