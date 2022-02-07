@@ -2,22 +2,19 @@ import { useMachine } from '@xstate/react'
 import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { ActorRef } from 'xstate'
-import usePresentation, {
-  PresentationMessage,
-} from '../../hooks/usePresentation'
 import { createShowMachine } from '../../machines/showMachine'
 import { useAppState } from '../../overmind'
 import { Show } from '../../overmind/types'
-import { Players } from './PresentationsControl'
+import { Players, usePresentationContext } from './PresentationsControl'
 import { Player } from '../player/Player'
 
 export function ExternalPresentationReceiver() {
   const show = useAppState((state) => state.selectedShow)
   const [players, setPlayers] = useState<Players>()
-  const { addMessageHandler } = usePresentation()
+  const [{ addMessageHandler }] = usePresentationContext()
 
   useEffect(() => {
-    addMessageHandler((data: PresentationMessage) => {
+    addMessageHandler((data) => {
       if (data.type !== 'PLAYERS') return
 
       setPlayers(data.payload)
@@ -40,10 +37,10 @@ function ExternalPresentation({ show, players }: ExternalPresentationProps) {
     [show, players]
   )
   const [state, send] = useMachine(machine)
-  const { addMessageHandler } = usePresentation()
+  const [{ addMessageHandler }] = usePresentationContext()
 
   useEffect(() => {
-    addMessageHandler((data: PresentationMessage) => {
+    addMessageHandler((data) => {
       if (data.type !== 'EVENT') return
       console.log('Running handler for event', data.payload.event)
 

@@ -1,23 +1,18 @@
 import { useActor } from '@xstate/react'
-import { PresentationMessage } from '../../hooks/usePresentation'
 import { QuestionSegmentActor } from '../../machines/questionSegmentMachine'
 import { Spacer } from '../common/Spacer'
-import { Players } from './PresentationsControl'
 import { ControlPanel } from './ControlPanel'
+import { usePresentationContext } from './PresentationsControl'
 import { QuestionAdmin } from './QuestionAdmin'
 
 type QuestionSegmentAdminProps = {
   actor: QuestionSegmentActor
-  players: Players
-  sendMessage: (msg: PresentationMessage) => void
 }
 
-export function QuestionSegmentAdmin({
-  actor,
-  players,
-  sendMessage,
-}: QuestionSegmentAdminProps) {
+export function QuestionSegmentAdmin({ actor }: QuestionSegmentAdminProps) {
   const [state, internalSend] = useActor(actor)
+  const [{ sendMessage }] = usePresentationContext()
+
   const segment = state.context.segment
 
   const send = (...params: Parameters<typeof internalSend>) => {
@@ -41,7 +36,6 @@ export function QuestionSegmentAdmin({
       {state.context.questionMachineRef && (
         <QuestionAdmin
           actor={state.context.questionMachineRef}
-          players={players}
           sendMessage={sendMessage}
         ></QuestionAdmin>
       )}

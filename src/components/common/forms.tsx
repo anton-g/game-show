@@ -6,6 +6,8 @@ export const TextArea = styled.textarea`
   background-color: ${({ theme }) => theme.colors.gray2};
   border: 1px solid ${({ theme }) => theme.colors.gray7};
   padding: 10px 14px;
+  max-width: 100%;
+  min-width: 100%;
 `
 
 export const Field = styled.div`

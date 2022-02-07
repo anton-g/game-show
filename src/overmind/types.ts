@@ -41,6 +41,7 @@ type Scoring = {
 
 type QuestionSettings = {
   timeLimit: number
+  manualReveal: boolean
 }
 
 type BaseQuestion = {

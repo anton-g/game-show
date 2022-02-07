@@ -24,7 +24,7 @@ export interface Typegen0 {
   };
   eventsCausingServices: {};
   eventsCausingGuards: {
-    ignoreReveal: "";
+    skipWaitingForReveal: "";
   };
   eventsCausingDelays: {};
   matchesStates:

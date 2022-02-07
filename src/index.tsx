@@ -13,7 +13,10 @@ import { Library } from './components/library/grid/Library'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import 'modern-css-reset'
 import { lightTheme } from './themes'
-import { PresentationControls } from './components/presentation/PresentationsControl'
+import {
+  PresentationControls,
+  PresentationMessageProvider,
+} from './components/presentation/PresentationsControl'
 import { inspect } from '@xstate/inspect'
 import { ExternalPresentationReceiver } from './components/presentation/ExternalPresentation'
 
@@ -72,7 +75,9 @@ ReactDOM.render(
               <PresentationControls />
             </Route>
             <Route path="/play/external" exact>
-              <ExternalPresentationReceiver />
+              <PresentationMessageProvider>
+                <ExternalPresentationReceiver />
+              </PresentationMessageProvider>
             </Route>
             <Route path="/creator">
               <Creator />

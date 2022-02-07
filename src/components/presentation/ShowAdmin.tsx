@@ -1,22 +1,23 @@
 import { useMachine } from '@xstate/react'
 import { useEffect } from 'react'
 import styled from 'styled-components'
-import usePresentation from '../../hooks/usePresentation'
 import { createShowMachine } from '../../machines/showMachine'
 import { Spacer } from '../common/Spacer'
 import { Preview } from './Preview'
 import { DevPanel } from './DevPanel'
-import { SegmentAdminFactory } from './SegmentAdminFactory'
 import { ControlPanel } from './ControlPanel'
-import { playersMock } from './PresentationsControl'
+import { playersMock, usePresentationContext } from './PresentationsControl'
+import { useSegmentFromMachine } from '../../hooks/useSegmentFromMachine'
 
 type ShowAdminProps = {
   machine: ReturnType<typeof createShowMachine>
 }
+
 export function ShowAdmin({ machine }: ShowAdminProps) {
-  const { startConnection, sendMessage, errors, terminateConnection } =
-    usePresentation()
+  const [{ startConnection, sendMessage, terminateConnection }, errors] =
+    usePresentationContext()
   const [state, internalSend] = useMachine(machine, { devTools: true })
+  const { admin } = useSegmentFromMachine(state.context.segmentMachineRef)
 
   useEffect(() => {
     console.log(errors)
@@ -59,13 +60,7 @@ export function ShowAdmin({ machine }: ShowAdminProps) {
           Current state: {state.value}
         </ControlPanel>
         <Spacer size={16} />
-        {state.context.segmentMachineRef && (
-          <SegmentAdminFactory
-            machine={state.context.segmentMachineRef}
-            players={state.context.players}
-            sendMessage={sendMessage} // Might actually wanna create a context for this
-          ></SegmentAdminFactory>
-        )}
+        {admin}
       </Tools>
       <Spacer axis={'horizontal'} size={16} />
       <Overview>

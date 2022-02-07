@@ -27,7 +27,7 @@ export const createQuestionMachine = (question: Question) => {
         context: {} as {
           question: Question
           timerRef: TimerActor
-          customReveal: boolean
+          manualReveal: boolean
           activeTeam: PlayerType['id'] | null
         },
       },
@@ -35,7 +35,7 @@ export const createQuestionMachine = (question: Question) => {
       context: {
         question: question,
         timerRef: null!,
-        customReveal: true,
+        manualReveal: question.settings.manualReveal,
         activeTeam: null,
       },
       states: {
@@ -71,7 +71,7 @@ export const createQuestionMachine = (question: Question) => {
         waitingForReveal: {
           always: {
             target: 'revealed',
-            cond: 'ignoreReveal',
+            cond: 'skipWaitingForReveal',
           },
           on: {
             REVEAL: 'revealed',
@@ -120,7 +120,7 @@ export const createQuestionMachine = (question: Question) => {
         notifyParent: sendParent('QUESTION.END'),
       },
       guards: {
-        ignoreReveal: (context) => !context.customReveal,
+        skipWaitingForReveal: (context) => !context.manualReveal,
       },
     }
   )

@@ -81,6 +81,14 @@ export function QuestionPage() {
           </Field>
           <Spacer size={16} />
           <Field>
+            <Label htmlFor="manualReveal">Manual reveal</Label>
+            <Checkbox
+              {...register('settings.manualReveal')}
+              id="manualReveal"
+            ></Checkbox>
+          </Field>
+          <Spacer size={16} />
+          <Field>
             <Label htmlFor="questionType">Question type</Label>
             <Select {...register('type')} id="questionType">
               <option value="TEXT">Text</option>
@@ -306,6 +314,12 @@ const GrowInput = styled(Input)`
 `
 
 const RadioButton = styled.input`
+  height: 20px;
+  width: 20px;
+  margin: 0 14px 0 28px;
+`
+
+const Checkbox = styled.input.attrs({ type: 'checkbox' })`
   height: 20px;
   width: 20px;
   margin: 0 14px 0 28px;

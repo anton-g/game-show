@@ -1,20 +1,14 @@
 import { useActor } from '@xstate/react'
 import { PresentationMessage } from '../../hooks/usePresentation'
 import { QuestionActor } from '../../machines/questionMachine'
-import { Players } from './PresentationsControl'
 import { ControlPanel } from './ControlPanel'
 
 type QuestionAdminProps = {
   actor: QuestionActor
-  players: Players
   sendMessage: (msg: PresentationMessage) => void
 }
 
-export function QuestionAdmin({
-  actor,
-  players,
-  sendMessage,
-}: QuestionAdminProps) {
+export function QuestionAdmin({ actor, sendMessage }: QuestionAdminProps) {
   const [state, internalSend] = useActor(actor)
   const [timerState] = useActor(state.context.timerRef!)
   const question = state.context.question

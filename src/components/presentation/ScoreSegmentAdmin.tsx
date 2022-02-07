@@ -1,18 +1,16 @@
 import { useActor } from '@xstate/react'
-import { PresentationMessage } from '../../hooks/usePresentation'
 import { ScoreSegmentActor } from '../../machines/scoreSegmentMachine'
 import { ControlPanel } from './ControlPanel'
+import { usePresentationContext } from './PresentationsControl'
 
 type ScoreSegmentAdminProps = {
   actor: ScoreSegmentActor
-  sendMessage: (msg: PresentationMessage) => void
 }
 
-export function ScoreSegmentAdmin({
-  actor,
-  sendMessage,
-}: ScoreSegmentAdminProps) {
+export function ScoreSegmentAdmin({ actor }: ScoreSegmentAdminProps) {
   const [state, internalSend] = useActor(actor)
+  const [{ sendMessage }] = usePresentationContext()
+
   const segment = state.context.segment
 
   const send = (...params: Parameters<typeof internalSend>) => {

@@ -1,13 +1,15 @@
 import styled from 'styled-components'
 import { StateFrom } from 'xstate'
+import { useSegmentFromMachine } from '../../hooks/useSegmentFromMachine'
 import { createShowMachine } from '../../machines/showMachine'
-import { SegmentPlayerFactory } from './SegmentPlayerFactory'
 
 type PlayerProps = {
   showState: StateFrom<ReturnType<typeof createShowMachine>>
 }
 
 export function Player({ showState }: PlayerProps) {
+  const { player } = useSegmentFromMachine(showState.context.segmentMachineRef)
+
   if (showState.matches('loading'))
     return (
       <Wrapper>
@@ -27,14 +29,8 @@ export function Player({ showState }: PlayerProps) {
       </Wrapper>
     )
 
-  if (showState.matches('segment') && showState.context.segmentMachineRef) {
-    return (
-      <Wrapper>
-        <SegmentPlayerFactory
-          machine={showState.context.segmentMachineRef}
-        ></SegmentPlayerFactory>
-      </Wrapper>
-    )
+  if (showState.matches('segment')) {
+    return <Wrapper>{player}</Wrapper>
   }
 
   return <h3>end</h3>
