@@ -1,6 +1,6 @@
 import { useActor } from '@xstate/react'
-import { QuestionSegmentActor } from '../../machines/questionSegmentMachine'
-import { QuestionPlayer } from './QuestionPlayer'
+import { QuestionSegmentActor } from '../../../machines/questionSegmentMachine'
+import { QuestionPlayer } from '../QuestionPlayer'
 
 type QuestionSegmentPlayerProps = {
   machine: QuestionSegmentActor

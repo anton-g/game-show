@@ -1,5 +1,5 @@
 import { useActor } from '@xstate/react'
-import { ScoreSegmentActor } from '../../machines/scoreSegmentMachine'
+import { ScoreSegmentActor } from '../../../machines/scoreSegmentMachine'
 
 type ScoreSegmentPlayerProps = {
   machine: ScoreSegmentActor

@@ -1,5 +1,5 @@
-import { QuestionSegmentPlayer } from '../components/player/QuestionSegmentPlayer'
-import { ScoreSegmentPlayer } from '../components/player/ScoreSegmentPlayer'
+import { QuestionSegmentPlayer } from '../components/player/segmentPlayers/QuestionSegmentPlayer'
+import { ScoreSegmentPlayer } from '../components/player/segmentPlayers/ScoreSegmentPlayer'
 import { QuestionSegmentAdmin } from '../components/presentation/QuestionSegmentAdmin'
 import { ScoreSegmentAdmin } from '../components/presentation/ScoreSegmentAdmin'
 import { QuestionSegmentActor } from '../machines/questionSegmentMachine'
