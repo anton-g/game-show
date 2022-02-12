@@ -123,6 +123,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
     id: 'q-7',
     type: 'IMAGE',
     question: `What is E-Types real name?`,
+    lore: 'E-Type is pretty cool and all',
     answer: {
       type: 'BUZZ_SINGLE',
       value: 'Martin Eriksson',

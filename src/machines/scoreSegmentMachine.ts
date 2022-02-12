@@ -1,6 +1,7 @@
 import { ActorRefFrom, createMachine, sendParent } from 'xstate'
 import { Players } from '../components/presentation/PresentationsControl'
 import { Segment } from '../overmind/types'
+import { SegmentMachineId } from './machines.types'
 
 export const createScoreSegmentMachine = (
   segment: Segment,
@@ -8,7 +9,7 @@ export const createScoreSegmentMachine = (
 ) => {
   const scoreMachine = createMachine(
     {
-      id: 'scoreSegment',
+      id: SegmentMachineId.ScoreSegment,
       schema: {
         context: {} as {
           segment: Segment

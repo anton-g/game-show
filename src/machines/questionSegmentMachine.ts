@@ -6,12 +6,13 @@ import {
   Segment,
   SegmentQuestion,
 } from '../overmind/types'
+import { SegmentMachineId } from './machines.types'
 import { QuestionActor, createQuestionMachine } from './questionMachine'
 
 export const createQuestionSegmentMachine = (segment: QuestionSegmentType) => {
   const questionSegmentMachine = createMachine(
     {
-      id: 'questionSegment',
+      id: SegmentMachineId.QuestionSegment,
       schema: {
         context: {} as {
           segment: Segment
