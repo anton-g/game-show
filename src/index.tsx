@@ -5,8 +5,7 @@ import { Provider } from 'overmind-react'
 import reportWebVitals from './reportWebVitals'
 import { config } from './overmind'
 import { App } from './App'
-import { Router, Route, Switch } from 'react-router-dom'
-import history from './history'
+import { Route, Routes, BrowserRouter } from 'react-router-dom'
 import { Creator } from './components/creator/Creator'
 import { QuestionPage } from './components/library/edit-question/QuestionPage'
 import { Library } from './components/library/grid/Library'
@@ -65,32 +64,29 @@ ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={lightTheme}>
       <GlobalStyle></GlobalStyle>
-      <Router history={history}>
+      <BrowserRouter>
         <Provider value={overmind}>
-          <Switch>
-            <Route path="/" exact>
-              <App />
-            </Route>
-            <Route path="/play" exact>
-              <PresentationControls />
-            </Route>
-            <Route path="/play/external" exact>
-              <PresentationMessageProvider>
-                <ExternalPresentationReceiver />
-              </PresentationMessageProvider>
-            </Route>
-            <Route path="/creator">
-              <Creator />
-            </Route>
-            <Route path="/library" exact>
-              <Library />
-            </Route>
-            <Route path="/library/question/:questionId?">
-              <QuestionPage />
-            </Route>
-          </Switch>
+          <Routes>
+            <Route path="/" element={<App />} />
+            <Route path="/play" element={<PresentationControls />} />
+            <Route
+              path="/play/external"
+              element={
+                <PresentationMessageProvider>
+                  <ExternalPresentationReceiver />
+                </PresentationMessageProvider>
+              }
+            />
+            <Route path="/creator" element={<Creator />} />
+            <Route path="/library" element={<Library />} />
+            <Route path="/library/question/" element={<QuestionPage />} />
+            <Route
+              path="/library/question/:questionId"
+              element={<QuestionPage />}
+            />
+          </Routes>
         </Provider>
-      </Router>
+      </BrowserRouter>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')

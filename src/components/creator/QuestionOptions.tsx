@@ -1,6 +1,6 @@
 import { CaretDownIcon } from '@radix-ui/react-icons'
 import React, { useState } from 'react'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 import { useAppState } from '../../overmind'
 import { DropdownMenu } from '../common/DropdownMenu'
@@ -22,7 +22,7 @@ export const QuestionOptions = React.memo(function QuestionOptions({
 }: Props) {
   const [open, setOpen] = useState(false)
   const { selectedShow: currentShow } = useAppState()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   return (
     <DropdownMenu onOpenChange={setOpen}>
@@ -35,7 +35,7 @@ export const QuestionOptions = React.memo(function QuestionOptions({
       <DropdownMenu.Content>
         <DropdownMenu>
           <DropdownMenu.Item
-            onSelect={() => history.push(`/library/question/${questionId}`)}
+            onSelect={() => navigate(`/library/question/${questionId}`)}
           >
             Edit
           </DropdownMenu.Item>

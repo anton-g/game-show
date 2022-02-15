@@ -1,6 +1,6 @@
 import { DashboardIcon, MoonIcon, Pencil1Icon } from '@radix-ui/react-icons'
 import React, { ReactNode } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { useActions, useAppState } from '../../overmind'
 import { Spacer } from './Spacer'
