@@ -44,13 +44,6 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 24px;
-  background-color: ${({ theme }) => theme.colors.gray1};
-  background-size: 20px 20px;
-  background-image: repeating-linear-gradient(
-    45deg,
-    ${({ theme }) => theme.colors.gray3} 0,
-    ${({ theme }) => theme.colors.gray3} 2px,
-    ${({ theme }) => theme.colors.gray1} 0,
-    ${({ theme }) => theme.colors.gray1} 50%
-  );
+  background-color: black; // todo replace with color from theme
+  color: white; // todo replace with color from theme
 `

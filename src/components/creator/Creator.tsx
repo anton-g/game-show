@@ -1,11 +1,10 @@
-import { NavBar } from '../common/NavBar'
+import { SidebarLayout } from '../common/SidebarLayout'
 import { Board } from './Board'
 
 export function Creator() {
   return (
-    <div>
-      <NavBar></NavBar>
+    <SidebarLayout>
       <Board></Board>
-    </div>
+    </SidebarLayout>
   )
 }

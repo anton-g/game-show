@@ -1,4 +1,5 @@
 import { useActor } from '@xstate/react'
+import styled from 'styled-components'
 import { ScoreSegmentActor } from '../../../machines/scoreSegmentMachine'
 
 type ScoreSegmentPlayerProps = {
@@ -11,10 +12,10 @@ export function ScoreSegmentPlayer({ machine }: ScoreSegmentPlayerProps) {
   const players = Object.values(state.context.players)
 
   return (
-    <div>
-      <h3>Scores</h3>
+    <Wrapper>
+      <h3 style={{ textAlign: 'center' }}>Scores</h3>
       {state.matches('visible') && (
-        <ol>
+        <List>
           {players
             .sort((a, b) => b.score - a.score)
             .map((x) => (
@@ -22,8 +23,14 @@ export function ScoreSegmentPlayer({ machine }: ScoreSegmentPlayerProps) {
                 {x.name} - {x.score} pts
               </li>
             ))}
-        </ol>
+        </List>
       )}
-    </div>
+    </Wrapper>
   )
 }
+
+const Wrapper = styled.div``
+
+const List = styled.ol`
+  font-size: 85%;
+`

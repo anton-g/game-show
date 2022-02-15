@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Field, Input, Label } from '../../common/forms'
-import { NavBar } from '../../common/NavBar'
 import { Spacer } from '../../common/Spacer'
 import { QuestionList } from '../../common/QuestionList'
 import { useAppState } from '../../../overmind'
+import { SidebarLayout } from '../../common/SidebarLayout'
 
 export function Library() {
   const [filter, setFilter] = useState('')
@@ -16,10 +16,8 @@ export function Library() {
   )
 
   return (
-    <>
-      <NavBar></NavBar>
+    <SidebarLayout>
       <Wrapper>
-        <Title>Library</Title>
         <Spacer size={16}></Spacer>
         <Controls>
           <Field>
@@ -35,15 +33,13 @@ export function Library() {
         <Spacer size={16}></Spacer>
         <QuestionList mode="LINK" questions={filteredQuestions}></QuestionList>
       </Wrapper>
-    </>
+    </SidebarLayout>
   )
 }
 
 const Wrapper = styled.div`
-  padding: 8px 16px;
+  padding: 8px 24px;
 `
-
-const Title = styled.h1``
 
 const Controls = styled.div`
   display: flex;
