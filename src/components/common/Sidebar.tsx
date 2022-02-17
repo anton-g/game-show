@@ -1,27 +1,23 @@
-import { DashboardIcon, MoonIcon, Pencil1Icon } from '@radix-ui/react-icons'
-import React, { ReactNode } from 'react'
+import {
+  DashboardIcon,
+  GearIcon,
+  MoonIcon,
+  Pencil1Icon,
+  PlayIcon,
+  TriangleDownIcon,
+} from '@radix-ui/react-icons'
+import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { useActions, useAppState } from '../../overmind'
 import { Spacer } from './Spacer'
+import * as Popover from '@radix-ui/react-popover'
 
 export function Sidebar() {
-  const { selectedShow, shows } = useAppState()
-  const { selectShow } = useActions()
-
   return (
     <Wrapper>
       <Header>
-        <Select
-          value={selectedShow?.id}
-          onChange={(e) => selectShow(e.target.value)}
-        >
-          {Object.values(shows).map((show) => (
-            <option key={show.id} value={show.id}>
-              {show.name}
-            </option>
-          ))}
-        </Select>
+        <ShowSelectPopover />
       </Header>
       <Spacer size={72} />
       <Menu>
@@ -33,12 +29,22 @@ export function Sidebar() {
           </MenuLink>
         </MenuItem>
         <MenuItem>
+          {/* TODO: should probably move this away from the nav links since this is more of an action than a navigation */}
+          <MenuLink to="/play">
+            <PlayIcon></PlayIcon>
+            <Spacer size={8} />
+            Play
+          </MenuLink>
+        </MenuItem>
+        <MenuItem>
           <MenuLink to="/creator">
             <Pencil1Icon></Pencil1Icon>
             <Spacer size={8} />
             Editor
           </MenuLink>
         </MenuItem>
+      </Menu>
+      <BottomMenu>
         <MenuItem>
           <MenuLink to="/foo">
             <MoonIcon></MoonIcon>
@@ -46,12 +52,21 @@ export function Sidebar() {
             Something
           </MenuLink>
         </MenuItem>
-      </Menu>
+        <MenuItem>
+          <MenuLink to="/settings">
+            <GearIcon></GearIcon>
+            <Spacer size={8} />
+            Settings
+          </MenuLink>
+        </MenuItem>
+      </BottomMenu>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.nav`
+  display: flex;
+  flex-direction: column;
   height: 100%;
   min-width: 225px;
   padding: 16px 8px;
@@ -66,6 +81,10 @@ const Menu = styled.ul`
   list-style: none;
   margin: 0;
   padding: 0;
+`
+
+const BottomMenu = styled(Menu)`
+  margin-top: auto;
 `
 
 const MenuItem = styled.li`
@@ -92,53 +111,80 @@ const MenuLink = styled(NavLink)`
   }
 `
 
-type Props = {
-  children: ReactNode
-} & React.SelectHTMLAttributes<HTMLSelectElement>
+function ShowSelectPopover() {
+  const [open, setOpen] = useState(false)
+  const { selectedShow, shows } = useAppState()
+  const { selectShow } = useActions()
 
-export const Select = React.forwardRef(
-  ({ children, ...props }: Props, ref: any) => {
-    return (
-      <SelectWrapper>
-        <StyledSelect {...props} ref={ref}>
-          {children}
-        </StyledSelect>
-        <Chevron
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fillRule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clipRule="evenodd"
-          />
-        </Chevron>
-      </SelectWrapper>
-    )
-  }
-)
+  return (
+    <Popover.Root onOpenChange={setOpen} open={open}>
+      <PopoverTrigger>
+        <span>{selectedShow?.name}</span>
+        <TriangleDownIcon />
+      </PopoverTrigger>
+      <Popover.Anchor />
+      <PopoverContent>
+        <PopoverArrow offset={35} />
+        {Object.values(shows).map((show) => (
+          <ShowButton
+            key={show.id}
+            onClick={() => {
+              selectShow(show.id)
+              setOpen(false)
+            }}
+          >
+            <ShowButtonTitle>{show.name}</ShowButtonTitle>
+            <ShowButtonInfo>
+              {Object.values(show.segments).length} segments
+            </ShowButtonInfo>
+          </ShowButton>
+        ))}
+      </PopoverContent>
+    </Popover.Root>
+  )
+}
 
-const SelectWrapper = styled.div`
-  width: fit-content;
+const PopoverTrigger = styled(Popover.Trigger)`
+  all: unset;
+  font-weight: bold;
   display: flex;
   align-items: center;
+  cursor: pointer;
+`
+
+const PopoverContent = styled(Popover.Content)`
+  border-radius: 4px;
+  padding: 16px;
+  width: 260px;
+  background-color: white;
+  box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px,
+    rgb(14 18 22 / 20%) 0px 10px 20px -15px;
+  display: flex;
+  flex-direction: column;
+`
+
+const PopoverArrow = styled(Popover.Arrow)`
+  fill: white;
+`
+
+const ShowButton = styled.button`
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  padding: 4px 8px;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.gray3};
+  }
+`
+
+const ShowButtonTitle = styled.span`
   font-weight: bold;
 `
 
-const Chevron = styled.svg`
-  height: 20px;
-  width: 20px;
-  margin-left: -20px;
-  pointer-events: none;
-`
-
-const StyledSelect = styled.select`
-  font-size: 16px;
-  background-color: transparent;
-  border: 0;
-  appearance: none;
-  width: 100%;
-  padding-right: 24px;
+const ShowButtonInfo = styled.span`
+  color: ${({ theme }) => theme.colors.gray11};
+  font-size: 0.8rem;
 `

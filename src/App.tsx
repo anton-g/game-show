@@ -1,15 +1,11 @@
 import styled from 'styled-components'
-import { NavBar } from './components/common/NavBar'
-import { ShowSelector } from './components/ShowSelector'
+import { SidebarLayout } from './components/common/SidebarLayout'
 
 export function App() {
   return (
-    <div>
-      <NavBar></NavBar>
-      <Wrapper>
-        <ShowSelector></ShowSelector>
-      </Wrapper>
-    </div>
+    <SidebarLayout>
+      <Wrapper>hello :)</Wrapper>
+    </SidebarLayout>
   )
 }
 
