@@ -18,6 +18,9 @@ export function Sidebar() {
     <Wrapper>
       <Header>
         <ShowSelectPopover />
+        <PlayButton to="/play">
+          <PlayIcon width={20} height={20}></PlayIcon>
+        </PlayButton>
       </Header>
       <Spacer size={72} />
       <Menu>
@@ -26,14 +29,6 @@ export function Sidebar() {
             <DashboardIcon></DashboardIcon>
             <Spacer size={8} />
             Library
-          </MenuLink>
-        </MenuItem>
-        <MenuItem>
-          {/* TODO: should probably move this away from the nav links since this is more of an action than a navigation */}
-          <MenuLink to="/play">
-            <PlayIcon></PlayIcon>
-            <Spacer size={8} />
-            Play
           </MenuLink>
         </MenuItem>
         <MenuItem>
@@ -75,6 +70,9 @@ const Wrapper = styled.nav`
 
 const Header = styled.div`
   padding-left: 16px;
+  display: flex;
+  justify-content: space-between;
+  padding-right: 16px;
 `
 
 const Menu = styled.ul`
@@ -187,4 +185,20 @@ const ShowButtonTitle = styled.span`
 const ShowButtonInfo = styled.span`
   color: ${({ theme }) => theme.colors.gray11};
   font-size: 0.8rem;
+`
+
+const PlayButton = styled(NavLink)`
+  all: unset;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid ${({ theme }) => theme.colors.gray7};
+  border-radius: 50%;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.gray4};
+  }
 `
