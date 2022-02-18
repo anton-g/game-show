@@ -25,8 +25,6 @@ export function Library() {
             onChange={(e) => setFilter(e.target.value)}
           ></Input>
         </Field>
-        <Spacer axis="horizontal" size={16}></Spacer>
-        <Button to="/library/question">Create question</Button>
       </Controls>
       <Spacer size={16}></Spacer>
       <QuestionList mode="LINK" questions={filteredQuestions}></QuestionList>

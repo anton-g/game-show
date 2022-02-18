@@ -38,7 +38,7 @@ export function Sidebar() {
         </MenuItem>
       </Menu>
       <Spacer size={48} />
-      <EditorSubMenu></EditorSubMenu>
+      <LibrarySubMenu></LibrarySubMenu>
       <BottomMenu>
         <MenuItem>
           <MenuLink to="/foo">
@@ -125,18 +125,17 @@ const PlayButton = styled(NavLink)`
   }
 `
 
-function EditorSubMenu() {
-  const foo = useMatch('/editor')
-
-  if (!foo) return null
+function LibrarySubMenu() {
+  const routeMatch = useMatch('/library')
+  if (!routeMatch) return null
 
   return (
     <Menu>
       <MenuItem>
-        <MenuLink to="/foo">
+        <MenuLink to="question">
           <PlusCircledIcon></PlusCircledIcon>
           <Spacer size={8} />
-          Create new question
+          New question
         </MenuLink>
       </MenuItem>
     </Menu>

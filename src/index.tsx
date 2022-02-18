@@ -5,11 +5,12 @@ import { Provider } from 'overmind-react'
 import reportWebVitals from './reportWebVitals'
 import { config } from './overmind'
 import { App } from './App'
-import { BrowserRouter } from 'react-router-dom'
+import { unstable_HistoryRouter as HistoryRouter } from 'react-router-dom'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { lightTheme } from './themes'
 import { inspect } from '@xstate/inspect'
 import 'modern-css-reset'
+import history from './history'
 
 inspect({
   url: 'https://statecharts.io/inspect',
@@ -56,11 +57,11 @@ ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={lightTheme}>
       <GlobalStyle></GlobalStyle>
-      <BrowserRouter>
+      <HistoryRouter history={history}>
         <Provider value={overmind}>
           <App />
         </Provider>
-      </BrowserRouter>
+      </HistoryRouter>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
