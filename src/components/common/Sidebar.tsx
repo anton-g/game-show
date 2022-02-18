@@ -4,8 +4,9 @@ import {
   MoonIcon,
   Pencil1Icon,
   PlayIcon,
+  PlusCircledIcon,
 } from '@radix-ui/react-icons'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useMatch } from 'react-router-dom'
 import styled from 'styled-components'
 import { Spacer } from './Spacer'
 import { ShowSelectPopover } from './ShowSelectPopover'
@@ -19,7 +20,7 @@ export function Sidebar() {
           <PlayIcon width={20} height={20}></PlayIcon>
         </PlayButton>
       </Header>
-      <Spacer size={72} />
+      <Spacer size={48} />
       <Menu>
         <MenuItem>
           <MenuLink to="/library">
@@ -29,13 +30,15 @@ export function Sidebar() {
           </MenuLink>
         </MenuItem>
         <MenuItem>
-          <MenuLink to="/creator">
+          <MenuLink to="/editor">
             <Pencil1Icon></Pencil1Icon>
             <Spacer size={8} />
             Editor
           </MenuLink>
         </MenuItem>
       </Menu>
+      <Spacer size={48} />
+      <EditorSubMenu></EditorSubMenu>
       <BottomMenu>
         <MenuItem>
           <MenuLink to="/foo">
@@ -121,3 +124,21 @@ const PlayButton = styled(NavLink)`
     background-color: ${({ theme }) => theme.colors.gray4};
   }
 `
+
+function EditorSubMenu() {
+  const foo = useMatch('/editor')
+
+  if (!foo) return null
+
+  return (
+    <Menu>
+      <MenuItem>
+        <MenuLink to="/foo">
+          <PlusCircledIcon></PlusCircledIcon>
+          <Spacer size={8} />
+          Create new question
+        </MenuLink>
+      </MenuItem>
+    </Menu>
+  )
+}

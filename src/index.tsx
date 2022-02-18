@@ -5,19 +5,11 @@ import { Provider } from 'overmind-react'
 import reportWebVitals from './reportWebVitals'
 import { config } from './overmind'
 import { App } from './App'
-import { Route, Routes, BrowserRouter } from 'react-router-dom'
-import { Creator } from './components/creator/Creator'
-import { QuestionPage } from './components/library/edit-question/QuestionPage'
-import { Library } from './components/library/grid/Library'
+import { BrowserRouter } from 'react-router-dom'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
-import 'modern-css-reset'
 import { lightTheme } from './themes'
-import {
-  PresentationControls,
-  PresentationMessageProvider,
-} from './components/presentation/PresentationsControl'
 import { inspect } from '@xstate/inspect'
-import { ExternalPresentationReceiver } from './components/presentation/ExternalPresentation'
+import 'modern-css-reset'
 
 inspect({
   url: 'https://statecharts.io/inspect',
@@ -66,25 +58,7 @@ ReactDOM.render(
       <GlobalStyle></GlobalStyle>
       <BrowserRouter>
         <Provider value={overmind}>
-          <Routes>
-            <Route path="/" element={<App />} />
-            <Route path="/play" element={<PresentationControls />} />
-            <Route
-              path="/play/external"
-              element={
-                <PresentationMessageProvider>
-                  <ExternalPresentationReceiver />
-                </PresentationMessageProvider>
-              }
-            />
-            <Route path="/creator" element={<Creator />} />
-            <Route path="/library" element={<Library />} />
-            <Route path="/library/question/" element={<QuestionPage />} />
-            <Route
-              path="/library/question/:questionId"
-              element={<QuestionPage />}
-            />
-          </Routes>
+          <App />
         </Provider>
       </BrowserRouter>
     </ThemeProvider>

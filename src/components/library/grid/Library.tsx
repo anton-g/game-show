@@ -5,7 +5,6 @@ import { Field, Input, Label } from '../../common/forms'
 import { Spacer } from '../../common/Spacer'
 import { QuestionList } from '../../common/QuestionList'
 import { useAppState } from '../../../overmind'
-import { SidebarLayout } from '../../common/SidebarLayout'
 
 export function Library() {
   const [filter, setFilter] = useState('')
@@ -16,24 +15,22 @@ export function Library() {
   )
 
   return (
-    <SidebarLayout>
-      <Wrapper>
-        <Spacer size={16}></Spacer>
-        <Controls>
-          <Field>
-            <Label htmlFor="filter">Filter</Label>
-            <Input
-              id="filter"
-              onChange={(e) => setFilter(e.target.value)}
-            ></Input>
-          </Field>
-          <Spacer axis="horizontal" size={16}></Spacer>
-          <Button to="/library/question">Create question</Button>
-        </Controls>
-        <Spacer size={16}></Spacer>
-        <QuestionList mode="LINK" questions={filteredQuestions}></QuestionList>
-      </Wrapper>
-    </SidebarLayout>
+    <Wrapper>
+      <Spacer size={16}></Spacer>
+      <Controls>
+        <Field>
+          <Label htmlFor="filter">Filter</Label>
+          <Input
+            id="filter"
+            onChange={(e) => setFilter(e.target.value)}
+          ></Input>
+        </Field>
+        <Spacer axis="horizontal" size={16}></Spacer>
+        <Button to="/library/question">Create question</Button>
+      </Controls>
+      <Spacer size={16}></Spacer>
+      <QuestionList mode="LINK" questions={filteredQuestions}></QuestionList>
+    </Wrapper>
   )
 }
 
