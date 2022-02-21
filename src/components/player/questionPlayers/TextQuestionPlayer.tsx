@@ -1,10 +1,9 @@
-import { EmittedFrom } from 'xstate'
-import { QuestionActor } from '../../../machines/questionMachine'
+import { QuestionState } from '../../../machines/questionMachine'
 import { TextQuestion } from '../../../overmind/types'
 
 type TextQuestionPlayerProps = {
   question: TextQuestion
-  machineState: EmittedFrom<QuestionActor>
+  machineState: QuestionState
 }
 
 export function TextQuestionPlayer({

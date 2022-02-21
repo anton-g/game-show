@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Field, Input, Label } from '../../common/forms'
 import { Spacer } from '../../common/Spacer'
@@ -16,7 +15,6 @@ export function Library() {
 
   return (
     <Wrapper>
-      <Spacer size={16}></Spacer>
       <Controls>
         <Field>
           <Label htmlFor="filter">Filter</Label>
@@ -39,23 +37,4 @@ const Wrapper = styled.div`
 const Controls = styled.div`
   display: flex;
   align-items: flex-end;
-`
-
-const Button = styled(Link)`
-  background-color: ${({ theme }) => theme.colors.gray9};
-  border: 0;
-  border-radius: 4px;
-  padding: 6px 12px;
-  color: ${({ theme }) => theme.colors.gray1};
-  cursor: pointer;
-  transition: background-color 0.15s;
-  font-weight: bold;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  height: 46px;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.gray10};
-  }
 `

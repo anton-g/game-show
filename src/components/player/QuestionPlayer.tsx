@@ -1,15 +1,33 @@
-import { useActor } from '@xstate/react'
+import { useActor, useMachine } from '@xstate/react'
 import styled from 'styled-components'
-import { QuestionActor } from '../../machines/questionMachine'
+import {
+  createQuestionMachine,
+  QuestionActor,
+  QuestionState,
+} from '../../machines/questionMachine'
 import { QuestionPlayerFactory } from './questionPlayers/QuestionPlayerFactory'
 import { QuestionTimer } from './QuestionTimer'
+
+export function ManualQuestionPlayer({
+  machine,
+}: {
+  machine: ReturnType<typeof createQuestionMachine>
+}) {
+  const [state] = useMachine(machine, { devTools: true })
+
+  return <InternalQuestionPlayer state={state} />
+}
 
 type QuestionPlayerProps = {
   machine: QuestionActor
 }
-
 export function QuestionPlayer({ machine }: QuestionPlayerProps) {
   const [state] = useActor(machine)
+
+  return <InternalQuestionPlayer state={state} />
+}
+
+function InternalQuestionPlayer({ state }: { state: QuestionState }) {
   const [timerState] = useActor(state.context.timerRef!)
   const question = state.context.question
 

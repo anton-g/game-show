@@ -2,18 +2,21 @@ import {
   ActorRefFrom,
   assign,
   createMachine,
+  EmittedFrom,
   send,
   sendParent,
   spawn,
+  StateFrom,
 } from 'xstate'
 import { PlayerType } from '../components/presentation/PresentationsControl'
 import { Question } from '../overmind/types'
+import { QuestionMachineId } from './machines.types'
 import { TimerActor, createTimerMachine } from './timerMachine'
 
 export const createQuestionMachine = (question: Question) => {
   const questionMachine = createMachine(
     {
-      id: 'question',
+      id: QuestionMachineId.Question,
       tsTypes: {} as import('./questionMachine.typegen').Typegen0,
       schema: {
         events: {} as
@@ -128,6 +131,10 @@ export const createQuestionMachine = (question: Question) => {
   return questionMachine
 }
 
-export type QuestionActor = ActorRefFrom<
-  ReturnType<typeof createQuestionMachine>
->
+export type QuestionMachine = ReturnType<typeof createQuestionMachine>
+
+export type QuestionActor = ActorRefFrom<QuestionMachine>
+
+export type QuestionState =
+  | StateFrom<QuestionMachine>
+  | EmittedFrom<QuestionActor>

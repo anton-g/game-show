@@ -1,9 +1,9 @@
 import { useActor } from '@xstate/react'
+import { useQuestionFromMachine } from '../../hooks/useQuestionFromMachine'
 import { QuestionSegmentActor } from '../../machines/questionSegmentMachine'
 import { Spacer } from '../common/Spacer'
 import { ControlPanel } from './ControlPanel'
 import { usePresentationContext } from './PresentationsControl'
-import { QuestionAdmin } from './QuestionAdmin'
 
 type QuestionSegmentAdminProps = {
   actor: QuestionSegmentActor
@@ -12,6 +12,11 @@ type QuestionSegmentAdminProps = {
 export function QuestionSegmentAdmin({ actor }: QuestionSegmentAdminProps) {
   const [state, internalSend] = useActor(actor)
   const [{ sendMessage }] = usePresentationContext()
+
+  const { admin } = useQuestionFromMachine(
+    state.context.questionMachineRef,
+    sendMessage
+  )
 
   const segment = state.context.segment
 
@@ -33,12 +38,7 @@ export function QuestionSegmentAdmin({ actor }: QuestionSegmentAdminProps) {
         Current state: {state.value}
       </ControlPanel>
       <Spacer size={16} />
-      {state.context.questionMachineRef && (
-        <QuestionAdmin
-          actor={state.context.questionMachineRef}
-          sendMessage={sendMessage}
-        ></QuestionAdmin>
-      )}
+      {admin}
     </div>
   )
 }

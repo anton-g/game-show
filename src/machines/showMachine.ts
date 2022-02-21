@@ -5,7 +5,7 @@ import {
   Players,
 } from '../components/presentation/PresentationsControl'
 import { Segment, Show } from '../overmind/types'
-import { QuestionActor } from './questionMachine'
+import { QuestionActor, QuestionMachine } from './questionMachine'
 import {
   QuestionSegmentActor,
   createQuestionSegmentMachine,
@@ -18,6 +18,7 @@ import { TimerActor } from './timerMachine'
 
 export type AnySegmentActor = QuestionSegmentActor | ScoreSegmentActor
 export type AnyQuestionActor = QuestionActor
+export type AnyQuestionMachine = AnyQuestionActor | QuestionMachine
 export type AnyActor = AnySegmentActor | AnyQuestionActor | TimerActor
 
 export const createShowMachine = (show: Show, players: Players) => {

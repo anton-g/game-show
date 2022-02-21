@@ -1,13 +1,13 @@
 import styled from 'styled-components'
 import { EmittedFrom } from 'xstate'
-import { QuestionActor } from '../../../machines/questionMachine'
+import { QuestionState } from '../../../machines/questionMachine'
 import { TimerActor } from '../../../machines/timerMachine'
 import { ImageQuestion } from '../../../overmind/types'
 import { lerp } from '../../../utils/number-utils'
 
 type ImageQuestionPlayerProps = {
   question: ImageQuestion
-  machineState: EmittedFrom<QuestionActor>
+  machineState: QuestionState
   timerState: EmittedFrom<TimerActor>
 }
 

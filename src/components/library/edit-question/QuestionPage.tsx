@@ -7,6 +7,8 @@ import { Spacer } from '../../common/Spacer'
 import { useActions, useAppState } from '../../../overmind'
 import type { AnswerType, Question } from '../../../overmind/types'
 import { QuestionFormButtons } from './QuestionFormButtons'
+import { ManualQuestionPlayer } from '../../player/QuestionPlayer'
+import { createQuestionMachine } from '../../../machines/questionMachine'
 
 export function QuestionPage() {
   const { questionId } = useParams<{ questionId?: string }>()
@@ -248,9 +250,7 @@ export function QuestionPage() {
           <Spacer size={48} />
         </Form>
         <Preview>
-          <h2 style={{ textAlign: 'center' }}>
-            {question?.question || 'Preview'}
-          </h2>
+          <QuestionPreview question={question}></QuestionPreview>
         </Preview>
       </Columns>
     </Wrapper>
@@ -324,3 +324,14 @@ const Checkbox = styled.input.attrs({ type: 'checkbox' })`
   width: 20px;
   margin: 0 14px 0 28px;
 `
+
+function QuestionPreview({ question }: { question: Question | undefined }) {
+  if (!question) return null
+  const machine = createQuestionMachine(question)
+
+  return (
+    <>
+      <ManualQuestionPlayer machine={machine}></ManualQuestionPlayer>
+    </>
+  )
+}

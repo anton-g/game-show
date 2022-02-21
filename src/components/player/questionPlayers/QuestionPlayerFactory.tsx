@@ -1,5 +1,5 @@
 import { EmittedFrom } from 'xstate'
-import { QuestionActor } from '../../../machines/questionMachine'
+import { QuestionState } from '../../../machines/questionMachine'
 import { TimerActor } from '../../../machines/timerMachine'
 import { Question } from '../../../overmind/types'
 import { ImageQuestionPlayer } from './ImageQuestionPlayer'
@@ -7,7 +7,7 @@ import { TextQuestionPlayer } from './TextQuestionPlayer'
 
 type QuestionPlayerFactoryProps = {
   question: Question
-  machineState: EmittedFrom<QuestionActor>
+  machineState: QuestionState
   timerState: EmittedFrom<TimerActor>
 }
 

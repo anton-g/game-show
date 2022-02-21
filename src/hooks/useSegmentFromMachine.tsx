@@ -4,11 +4,10 @@ import { ScoreSegmentPlayer } from '../components/player/segmentPlayers/ScoreSeg
 import { QuestionSegmentAdmin } from '../components/presentation/QuestionSegmentAdmin'
 import { ScoreSegmentAdmin } from '../components/presentation/ScoreSegmentAdmin'
 import { SegmentMachineId } from '../machines/machines.types'
-import { QuestionActor } from '../machines/questionMachine'
 import { QuestionSegmentActor } from '../machines/questionSegmentMachine'
 import { ScoreSegmentActor } from '../machines/scoreSegmentMachine'
 import { AnySegmentActor } from '../machines/showMachine'
-import { getQuestionAnswer } from '../utils/question-utils'
+import { useQuestionFromMachine } from './useQuestionFromMachine'
 
 export function useSegmentFromMachine(machine: AnySegmentActor | null) {
   if (!machine) {
@@ -49,30 +48,16 @@ function ScoreSegmentInfo() {
 function QuestionSegmentInfo({ actor }: { actor: QuestionSegmentActor }) {
   const [state] = useActor(actor)
 
+  const { info } = useQuestionFromMachine(state.context.questionMachineRef)
+
   switch (state.value) {
     case 'intro':
       return <div>Showing segment intro</div>
     case 'question':
-      return state.context.questionMachineRef ? (
-        <QuestionInfo actor={state.context.questionMachineRef}></QuestionInfo>
-      ) : null
+      return info
     case 'end':
       return <div>Segment ended</div>
     default:
       throw Error('Unhandled machine state')
   }
-}
-
-function QuestionInfo({ actor }: { actor: QuestionActor }) {
-  const question = actor.getSnapshot()?.context.question
-
-  if (!question) return null
-
-  return (
-    <div>
-      <h2>{question.question}</h2>
-      <p>{getQuestionAnswer(question)}</p>
-      <p style={{ fontStyle: 'italic' }}>{question.lore}</p>
-    </div>
-  )
 }
