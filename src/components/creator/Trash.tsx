@@ -9,7 +9,7 @@ export function Trash({ id }: { id: string }) {
 
   return (
     <Wrapper ref={setNodeRef} isOver={isOver}>
-      <Icon isOver={isOver} />
+      <Icon $isOver={isOver} />
     </Wrapper>
   )
 }
@@ -33,8 +33,9 @@ const Wrapper = styled.div<{ isOver: boolean }>`
     isOver ? theme.colors.tomato4 : 'white'};
 `
 
-const Icon = styled(TrashIcon)<{ isOver: boolean }>`
+const Icon = styled(TrashIcon)<{ $isOver: boolean }>`
   width: 24px;
   height: 24px;
-  color: ${({ theme, isOver }) => (isOver ? theme.colors.tomato11 : 'inherit')};
+  color: ${({ theme, $isOver }) =>
+    $isOver ? theme.colors.tomato11 : 'inherit'};
 `

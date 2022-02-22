@@ -20,7 +20,7 @@ export function ScoreSegmentOptions({ onRemove, className }: Props) {
         <CaretDownIcon></CaretDownIcon>
       </Trigger>
       <DropdownMenu.Content>
-        <DropdownMenu.Item danger onSelect={onRemove}>
+        <DropdownMenu.Item $danger onSelect={onRemove}>
           Remove segment
         </DropdownMenu.Item>
       </DropdownMenu.Content>

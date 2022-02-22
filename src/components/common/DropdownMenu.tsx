@@ -21,7 +21,7 @@ DropdownMenu.Content = styled(RadixDropdownMenu.Content)`
   box-shadow: 0px 0px 15px hsla(206, 22%, 7%, 0.35);
 `
 
-const itemStyle = css<{ danger?: true }>`
+const itemStyle = css<{ $danger?: true }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -29,7 +29,8 @@ const itemStyle = css<{ danger?: true }>`
   padding: 5px 10px;
   border-radius: 3px;
   cursor: default;
-  color: ${({ theme, danger }) => (danger ? theme.colors.tomato11 : 'inherit')};
+  color: ${({ theme, $danger }) =>
+    $danger ? theme.colors.tomato11 : 'inherit'};
   &:focus {
     outline: none;
     background-color: ${({ theme }) => theme.colors.blue4};
@@ -39,12 +40,12 @@ const itemStyle = css<{ danger?: true }>`
   }
 `
 
-DropdownMenu.Item = styled(RadixDropdownMenu.Item)<{ danger?: true }>`
+DropdownMenu.Item = styled(RadixDropdownMenu.Item)<{ $danger?: true }>`
   ${itemStyle}
 `
 
 DropdownMenu.TriggerItem = styled(RadixDropdownMenu.TriggerItem)<{
-  danger?: true
+  $danger?: true
 }>`
   &[data-state='open'] {
     background-color: ${({ theme }) => theme.colors.blue4};

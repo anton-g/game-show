@@ -47,7 +47,7 @@ export function QuestionFormButtons({
             </DropdownButton>
             <DropdownMenu.Content>
               <DropdownMenu.Item
-                danger
+                $danger
                 onSelect={() => setShowConfirmDeleteDialog(true)}
               >
                 Delete
