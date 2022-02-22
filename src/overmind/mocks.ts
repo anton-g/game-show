@@ -53,6 +53,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
     settings: {
       manualReveal: false,
       timeLimit: 0,
+      blurImage: true,
     },
     assets: {
       imageSrc:
@@ -134,6 +135,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
     settings: {
       manualReveal: true,
       timeLimit: 15,
+      blurImage: false,
     },
     assets: {
       imageSrc:
@@ -158,6 +160,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
     settings: {
       manualReveal: false,
       timeLimit: 0,
+      blurImage: true,
     },
     assets: {
       imageSrc:
@@ -251,6 +254,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
     settings: {
       manualReveal: false,
       timeLimit: 0,
+      blurImage: true,
     },
   },
   'q-14': {
@@ -329,6 +333,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
     settings: {
       manualReveal: false,
       timeLimit: 0,
+      blurImage: true,
     },
   },
   'q-18': {
@@ -349,6 +354,7 @@ export const mockQuestions: Record<Question['id'], Question> = {
     settings: {
       manualReveal: false,
       timeLimit: 0,
+      blurImage: true,
     },
     assets: {
       imageSrc:

@@ -6,11 +6,22 @@ import {
 } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import { Field, FieldError, Input, Label, TextArea } from '../../common/forms'
+import {
+  CheckboxField,
+  Field,
+  FieldError,
+  Input,
+  Label,
+  TextArea,
+} from '../../common/forms'
 import { Select } from '../../common/Select'
 import { Spacer } from '../../common/Spacer'
 import { useActions, useAppState } from '../../../overmind'
-import type { AnswerType, Question } from '../../../overmind/types'
+import type {
+  AnswerType,
+  Question,
+  QuestionType,
+} from '../../../overmind/types'
 import { QuestionFormButtons } from './QuestionFormButtons'
 import { QuestionPreview } from './QuestionPreview'
 
@@ -47,6 +58,7 @@ export function QuestionPage() {
   }
 
   const answerType = watch('answer.type') as AnswerType
+  const questionType = watch('type') as Question['type']
 
   return (
     <Wrapper>
@@ -82,8 +94,11 @@ export function QuestionPage() {
               <option value="TEXT">Text</option>
               <option value="IMAGE">Image</option>
               <option value="VIDEO">Video</option>
+              <option value="SOUND">Sound</option>
             </Select>
           </Field>
+          <Spacer size={16} />
+          <QuestionTypeInputs questionType={questionType} register={register} />
           <Spacer size={32} />
           <SubTitle>Answer</SubTitle>
           <Spacer size={8} />
@@ -135,13 +150,13 @@ export function QuestionPage() {
             ></Input>
           </Field>
           <Spacer size={16} />
-          <Field>
+          <CheckboxField>
             <Label htmlFor="manualReveal">Manual reveal</Label>
             <Checkbox
               {...register('settings.manualReveal')}
               id="manualReveal"
             ></Checkbox>
-          </Field>
+          </CheckboxField>
           <Spacer size={48} />
           <QuestionFormButtons
             editing={Boolean(questionId)}
@@ -224,7 +239,7 @@ const RadioButton = styled.input`
 const Checkbox = styled.input.attrs({ type: 'checkbox' })`
   height: 20px;
   width: 20px;
-  margin: 0 14px 0 28px;
+  margin: 0;
 `
 
 function AnswerTypeInputs({
@@ -376,5 +391,53 @@ function AnswerInputPhysical({
         type="text"
       ></Input>
     </Field>
+  )
+}
+
+function QuestionTypeInputs({
+  questionType,
+  register,
+}: {
+  questionType: QuestionType
+  register: UseFormRegister<Question>
+}) {
+  switch (questionType) {
+    case 'TEXT':
+      return null
+    case 'IMAGE':
+      return <QuestionInputImage register={register} />
+    case 'SOUND':
+      return null
+    case 'VIDEO':
+      return null
+    default:
+      const _exhaustiveCheck: never = questionType
+      return _exhaustiveCheck
+  }
+}
+
+function QuestionInputImage({
+  register,
+}: {
+  register: UseFormRegister<Question>
+}) {
+  return (
+    <>
+      <Field>
+        <Label htmlFor="imageSrc">Image URL</Label>
+        <Input
+          {...register('assets.imageSrc', {
+            required: 'You need to specify an image URL',
+          })}
+          id="imageSrc"
+          type="text"
+        ></Input>
+      </Field>
+      <Spacer size={16} />
+      <CheckboxField>
+        <Label htmlFor="imageBlur">Blur reveal</Label>
+        <Checkbox {...register('settings.blurImage')} id="imageBlur"></Checkbox>
+      </CheckboxField>
+    </>
   )
 }

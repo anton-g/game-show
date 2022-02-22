@@ -30,7 +30,7 @@ export function ImageQuestionPlayer({
         <Wrapper>
           <BlurredImage
             blur={
-              machineState.value === 'revealed'
+              machineState.value === 'revealed' || !question.settings.blurImage
                 ? '0'
                 : lerp(1, 0, progress) + 'em'
             }

@@ -15,6 +15,11 @@ export const Field = styled.div`
   flex-direction: column;
 `
 
+export const CheckboxField = styled(Field)`
+  align-items: center;
+  max-width: fit-content;
+`
+
 export const Label = styled.label`
   padding: 4px 0 8px;
   font-size: 14px;

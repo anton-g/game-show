@@ -59,6 +59,7 @@ export type SoundQuestion = {
 
 export type ImageQuestion = {
   type: 'IMAGE'
+  settings: { blurImage: boolean } & QuestionSettings
   assets: {
     imageSrc: string
   }
@@ -73,6 +74,8 @@ export type Question =
   | SoundQuestion
   | ImageQuestion
   | VideoQuestion
+
+export type QuestionType = Question['type']
 
 type IntroType = 'NONE' | 'COMPONENT'
 
