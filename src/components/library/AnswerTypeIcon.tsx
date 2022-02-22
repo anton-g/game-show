@@ -61,7 +61,6 @@ const physicalIconPath = (
 
 const paths: Record<AnswerType, { path: JSX.Element; name: string }> = {
   BUZZ_SINGLE: { path: buzzSingleIconPath, name: 'Single buzz' },
-  OPTIONS_MULTI: { path: optionsMultiIconPath, name: 'Multiple options' },
   OPTIONS_SINGLE: { path: optionsMultiIconPath, name: 'Single option' },
   PHYSICAL: { path: physicalIconPath, name: 'Physical' },
 }

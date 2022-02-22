@@ -1,4 +1,9 @@
-import { SubmitHandler, useForm } from 'react-hook-form'
+import {
+  SubmitHandler,
+  useForm,
+  UseFormRegister,
+  UseFormWatch,
+} from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { Field, FieldError, Input, Label, TextArea } from '../../common/forms'
@@ -7,8 +12,7 @@ import { Spacer } from '../../common/Spacer'
 import { useActions, useAppState } from '../../../overmind'
 import type { AnswerType, Question } from '../../../overmind/types'
 import { QuestionFormButtons } from './QuestionFormButtons'
-import { ManualQuestionPlayer } from '../../player/QuestionPlayer'
-import { createQuestionMachine } from '../../../machines/questionMachine'
+import { QuestionPreview } from './QuestionPreview'
 
 export function QuestionPage() {
   const { questionId } = useParams<{ questionId?: string }>()
@@ -73,25 +77,7 @@ export function QuestionPage() {
           </Field>
           <Spacer size={16} />
           <Field>
-            <Label htmlFor="timerValue">Time limit</Label>
-            <Input
-              {...register('settings.timeLimit')}
-              id="timerValue"
-              type="number"
-              min="0"
-            ></Input>
-          </Field>
-          <Spacer size={16} />
-          <Field>
-            <Label htmlFor="manualReveal">Manual reveal</Label>
-            <Checkbox
-              {...register('settings.manualReveal')}
-              id="manualReveal"
-            ></Checkbox>
-          </Field>
-          <Spacer size={16} />
-          <Field>
-            <Label htmlFor="questionType">Question type</Label>
+            <Label htmlFor="questionType">Display type</Label>
             <Select {...register('type')} id="questionType">
               <option value="TEXT">Text</option>
               <option value="IMAGE">Image</option>
@@ -111,118 +97,14 @@ export function QuestionPage() {
               <option value="BUZZ_SINGLE">Buzzer - Single</option>
               <option value="OPTIONS_SINGLE">Option - Single</option>
               <option value="PHYSICAL">Physical</option>
-              {/* <option value="OPTIONS_MULTI">Option - Multiple</option>
-              <option value="PHYSICAL">Physical</option> */}
             </Select>
           </Field>
           <Spacer size={16} />
-          {answerType === 'BUZZ_SINGLE' && ( // TODO refactor to switch in component
-            <Field>
-              <Label htmlFor="answerValue">Answer</Label>
-              <Input
-                {...register('answer.value', {
-                  required: 'You need to specify an answer',
-                })}
-                id="answerValue"
-                type="text"
-              ></Input>
-            </Field>
-          )}
-          {answerType === 'PHYSICAL' && (
-            <Field>
-              <Label htmlFor="answerValue">Answer</Label>
-              <Input
-                {...register('answer.value', {
-                  required: 'You need to specify an answer',
-                })}
-                id="answerValue"
-                type="text"
-              ></Input>
-            </Field>
-          )}
-          {answerType === 'OPTIONS_SINGLE' && (
-            <>
-              <Spacer size={16} />
-              <Field>
-                <LabelWrapper>
-                  <Label htmlFor="optionA">Option A</Label>
-                  <Label>Correct</Label>
-                </LabelWrapper>
-                <InputWithRadio>
-                  <GrowInput
-                    {...register('answer.options.a')}
-                    id="optionA"
-                    type="text"
-                  ></GrowInput>
-                  <RadioButton
-                    {...register('answer.correctOption', {
-                      required: true,
-                    })}
-                    type="radio"
-                    value="a"
-                    disabled={!Boolean(watch('answer.options.a'))}
-                  ></RadioButton>
-                </InputWithRadio>
-              </Field>
-              <Spacer size={16} />
-              <Field>
-                <Label htmlFor="optionB">Option B</Label>
-                <InputWithRadio>
-                  <GrowInput
-                    {...register('answer.options.b')}
-                    id="optionB"
-                    type="text"
-                  ></GrowInput>
-                  <RadioButton
-                    {...register('answer.correctOption', {
-                      required: true,
-                    })}
-                    type="radio"
-                    value="b"
-                    disabled={!Boolean(watch('answer.options.b'))}
-                  ></RadioButton>
-                </InputWithRadio>
-              </Field>
-              <Spacer size={16} />
-              <Field>
-                <Label htmlFor="optionC">Option C</Label>
-                <InputWithRadio>
-                  <GrowInput
-                    {...register('answer.options.c')}
-                    id="optionC"
-                    type="text"
-                  ></GrowInput>
-                  <RadioButton
-                    {...register('answer.correctOption', {
-                      required: true,
-                    })}
-                    type="radio"
-                    value="c"
-                    disabled={!Boolean(watch('answer.options.c'))}
-                  ></RadioButton>
-                </InputWithRadio>
-              </Field>
-              <Spacer size={16} />
-              <Field>
-                <Label htmlFor="optionD">Option D</Label>
-                <InputWithRadio>
-                  <GrowInput
-                    {...register('answer.options.d')}
-                    id="optionD"
-                    type="text"
-                  ></GrowInput>
-                  <RadioButton
-                    {...register('answer.correctOption', {
-                      required: true,
-                    })}
-                    type="radio"
-                    value="false"
-                    disabled={!Boolean(watch('answer.options.d'))}
-                  ></RadioButton>
-                </InputWithRadio>
-              </Field>
-            </>
-          )}
+          <AnswerTypeInputs
+            answerType={answerType}
+            register={register}
+            watch={watch}
+          />
           <Spacer size={32} />
           <SubTitle>Scoring</SubTitle>
           <Spacer size={8} />
@@ -239,6 +121,26 @@ export function QuestionPage() {
             {errors.scoring?.value && (
               <FieldError>{errors.scoring.value.message}</FieldError>
             )}
+          </Field>
+          <Spacer size={32} />
+          <SubTitle>Other</SubTitle>
+          <Spacer size={16} />
+          <Field>
+            <Label htmlFor="timerValue">Time limit</Label>
+            <Input
+              {...register('settings.timeLimit')}
+              id="timerValue"
+              type="number"
+              min="0"
+            ></Input>
+          </Field>
+          <Spacer size={16} />
+          <Field>
+            <Label htmlFor="manualReveal">Manual reveal</Label>
+            <Checkbox
+              {...register('settings.manualReveal')}
+              id="manualReveal"
+            ></Checkbox>
           </Field>
           <Spacer size={48} />
           <QuestionFormButtons
@@ -325,13 +227,154 @@ const Checkbox = styled.input.attrs({ type: 'checkbox' })`
   margin: 0 14px 0 28px;
 `
 
-function QuestionPreview({ question }: { question: Question | undefined }) {
-  if (!question) return null
-  const machine = createQuestionMachine(question)
+function AnswerTypeInputs({
+  answerType,
+  register,
+  watch,
+}: {
+  answerType: AnswerType
+  register: UseFormRegister<Question>
+  watch: UseFormWatch<Question>
+}) {
+  switch (answerType) {
+    case 'BUZZ_SINGLE':
+      return <AnswerInputBuzzSingle register={register} />
+    case 'OPTIONS_SINGLE':
+      return <AnswerInputOptionsSingle register={register} watch={watch} />
+    case 'PHYSICAL':
+      return <AnswerInputPhysical register={register} />
+    default:
+      const _exhaustiveCheck: never = answerType
+      return _exhaustiveCheck
+  }
+}
 
+function AnswerInputBuzzSingle({
+  register,
+}: {
+  register: UseFormRegister<Question>
+}) {
+  return (
+    <Field>
+      <Label htmlFor="answerValue">Answer</Label>
+      <Input
+        {...register('answer.value', {
+          required: 'You need to specify an answer',
+        })}
+        id="answerValue"
+        type="text"
+      ></Input>
+    </Field>
+  )
+}
+
+function AnswerInputOptionsSingle({
+  register,
+  watch,
+}: {
+  register: UseFormRegister<Question>
+  watch: UseFormWatch<Question>
+}) {
   return (
     <>
-      <ManualQuestionPlayer machine={machine}></ManualQuestionPlayer>
+      <Spacer size={16} />
+      <Field>
+        <LabelWrapper>
+          <Label htmlFor="optionA">Option A</Label>
+          <Label>Correct</Label>
+        </LabelWrapper>
+        <InputWithRadio>
+          <GrowInput
+            {...register('answer.options.a')}
+            id="optionA"
+            type="text"
+          ></GrowInput>
+          <RadioButton
+            {...register('answer.correctOption', {
+              required: true,
+            })}
+            type="radio"
+            value="a"
+            disabled={!Boolean(watch('answer.options.a'))}
+          ></RadioButton>
+        </InputWithRadio>
+      </Field>
+      <Spacer size={16} />
+      <Field>
+        <Label htmlFor="optionB">Option B</Label>
+        <InputWithRadio>
+          <GrowInput
+            {...register('answer.options.b')}
+            id="optionB"
+            type="text"
+          ></GrowInput>
+          <RadioButton
+            {...register('answer.correctOption', {
+              required: true,
+            })}
+            type="radio"
+            value="b"
+            disabled={!Boolean(watch('answer.options.b'))}
+          ></RadioButton>
+        </InputWithRadio>
+      </Field>
+      <Spacer size={16} />
+      <Field>
+        <Label htmlFor="optionC">Option C</Label>
+        <InputWithRadio>
+          <GrowInput
+            {...register('answer.options.c')}
+            id="optionC"
+            type="text"
+          ></GrowInput>
+          <RadioButton
+            {...register('answer.correctOption', {
+              required: true,
+            })}
+            type="radio"
+            value="c"
+            disabled={!Boolean(watch('answer.options.c'))}
+          ></RadioButton>
+        </InputWithRadio>
+      </Field>
+      <Spacer size={16} />
+      <Field>
+        <Label htmlFor="optionD">Option D</Label>
+        <InputWithRadio>
+          <GrowInput
+            {...register('answer.options.d')}
+            id="optionD"
+            type="text"
+          ></GrowInput>
+          <RadioButton
+            {...register('answer.correctOption', {
+              required: true,
+            })}
+            type="radio"
+            value="false"
+            disabled={!Boolean(watch('answer.options.d'))}
+          ></RadioButton>
+        </InputWithRadio>
+      </Field>
     </>
+  )
+}
+
+function AnswerInputPhysical({
+  register,
+}: {
+  register: UseFormRegister<Question>
+}) {
+  return (
+    <Field>
+      <Label htmlFor="answerValue">Answer</Label>
+      <Input
+        {...register('answer.value', {
+          required: 'You need to specify an answer',
+        })}
+        id="answerValue"
+        type="text"
+      ></Input>
+    </Field>
   )
 }

@@ -1,10 +1,6 @@
 // TODO use null instead of undefined/?
 
-export type AnswerType =
-  | 'BUZZ_SINGLE'
-  | 'OPTIONS_SINGLE'
-  | 'OPTIONS_MULTI'
-  | 'PHYSICAL'
+export type AnswerType = 'BUZZ_SINGLE' | 'OPTIONS_SINGLE' | 'PHYSICAL'
 
 type BaseAnswer = {
   type: AnswerType
