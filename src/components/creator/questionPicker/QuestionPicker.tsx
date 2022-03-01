@@ -80,6 +80,7 @@ const Overlay = styled(Dialog.Overlay)`
 
 const Content = styled(Dialog.Content)`
   background-color: white;
+  inset: 0px;
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -88,6 +89,7 @@ const Content = styled(Dialog.Content)`
   padding: 32px;
   overflow-y: auto;
   position: fixed;
+  z-index: 2;
 `
 
 const Close = styled(Dialog.Close)`
