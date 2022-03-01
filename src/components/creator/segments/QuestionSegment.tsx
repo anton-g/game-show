@@ -181,7 +181,8 @@ const QuestionsList = styled.div<{ isHovered?: boolean }>`
   height: 100%;
   border-radius: 8px;
   min-width: 150px;
-  overflow-y: scroll;
+  overflow-y: auto;
+  overflow-x: hidden;
   background-color: ${({ theme, isHovered }) =>
     isHovered ? theme.colors.gray5 : theme.colors.gray3};
   transition: background-color 300ms ease-in-out;

@@ -193,7 +193,7 @@ const Form = styled.form`
   min-width: 500px;
   max-width: 500px;
   max-height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding: 8px 16px;
 `
 

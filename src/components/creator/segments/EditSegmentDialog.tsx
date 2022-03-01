@@ -49,7 +49,7 @@ const Content = styled(Dialog.Content)`
   display: flex;
   flex-direction: column;
   padding: 32px;
-  overflow-y: scroll;
+  overflow-y: auto;
   position: fixed;
   border-radius: 8px;
   box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px,

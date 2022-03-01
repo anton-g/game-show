@@ -86,7 +86,7 @@ const Content = styled(Dialog.Content)`
   flex-direction: column;
   align-items: center;
   padding: 32px;
-  overflow-y: scroll;
+  overflow-y: auto;
   position: fixed;
 `
 

@@ -276,7 +276,7 @@ export const Board = () => {
 const Segments = styled.div`
   display: flex;
   height: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
 
   > * {
     margin-left: 16px;

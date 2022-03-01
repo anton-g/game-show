@@ -19,5 +19,5 @@ const LayoutWrapper = styled.div`
 const LayoutContent = styled.div`
   height: 100%;
   flex-grow: 1;
-  overflow-y: scroll;
+  overflow-y: auto;
 `
