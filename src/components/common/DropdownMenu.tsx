@@ -5,7 +5,7 @@ import { CaretRightIcon } from '@radix-ui/react-icons'
 
 type Props = {
   children: ReactNode
-} & RadixDropdownMenu.DropdownMenuOwnProps
+} & RadixDropdownMenu.DropdownMenuProps
 
 export function DropdownMenu({ children, ...props }: Props) {
   return <RadixDropdownMenu.Root {...props}>{children}</RadixDropdownMenu.Root>
