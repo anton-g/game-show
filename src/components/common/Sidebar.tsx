@@ -9,13 +9,13 @@ import {
 import { NavLink, useMatch } from 'react-router-dom'
 import styled from 'styled-components'
 import { Spacer } from './Spacer'
-import { ShowSelectPopover } from './ShowSelectPopover'
+import { ShowSelect } from './ShowSelect'
 
 export function Sidebar() {
   return (
     <Wrapper>
       <Header>
-        <ShowSelectPopover />
+        <ShowSelect />
         <PlayButton to="/play">
           <PlayIcon width={20} height={20}></PlayIcon>
         </PlayButton>
@@ -110,7 +110,7 @@ const MenuLink = styled(NavLink)`
 `
 
 const PlayButton = styled(NavLink)`
-  all: unset;
+  all: unset; // todo fix a11y
   width: 36px;
   height: 36px;
   display: flex;
