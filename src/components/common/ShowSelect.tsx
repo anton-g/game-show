@@ -41,6 +41,10 @@ const SelectTrigger = styled(Select.Trigger)`
   all: unset;
   font-weight: bold;
   cursor: pointer;
+
+  &:focus-visible {
+    outline: revert;
+  }
 `
 
 const SelectContent = styled(Select.Content)`

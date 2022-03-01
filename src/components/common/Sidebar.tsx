@@ -110,7 +110,7 @@ const MenuLink = styled(NavLink)`
 `
 
 const PlayButton = styled(NavLink)`
-  all: unset; // todo fix a11y
+  all: unset;
   width: 36px;
   height: 36px;
   display: flex;
@@ -119,6 +119,10 @@ const PlayButton = styled(NavLink)`
   border: 1px solid ${({ theme }) => theme.colors.gray7};
   border-radius: 50%;
   cursor: pointer;
+
+  &:focus-visible {
+    outline: revert;
+  }
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.gray4};

@@ -73,6 +73,10 @@ const Close = styled(Dialog.Close)`
   right: 10px;
   border-radius: 100%;
 
+  &:focus-visible {
+    outline: revert;
+  }
+
   &:hover {
     background-color: ${({ theme }) => theme.colors.primary4};
   }

@@ -36,6 +36,10 @@ const DevPanelButton = styled.button`
   padding: 4px 8px;
   margin-bottom: -1px;
   background-color: white;
+
+  &:focus-visible {
+    outline: revert;
+  }
 `
 const PanelContent = styled(Collapsible.Content)`
   border: 1px solid ${({ theme }) => theme.colors.gray6};
@@ -175,6 +179,10 @@ const OptionButton = styled.button`
   height: 20px;
   border-radius: 50%;
   cursor: pointer;
+
+  &:focus-visible {
+    outline: revert;
+  }
 
   &:hover {
     filter: brightness(110%);
