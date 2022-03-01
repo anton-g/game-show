@@ -67,7 +67,9 @@ export const Board = () => {
     ? activeId in selectedShowSegmentsList
     : false
 
-  const sensors = useSensors(useSensor(PointerSensor))
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 1 } })
+  )
 
   useEffect(() => {
     requestAnimationFrame(() => {
