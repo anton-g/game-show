@@ -1,5 +1,5 @@
-import type { LoaderArgs, MetaFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { LoaderArgs, MetaFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
 import {
   Links,
   LiveReload,
@@ -7,23 +7,23 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "@remix-run/react";
-import { ThemeProvider } from "styled-components";
-import { theme } from "./styles/theme";
-import GlobalStyle from "./styles/global";
+} from '@remix-run/react'
+import { ThemeProvider } from 'styled-components'
+import { theme } from './styles/theme'
+import GlobalStyle from './styles/global'
 
-import { getUser } from "./session.server";
+import { getUser } from './session.server'
 
 export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  title: "A game show engine",
-  viewport: "width=device-width,initial-scale=1",
-});
+  charset: 'utf-8',
+  title: 'A game show engine',
+  viewport: 'width=device-width,initial-scale=1',
+})
 
 export async function loader({ request }: LoaderArgs) {
   return json({
     user: await getUser(request),
-  });
+  })
 }
 
 export default function App() {
@@ -32,7 +32,7 @@ export default function App() {
       <head>
         <Meta />
         <Links />
-        {typeof document === "undefined" ? "__STYLES__" : null}
+        {typeof document === 'undefined' ? '__STYLES__' : null}
       </head>
       <body>
         <ThemeProvider theme={theme}>
@@ -44,5 +44,5 @@ export default function App() {
         <LiveReload />
       </body>
     </html>
-  );
+  )
 }

@@ -1,5 +1,5 @@
-import { NavLink } from "@remix-run/react";
-import styled from "styled-components";
+import { NavLink } from '@remix-run/react'
+import styled from 'styled-components'
 import {
   ButtonIcon,
   DashboardIcon,
@@ -7,8 +7,8 @@ import {
   HomeIcon,
   LayoutIcon,
   MoonIcon,
-} from "@radix-ui/react-icons";
-import { Spacer } from "~/components/Spacer";
+} from '@radix-ui/react-icons'
+import { Spacer } from '~/components/Spacer'
 
 export function Sidebar() {
   return (
@@ -64,7 +64,7 @@ export function Sidebar() {
         </MenuItem>
       </BottomMenu>
     </SidebarWrapper>
-  );
+  )
 }
 const SidebarWrapper = styled.nav`
   display: flex;
@@ -73,18 +73,18 @@ const SidebarWrapper = styled.nav`
   min-width: 225px;
   padding: 16px 8px;
   background-color: ${({ theme }) => theme.colors.gray3};
-`;
+`
 const Header = styled.div`
   padding-left: 16px;
   display: flex;
   justify-content: space-between;
   padding-right: 16px;
   margin-bottom: 48px;
-`;
+`
 const Title = styled.h1`
   margin: 0;
   padding: 0;
-`;
+`
 const Menu = styled.ul`
   list-style: none;
   margin: 0;
@@ -92,14 +92,14 @@ const Menu = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 4px;
-`;
+`
 const BottomMenu = styled(Menu)`
   margin-top: auto;
-`;
-const MenuItem = styled.li``;
+`
+const MenuItem = styled.li``
 const SubMenuItem = styled(MenuItem)`
   margin-left: 24px;
-`;
+`
 const MenuLink = styled(NavLink)`
   display: flex;
   align-items: center;
@@ -117,4 +117,4 @@ const MenuLink = styled(NavLink)`
   &:hover {
     background-color: ${({ theme }) => theme.colors.gray5};
   }
-`;
+`

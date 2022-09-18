@@ -1,5 +1,5 @@
-import { Title } from "~/components/Title";
+import { Title } from '~/components/Title'
 
 export default function Index() {
-  return <Title>Library</Title>;
+  return <Title>Library</Title>
 }
