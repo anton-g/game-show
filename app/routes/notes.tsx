@@ -17,9 +17,9 @@ export default function NotesPage() {
   const user = useUser();
 
   return (
-    <div className="flex h-full min-h-screen flex-col">
-      <header className="flex items-center justify-between bg-slate-800 p-4 text-white">
-        <h1 className="text-3xl font-bold">
+    <div>
+      <header>
+        <h1>
           <Link to=".">Notes</Link>
         </h1>
         <p>{user.email}</p>
@@ -33,16 +33,14 @@ export default function NotesPage() {
         </Form>
       </header>
 
-      <main className="flex h-full bg-white">
-        <div className="h-full w-80 border-r bg-gray-50">
-          <Link to="new" className="block p-4 text-xl text-blue-500">
-            + New Note
-          </Link>
+      <main>
+        <div>
+          <Link to="new">+ New Note</Link>
 
           <hr />
 
           {data.noteListItems.length === 0 ? (
-            <p className="p-4">No notes yet</p>
+            <p>No notes yet</p>
           ) : (
             <ol>
               {data.noteListItems.map((note) => (
@@ -61,7 +59,7 @@ export default function NotesPage() {
           )}
         </div>
 
-        <div className="flex-1 p-6">
+        <div>
           <Outlet />
         </div>
       </main>

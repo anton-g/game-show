@@ -31,9 +31,9 @@ export default function NoteDetailsPage() {
 
   return (
     <div>
-      <h3 className="text-2xl font-bold">{data.note.title}</h3>
-      <p className="py-6">{data.note.body}</p>
-      <hr className="my-4" />
+      <h3>{data.note.title}</h3>
+      <p>{data.note.body}</p>
+      <hr />
       <Form method="post">
         <button
           type="submit"
