@@ -16,7 +16,7 @@ import { getUser } from "./session.server";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "Remix Notes",
+  title: "A game show engine",
   viewport: "width=device-width,initial-scale=1",
 });
 
