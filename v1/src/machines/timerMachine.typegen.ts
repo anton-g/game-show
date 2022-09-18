@@ -2,13 +2,8 @@
 
 export interface Typegen0 {
   "@@xstate/typegen": true;
-  eventsCausingActions: {
-    update: "TICK";
-    notifyParent: "";
-  };
   internalEvents: {
     "": { type: "" };
-    "xstate.init": { type: "xstate.init" };
     "done.invoke.interval": {
       type: "done.invoke.interval";
       data: unknown;
@@ -18,6 +13,7 @@ export interface Typegen0 {
       type: "error.platform.interval";
       data: unknown;
     };
+    "xstate.init": { type: "xstate.init" };
   };
   invokeSrcNameMap: {
     interval: "done.invoke.interval";
@@ -28,15 +24,19 @@ export interface Typegen0 {
     guards: never;
     delays: never;
   };
+  eventsCausingActions: {
+    notifyParent: "";
+    update: "TICK";
+  };
   eventsCausingServices: {
-    interval: "TICK" | "START";
+    interval: "START" | "TICK";
   };
   eventsCausingGuards: {
-    hasEnded: "";
     disabled: "START";
+    hasEnded: "";
     notEnded: "START";
   };
   eventsCausingDelays: {};
-  matchesStates: "running" | "paused" | "ended";
+  matchesStates: "ended" | "paused" | "running";
   tags: never;
 }
